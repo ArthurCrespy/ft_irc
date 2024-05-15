@@ -13,6 +13,8 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+#include "../client/Client.hpp"
+
 typedef struct sockaddr_in t_sockaddr_in;
 typedef struct pollfd t_pollfd;
 typedef socklen_t t_socklen;
@@ -29,8 +31,8 @@ class Server
 		t_sockaddr_in	_srv_sock_adrr;
 		t_pollfd 		_srv_poll;
 
-
         std::vector<pollfd>     _poll_fds;
+		std::map<pollfd, Client>	_clients;
 		// todo: maybe do a map of fd to client
 		// std::map<pollfd, Client>	_clients;
 

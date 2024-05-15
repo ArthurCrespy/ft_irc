@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+# pragma once
+
 # define NONE	"    "
 # define INPUT	"\033[1;35mINPT\033[0m"
 # define INFO	"\033[1;34mINFO\033[0m"
@@ -36,11 +38,12 @@
 # include <cerrno>			// errno
 
 # include <vector>			// std::vector
+# include <map>				// std::map
 
 # include <ctime>			// std::time_t
 
-
-# include "./../includes/Server.hpp"
+# include "./server/Server.hpp"
+# include "./client/Client.hpp"
 
 std::string	ft_nbtos(const int &value);
 int 		ft_stoi(const std::string &str);

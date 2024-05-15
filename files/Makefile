@@ -13,6 +13,7 @@
 NAME        := ircserv
 
 SRCS		:= \
+				srcs/client/Client.cpp \
 				srcs/server/Server.cpp \
 				srcs/server/Server_setup.cpp \
 				srcs/server/Server_start.cpp \
