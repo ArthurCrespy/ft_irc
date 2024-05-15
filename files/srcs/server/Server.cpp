@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../includes/ft_irc.h"
+#include "../../includes/ft_irc.h"
 
 Server::Server(void) : _port(6667), _password("default"), _srv_sock(-1), _srv_opt(1), _srv_sock_adrr(), _srv_poll()
 {
@@ -59,3 +59,8 @@ Server &Server::operator=(Server const &rhs)
 	return (*this);
 }
 
+void Server::servStart(void)
+{
+	this->servListen();
+	this->servPoll();
+}

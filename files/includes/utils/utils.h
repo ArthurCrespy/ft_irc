@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/15 16:17:09 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/15 16:17:09 by acrespy          ###   ########.fr       */
+/*   Created: 2024/05/15 16:39:06 by acrespy           #+#    #+#             */
+/*   Updated: 2024/05/15 16:39:06 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#include "../../includes/ft_irc.h"
 
-class Client
-{
-	private:
-		/* data */
+#ifndef UTILS_H
+# define UTILS_H
 
-	public:
-		/* data */
-};
+std::string	ft_nbtos(int const &value);
+int 		ft_stoi(std::string const &str);
+
+void		ft_print(std::string const &str,std::string const &level);
 
 #endif

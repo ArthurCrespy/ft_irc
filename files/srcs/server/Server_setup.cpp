@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "./../../includes/ft_irc.h"
+#include "../../includes/ft_irc.h"
 
 void Server::servSetup(int argc, char **argv)
 {

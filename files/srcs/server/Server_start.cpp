@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../includes/ft_irc.h"
+#include "../../includes/ft_irc.h"
 
 void Server::servListen(void)
 {
@@ -76,10 +76,38 @@ void Server::servPoll(void)
 
 }
 
+void Server::servConnect(void)
+{
+	int				cli_fd;
+	int 			cli_name_len;
+	char			cli_name_in[NI_MAXHOST];
+	t_sockaddr_in	cli_adrr_in;
+	t_socklen		cli_adrr_len;
+	t_pollfd		cli_poll_in;
+
+	cli_adrr_len = sizeof(cli_adrr_in);
+	cli_fd = accept(_srv_sock, (struct sockaddr *) &cli_adrr_in, &cli_adrr_len);
+	if (cli_fd == -1)
+		throw std::runtime_error("Syscall accept() Failed in servConnect: " + (std::string)std::strerror(errno));
+
+	cli_poll_in.fd = cli_fd;
+	cli_poll_in.events = POLLIN;
+	cli_poll_in.revents = 0;
+	_poll_fds.push_back(cli_poll_in);
+
+	cli_name_len = getnameinfo((struct sockaddr *) &cli_adrr_in, sizeof(cli_adrr_in), cli_name_in, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
+	if (cli_name_len != 0)
+		throw std::runtime_error("Syscall getnameinfo() Failed in servConnect: " + (std::string)std::strerror(errno));
+
+	// todo: add a new client to the list
+
+	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
+}
+
 void Server::servReceive(int fd)
 {
-	char buffer[1024];
-	int bytes;
+	int		bytes;
+	char	buffer[1024];
 
 	bytes = recv(fd, buffer, 1024, 0);
 	if (bytes == -1)
@@ -87,35 +115,7 @@ void Server::servReceive(int fd)
 	if (bytes == 0)
 		servClose(fd);
 	else
-		ft_print("Recived: " + (std::string)buffer, INFO);
-}
-
-void Server::servConnect(void)
-{
-	int				fd_in;
-	int 			name_len;
-	char			name_in[NI_MAXHOST];
-	t_sockaddr_in	adrr_in;
-	t_socklen		adrr_len;
-	t_pollfd		poll_in;
-
-	adrr_len = sizeof(adrr_in);
-	fd_in = accept(_srv_sock, (struct sockaddr *) &adrr_in, &adrr_len);
-	if (fd_in == -1)
-		throw std::runtime_error("Syscall accept() Failed in servConnect: " + (std::string)std::strerror(errno));
-
-	poll_in.fd = fd_in;
-	poll_in.events = POLLIN;
-	poll_in.revents = 0;
-	_poll_fds.push_back(poll_in);
-
-	name_len = getnameinfo((struct sockaddr *) &adrr_in, sizeof(adrr_in), name_in, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
-	if (name_len != 0)
-		throw std::runtime_error("Syscall getnameinfo() Failed in servConnect: " + (std::string)std::strerror(errno));
-
-	// todo: add a new client to the list
-
-	ft_print("Connection opened: " + (std::string)name_in, LOG);
+		ft_print("Recived: " + (std::string)buffer, MSG);
 }
 
 void Server::servClose(int fd)
@@ -132,10 +132,4 @@ void Server::servClose(int fd)
 			break;
 		}
 	}
-}
-
-void Server::servStart(void)
-{
-	this->servListen();
-	this->servPoll();
 }

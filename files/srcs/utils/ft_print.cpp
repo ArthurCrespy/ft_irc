@@ -10,22 +10,22 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../includes/ft_irc.h"
+#include "../../includes/ft_irc.h"
 
 std::string ft_time(void)
 {
-    std::time_t currentTime;
-    std::tm* localTime;
-    char timeString[100];
+	char		timeString[100];
+	std::tm		*localTime;
+	std::time_t	currentTime;
 
-    std::time(&currentTime);
-    localTime = std::localtime(&currentTime);
-    std::strftime(timeString, sizeof(timeString), "%H:%M:%S", localTime);
+	std::time(&currentTime);
+	localTime = std::localtime(&currentTime);
+	std::strftime(timeString, sizeof(timeString), "%H:%M:%S", localTime);
 
 	return ((std::string)timeString);
 }
 
-void	ft_print(const std::string &str, const std::string &level)
+void	ft_print(std::string const &str, std::string const &level)
 {
 	if (level == INPUT)
 		std::cout << "[" << ft_time() << "] (ircserv) "<< level << " > " << str << " : ";
