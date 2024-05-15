@@ -14,6 +14,9 @@
 # define SERVER_HPP
 
 typedef struct sockaddr_in t_sockaddr_in;
+typedef struct pollfd t_pollfd;
+typedef socklen_t t_socklen;
+typedef std::vector<pollfd>::iterator it_pollfds;
 
 class Server
 {
@@ -44,8 +47,9 @@ class Server
 
 		void		setup(int argc, char **argv);
 
-		void		serv_poll(void);
 		void		servSocket(void);
+		void		servPoll(void);
+		void		servAccept(void);
 
 		void		setPort(int port);
 		void		setPort(std::string const &input);
