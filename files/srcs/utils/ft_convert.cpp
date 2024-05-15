@@ -10,9 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../includes/ft_irc.h"
+#include "../../includes/ft_irc.h"
 
-int ft_stoi(const std::string &str)
+std::string ft_nbtos(int const &value)
+{
+	std::ostringstream oss;
+
+	if (!(oss << value))
+		throw std::invalid_argument("Invalid input value");
+
+	return (oss.str());
+}
+
+int ft_stoi(std::string const &str)
 {
 	int					number;
 	std::istringstream	iss(str);
@@ -21,14 +31,4 @@ int ft_stoi(const std::string &str)
 		throw std::invalid_argument("Invalid input string");
 
 	return (number);
-}
-
-std::string ft_nbtos(const int &value)
-{
-    std::ostringstream oss;
-
-    if (!(oss << value))
-		throw std::invalid_argument("Invalid input value");
-
-    return (oss.str());
 }

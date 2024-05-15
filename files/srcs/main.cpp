@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "./../includes/ft_irc.h"
+#include "./../includes/ft_irc.h"
 
 int main(int argc, char **argv)
 {

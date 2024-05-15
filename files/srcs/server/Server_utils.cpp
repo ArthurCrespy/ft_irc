@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../includes/ft_irc.h"
+#include "../../includes/ft_irc.h"
 
 void Server::setPort(int port)
 {
@@ -58,4 +58,9 @@ int	Server::getPort(void) const
 std::string	Server::getPassword(void) const
 {
 	return (this->_password);
+}
+
+int Server::getSock(void) const
+{
+	return (this->_srv_sock);
 }

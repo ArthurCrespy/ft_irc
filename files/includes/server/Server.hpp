@@ -10,31 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "./../../includes/ft_irc.h"
+
 #ifndef SERVER_HPP
 # define SERVER_HPP
-
-#include "../client/Client.hpp"
-
-typedef struct sockaddr_in t_sockaddr_in;
-typedef struct pollfd t_pollfd;
-typedef socklen_t t_socklen;
-typedef std::vector<pollfd>::iterator it_pollfds;
 
 class Server
 {
 	private:
-		int				_port;
-		std::string		_password;
+		int							_port;
+		std::string					_password;
 
-        int				_srv_sock;
-		int 			_srv_opt;
-		t_sockaddr_in	_srv_sock_adrr;
-		t_pollfd 		_srv_poll;
+		int							_srv_sock;
+		int 						_srv_opt;
+		t_sockaddr_in				_srv_sock_adrr;
+		t_pollfd 					_srv_poll;
 
-        std::vector<pollfd>     _poll_fds;
-		std::map<pollfd, Client>	_clients;
-		// todo: maybe do a map of fd to client
-		// std::map<pollfd, Client>	_clients;
+		std::vector<pollfd>			_poll_fds;
+		std::map<pollfd, Client>	_pclimap;
 
 	public:
 		Server(void);
@@ -46,13 +39,14 @@ class Server
 		Server &operator=(Server const &rhs);
 
 		void		servStart(void);
+
 		void		servSetup(int argc, char **argv);
 
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
-		void		servClose(int fd);
 		void		servReceive(int fd);
+		void		servClose(int fd);
 
 		void		setPort(int port);
 		void		setPort(std::string const &input);
@@ -60,7 +54,7 @@ class Server
 
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
+		int			getSock(void) const;
 };
-
 
 #endif
