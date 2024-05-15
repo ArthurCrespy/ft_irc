@@ -18,10 +18,10 @@ typedef struct sockaddr_in t_sockaddr_in;
 class Server
 {
 	private:
-        int				_sock;
-
-		int 			_opt;
-		t_sockaddr_in	_sock_adrr;
+        int				_sock_srv;
+		int 			_opt_srv;
+		t_sockaddr_in	_sock_adrr_srv;
+		t_pollfd 		_poll_srv;
 
         std::vector<pollfd>     _poll_fds;
 
@@ -44,8 +44,8 @@ class Server
 
 		void		setup(int argc, char **argv);
 
-		void		serv_socket(void);
 		void		serv_poll(void);
+		void		servSocket(void);
 
 		void		setPort(int port);
 		void		setPort(std::string const &input);

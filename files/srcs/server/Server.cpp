@@ -14,14 +14,17 @@
 
 Server::Server(void) : _port(6667), _password("default")
 {
-	ft_print("Port: " + ft_nbtos(this->getPort()) + " - Password: " + this->getPassword(), INFO);
+	ft_print("Server void constructor called, using default values", WARN);
+	ft_print("Port: " + ft_nbtos(this->getPort()), INFO);
+	ft_print("Password: " + this->getPassword(), INFO);
 }
 
 Server::Server(int argc, char **argv) : _port(-1), _password("")
 {
 	this->setup(argc, argv);
 
-	ft_print("Port: " + ft_nbtos(this->getPort()) + " - Password: " + this->getPassword(), INFO);
+	ft_print("Port: " + ft_nbtos(this->getPort()), INFO);
+	ft_print("Password: " + this->getPassword(), INFO);
 }
 
 Server::Server(int port, std::string password) : _port(-1), _password("")
@@ -29,7 +32,8 @@ Server::Server(int port, std::string password) : _port(-1), _password("")
 	this->setPort(port);
 	this->setPassword(password);
 
-	ft_print("Port: " + ft_nbtos(this->getPort()) + " - Password: " + this->getPassword(), INFO);
+	ft_print("Port: " + ft_nbtos(this->getPort()), INFO);
+	ft_print("Password: " + this->getPassword(), INFO);
 }
 
 Server::Server(Server const &src)

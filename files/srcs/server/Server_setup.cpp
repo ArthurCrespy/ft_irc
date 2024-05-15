@@ -21,7 +21,7 @@ void Server::setup(int argc, char **argv)
 		std::string answer;
 		std::getline(std::cin, answer);
 		if (answer.empty() || (answer != "Y" && answer != "y"))
-			return ;
+			throw std::runtime_error("Server not started");
 		setPort(6667);
 		setPassword("default");
 	}
