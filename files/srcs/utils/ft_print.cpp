@@ -1,0 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/14 13:48:22 by acrespy           #+#    #+#             */
+/*   Updated: 2024/05/14 13:48:22 by acrespy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "./../../includes/ft_irc.h"
+
+std::string ft_time(void)
+{
+    std::time_t currentTime;
+    std::tm* localTime;
+    char timeString[100];
+
+    std::time(&currentTime);
+    localTime = std::localtime(&currentTime);
+    std::strftime(timeString, sizeof(timeString), "%H:%M:%S", localTime);
+
+	return ((std::string)timeString);
+}
+
+void	ft_print(const std::string &str, const std::string &level)
+{
+	if (level == INPUT)
+		std::cout << "[" << ft_time() << "] (ircserv) "<< level << " > " << str << " : ";
+	else
+		std::cout << "[" << ft_time() << "] (ircserv) "<< level << " > " << str << std::endl;
+}

@@ -54,6 +54,12 @@ $ make
 $ ./ircserv <port> <password> 
 ```
 
+42 Students can use the following command to test the project with `irssi` installed in the `sgoinfre`:
+
+```bash
+rm -rf $HOME/sgoinfre/.brew && git clone --depth=1 https://github.com/Homebrew/brew $HOME/sgoinfre/.brew && echo 'export PATH=$HOME/sgoinfre/.brew/bin:$PATH' >> $HOME/.zshrc && source $HOME/.zshrc && brew update
+```
+
 ## Description
 
 Internet Relay Chat or IRC is a text-based communication protocol on the Internet.
