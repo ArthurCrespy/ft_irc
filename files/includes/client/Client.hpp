@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/14 10:31:29 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/14 10:36:10 by acrespy          ###   ########.fr       */
+/*   Created: 2024/05/15 16:17:09 by acrespy           #+#    #+#             */
+/*   Updated: 2024/05/15 16:17:09 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "./../includes/ft_irc.h"
+# include "./../../includes/ft_irc.h"
 
-int main(int argc, char **argv)
+#ifndef CLIENT_HPP
+# define CLIENT_HPP
+
+
+class Client
 {
-	try
-	{
-		Server serv(argc, argv);
-		serv.servStart();
-	}
-	catch (std::exception &e)
-	{
-		ft_print(e.what(), ERROR);
-		return (1);
-	}
 
-	return (0);
-}
+};
+
+
+#endif
