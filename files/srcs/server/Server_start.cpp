@@ -60,6 +60,7 @@ void Server::servPoll(void)
 			else if (it->revents & POLLHUP)
 			{
 				ft_print("Recived POLLHUP", NONE);
+				servClose(it->fd);
 			}
 			else if (it->revents & POLLERR)
 				ft_print("Recived POLLERR", NONE); // Handle error
@@ -98,6 +99,22 @@ void Server::servAccept(void)
 	// Add a new client to the list
 
 	ft_print("Connection opened: " + (std::string)name_in, LOG);
+}
+
+void Server::servClose(int fd)
+{
+	if (close(fd) == -1)
+		throw std::runtime_error("Syscall close Failed in servClose: " + (std::string)std::strerror(errno));
+
+	for (it_pollfds it = _poll_fds.begin(); it != _poll_fds.end(); it++)
+	{
+		if (it->fd == fd)
+		{
+			ft_print("Connection closed: <unknown host>", LOG);
+			_poll_fds.erase(it);
+			break;
+		}
+	}
 }
 
 void Server::start(void)

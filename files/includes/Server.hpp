@@ -50,6 +50,7 @@ class Server
 		void		servSocket(void);
 		void		servPoll(void);
 		void		servAccept(void);
+		void		servClose(int fd);
 
 		void		setPort(int port);
 		void		setPort(std::string const &input);
