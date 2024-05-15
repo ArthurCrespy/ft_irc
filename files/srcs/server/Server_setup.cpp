@@ -12,7 +12,7 @@
 
 # include "./../../includes/ft_irc.h"
 
-void Server::setup(int argc, char **argv)
+void Server::servSetup(int argc, char **argv)
 {
 	if (argc != 3)
 	{

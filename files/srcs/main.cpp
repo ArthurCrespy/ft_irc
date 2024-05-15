@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	try
 	{
 		Server serv(argc, argv);
-		serv.start();
+		serv.servStart();
 	}
 	catch (std::exception &e)
 	{

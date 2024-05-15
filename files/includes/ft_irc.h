@@ -19,11 +19,14 @@
 # define ERROR	"\033[1;31mERRR\033[0m"
 # define STOP	"\033[1;31mSTOP\033[0m"
 
+# define SRV_MAX 42
+
 # include <sys/socket.h>	// socket, bind, listen, accept, connect
 # include <arpa/inet.h>		// htons, htonl, ntohs, ntohl
 # include <sys/poll.h>		// poll
 # include <unistd.h>		// close
 # include <netdb.h>			// gethostbyname
+# include <fcntl.h>			// fcntl
 
 # include <iostream>		// std::cout, std::endl
 # include <sstream>			// std::stringstream
