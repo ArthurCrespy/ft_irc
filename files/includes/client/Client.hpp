@@ -32,7 +32,21 @@ class Client
 
 		Client &operator=(Client const &rhs);
 
+		void    cliReceive(std::string const &msg);
 
+		void	setFd(int fd);
+		void	setPort(int port);
+		void	setNickname(std::string const &nickname);
+		void	setUsername(std::string const &username);
+		void	setRealname(std::string const &realname);
+		void	setHostname(std::string const &hostname);
+
+		int		getFd(void) const;
+		int		getPort(void) const;
+		std::string	getNickname(void) const;
+		std::string	getUsername(void) const;
+		std::string	getRealname(void) const;
+		std::string	getHostname(void) const;
 };
 
 #endif

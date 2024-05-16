@@ -17,9 +17,9 @@
 
 struct compare_fd
 {
-    bool operator() (pollfd const lhs, pollfd const &rhs) const
+    bool operator() (pollfd const *lhs, pollfd const *rhs) const
     {
-        return (lhs.fd < rhs.fd);
+        return (lhs->fd != rhs->fd);
     }
 };
 

@@ -12,7 +12,7 @@
 
 #include "../../includes/ft_irc.h"
 
-Client::Client(void) {}
+Client::Client(void) : _cli_fd(-1), _cli_port(-1) {}
 
 Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_hostname(hostname) {}
 
@@ -37,3 +37,7 @@ Client &Client::operator=(Client const &rhs)
 	return (*this);
 }
 
+void	Client::cliReceive(std::string const &msg)
+{
+	ft_print("Client received: " + msg, INFO);
+}
