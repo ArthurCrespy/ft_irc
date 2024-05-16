@@ -16,10 +16,23 @@
 class Client
 {
 	private:
-		/* data */
+		int				_cli_fd;
+		int				_cli_port;
+
+		std::string		_cli_nickname;
+		std::string		_cli_username;
+		std::string		_cli_realname;
+		std::string		_cli_hostname;
 
 	public:
-		/* data */
+		Client(void);
+		Client(int cli_fd, int cli_port, std::string const &hostname);
+		Client(Client const &src);
+		~Client(void);
+
+		Client &operator=(Client const &rhs);
+
+
 };
 
 #endif

@@ -12,7 +12,7 @@
 
 #include "../../includes/ft_irc.h"
 
-Server::Server(void) : _port(6667), _password("default"), _srv_sock(-1), _srv_opt(1), _srv_sock_adrr(), _srv_poll()
+Server::Server(void) : _srv_port(6667), _srv_password("default"), _srv_sock(-1), _srv_opt(1), _srv_sock_adrr(), _srv_poll()
 {
 	ft_print("Server void constructor called, using default values", WARN);
 	ft_print("Port: " + ft_nbtos(this->getPort()), INFO);
@@ -20,7 +20,7 @@ Server::Server(void) : _port(6667), _password("default"), _srv_sock(-1), _srv_op
 	ft_print("Max simultaneous connections: " + ft_nbtos(SRV_MAX), INFO);
 }
 
-Server::Server(int argc, char **argv) : _port(-1), _srv_sock(-1), _srv_opt(1), _srv_sock_adrr(), _srv_poll()
+Server::Server(int argc, char **argv) : _srv_port(-1), _srv_sock(-1), _srv_opt(1), _srv_sock_adrr(), _srv_poll()
 {
 	this->servSetup(argc, argv);
 
@@ -29,7 +29,7 @@ Server::Server(int argc, char **argv) : _port(-1), _srv_sock(-1), _srv_opt(1), _
 	ft_print("Max simultaneous connections: " + ft_nbtos(SRV_MAX), INFO);
 }
 
-Server::Server(int port, std::string const &password) : _port(-1), _srv_sock(-1), _srv_opt(1), _srv_sock_adrr(), _srv_poll()
+Server::Server(int port, std::string const &password) : _srv_port(-1), _srv_sock(-1), _srv_opt(1), _srv_sock_adrr(), _srv_poll()
 {
 	this->setPort(port);
 	this->setPassword(password);
@@ -53,8 +53,8 @@ Server &Server::operator=(Server const &rhs)
 {
 	if (this != &rhs)
 	{
-		this->_port = rhs._port;
-		this->_password = rhs._password;
+		this->_srv_port = rhs._srv_port;
+		this->_srv_password = rhs._srv_password;
 	}
 	return (*this);
 }

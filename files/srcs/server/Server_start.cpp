@@ -43,15 +43,18 @@ void Server::servListen(void)
 void Server::servPoll(void)
 {
 	int poll_ret;
+	it_pclimap pcli_it = _pclimap.begin();
 
 	_srv_poll.fd = _srv_sock;
 	_srv_poll.events = POLLIN;
 	_srv_poll.revents = 0;
 	_poll_fds.push_back(_srv_poll);
+	_pclimap.insert(std::pair<t_pollfd *, Client>(&_srv_poll, Client(_srv_sock, this->getPort(), "localhost")));
 
 	while (true)
 	{
 		poll_ret = poll(_poll_fds.data(), _poll_fds.size(), (3 * 60 * 1000)); // timeout 3 minutes
+		poll_ret = poll(pcli_it->first, _poll_fds.size(), (3 * 60 * 1000)); // timeout 3 minutes
 		if (poll_ret == -1)
 			throw std::runtime_error("Syscall poll() Failed in servPoll: " + (std::string)std::strerror(errno));
 		if (poll_ret == 0)
@@ -93,7 +96,9 @@ void Server::servConnect(void)
 	cli_poll_in.fd = cli_fd;
 	cli_poll_in.events = POLLIN;
 	cli_poll_in.revents = 0;
+
 	_poll_fds.push_back(cli_poll_in);
+	_pclimap.insert(std::pair<t_pollfd *, Client>(&cli_poll_in, Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in)));
 
 	cli_name_len = getnameinfo((struct sockaddr *) &cli_adrr_in, sizeof(cli_adrr_in), cli_name_in, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
 	if (cli_name_len != 0)
