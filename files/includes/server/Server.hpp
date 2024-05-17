@@ -18,16 +18,12 @@
 class Server
 {
 	private:
-		int							_port;
-		std::string					_password;
+		int			_srv_sock;
+		int			_srv_port;
+		std::string	_srv_password;
 
-		int							_srv_sock;
-		int 						_srv_opt;
-		t_sockaddr_in				_srv_sock_adrr;
-		t_pollfd 					_srv_poll;
-
-		std::vector<pollfd>			_poll_fds;
-		std::map<pollfd, Client>	_pclimap;
+		t_poll		_poll;
+		t_client	_client;
 
 	public:
 		Server(void);

@@ -18,7 +18,7 @@ void Server::setPort(int port)
 	{
 		throw std::invalid_argument("Port must be between 1024 and 49151");
 	}
-	this->_port = port;
+	this->_srv_port = port;
 }
 
 void Server::setPort(std::string const &input)
@@ -38,7 +38,7 @@ void Server::setPort(std::string const &input)
 		throw std::invalid_argument("Port must be between 1024 and 49151");
 	}
 
-	this->_port = port;
+	this->_srv_port = port;
 }
 
 void Server::setPassword(std::string const &password)
@@ -47,17 +47,17 @@ void Server::setPassword(std::string const &password)
 	{
 		throw std::invalid_argument("Password cannot be empty");
 	}
-	this->_password = password;
+	this->_srv_password = password;
 }
 
 int	Server::getPort(void) const
 {
-	return (this->_port);
+	return (this->_srv_port);
 }
 
 std::string	Server::getPassword(void) const
 {
-	return (this->_password);
+	return (this->_srv_password);
 }
 
 int Server::getSock(void) const

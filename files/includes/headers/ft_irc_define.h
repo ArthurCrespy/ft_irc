@@ -24,5 +24,6 @@
 # define MSG	"\033[1;37mMSGG\033[0m"
 
 # define SRV_MAX 42
+# define TIMEOUT 180000
 
 #endif
