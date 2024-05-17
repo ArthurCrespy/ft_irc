@@ -61,7 +61,7 @@ void Server::servPoll(void)
 	srv_poll.revents = 0;
 
 	_poll.push_back(srv_poll);
-	_pclimap.insert(std::make_pair(srv_poll.fd, client));
+	_pollcli.insert(std::make_pair(srv_poll.fd, client));
 
 	while (true)
 	{
@@ -123,7 +123,7 @@ void Server::servConnect(void)
 	Client *client = new Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
 	_poll.push_back(cli_poll_in);
-	_pclimap.insert(std::make_pair(cli_fd, client));
+	_pollcli.insert(std::make_pair(cli_fd, client));
 
 	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
 }
@@ -152,7 +152,7 @@ void Server::servReceive(int fd)
 		return ;
 	}
 	else
-		_pclimap[fd]->cliReceive(msg);
+		_pollcli[fd]->cliReceive(msg);
 }
 
 void Server::servClose(int fd)
@@ -169,11 +169,11 @@ void Server::servClose(int fd)
 		}
 	}
 
-	it_pclimap it = _pclimap.find(fd);
-	if (it != _pclimap.end())
+	it_pollcli it = _pollcli.find(fd);
+	if (it != _pollcli.end())
 	{
 		delete (it->second);
-		_pclimap.erase(it);
+		_pollcli.erase(it);
 	}
 
 	ft_print("Connection closed: fd " + ft_nbtos(fd), LOG);

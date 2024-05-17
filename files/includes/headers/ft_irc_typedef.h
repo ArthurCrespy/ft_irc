@@ -25,7 +25,7 @@ typedef struct sockaddr_in	t_sockaddr_in;
 typedef std::vector<t_pollfd>			t_poll;
 typedef std::vector<t_pollfd>::iterator	it_poll;
 
-typedef std::map<int, Client *>::iterator	it_pclimap;
-typedef std::map<int, Client *, compare_fd>	t_pclimap;
+typedef std::map<int, Client *>::iterator	it_pollcli;
+typedef std::map<int, Client *, compare_fd>	t_pollcli;
 
 #endif

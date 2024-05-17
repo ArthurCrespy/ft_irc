@@ -22,9 +22,8 @@ class Server
 		std::string	_srv_password;
 
 		int			_srv_sock;
-		t_pclimap	_pclimap;
-
 		t_poll		_poll;
+		t_pollcli	_pollcli;
 
 	public:
 		Server(void);

@@ -46,10 +46,10 @@ Server::Server(Server const &src)
 
 Server::~Server(void)
 {
-	for (it_pclimap it = _pclimap.begin(); it != _pclimap.end(); it++)
+	for (it_pollcli it = _pollcli.begin(); it != _pollcli.end(); it++)
 		delete (it->second);
 
-	_pclimap.clear();
+	_pollcli.clear();
 	_poll.clear();
 
 	if (_srv_sock != -1)
