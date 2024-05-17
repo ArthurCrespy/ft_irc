@@ -22,7 +22,10 @@ typedef	socklen_t	t_socklen;
 typedef	struct pollfd		t_pollfd;
 typedef struct sockaddr_in	t_sockaddr_in;
 
-typedef std::map<pollfd *, Client *>::iterator		it_pclimap;
-typedef std::map<t_pollfd *, Client *, compare_fd>	t_pclimap;
+typedef std::vector<t_pollfd>			t_poll;
+typedef std::vector<t_pollfd>::iterator	it_poll;
+
+typedef std::map<int, Client *>::iterator	it_pclimap;
+typedef std::map<int, Client *, compare_fd>	t_pclimap;
 
 #endif

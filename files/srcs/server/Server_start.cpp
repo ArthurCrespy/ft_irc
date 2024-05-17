@@ -52,19 +52,20 @@ void Server::servListen(void)
 void Server::servPoll(void)
 {
 	int			poll_ret;
-	t_pollfd	*srv_poll = new t_pollfd();
+	t_pollfd	srv_poll;
 	Client		*client = new Client(_srv_sock, this->getPort(), "server");
 
 
-	srv_poll->fd = _srv_sock;
-	srv_poll->events = POLLIN;
-	srv_poll->revents = 0;
+	srv_poll.fd = _srv_sock;
+	srv_poll.events = POLLIN;
+	srv_poll.revents = 0;
 
-	_pclimap.insert(std::make_pair(srv_poll, client));
+	_poll.push_back(srv_poll);
+	_pclimap.insert(std::make_pair(srv_poll.fd, client));
 
 	while (true)
 	{
-		poll_ret = poll(_pclimap.begin()->first, _pclimap.size(), TIMEOUT);
+		poll_ret = poll(_poll.data(), _poll.size(), TIMEOUT);
 		if (poll_ret == -1)
 		{
             if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
@@ -74,18 +75,18 @@ void Server::servPoll(void)
 		if (poll_ret == 0)
 			throw std::runtime_error("Syscall poll() timeout'd in servPoll after " + ft_nbtos(TIMEOUT) + " ms");
 
-		for (it_pclimap it = _pclimap.begin(); it != _pclimap.end(); ++it)
+		for (it_poll it = _poll.begin(); it != _poll.end(); ++it)
 		{
-			if (it->first->revents == 0)
+			if (it->revents == 0)
 				continue ;
 
-			else if (it->first->revents & POLLIN && it->first->fd == _srv_sock)
+			else if (it->revents & POLLIN && it->fd == _srv_sock)
 				servConnect();
 
-			else if (it->first->revents & POLLIN)
-				servReceive(it->first);
-			else if (it->first->revents & POLLHUP)
-				servClose(it->first);
+			else if (it->revents & POLLIN)
+				servReceive(it->fd);
+			else if (it->revents & POLLHUP)
+				servClose(it->fd);
 			break ;
 		}
 	}
@@ -98,12 +99,12 @@ void Server::servConnect(void)
 	char			cli_name_in[NI_MAXHOST];
 	t_sockaddr_in	cli_adrr_in;
 	t_socklen		cli_adrr_len;
-	t_pollfd		*cli_poll_in = new t_pollfd();
+	t_pollfd		cli_poll_in;
 
 	cli_adrr_len = sizeof(cli_adrr_in);
-	cli_poll_in->fd = -1;
-	cli_poll_in->events = POLLIN;
-	cli_poll_in->revents = 0;
+	cli_poll_in.fd = -1;
+	cli_poll_in.events = POLLIN;
+	cli_poll_in.revents = 0;
 
 	cli_fd = accept(_srv_sock, (struct sockaddr *) &cli_adrr_in, &cli_adrr_len);
 	if (cli_fd == -1)
@@ -113,7 +114,7 @@ void Server::servConnect(void)
 		else
 			throw std::runtime_error("Syscall accept() Failed in servConnect: " + (std::string)std::strerror(errno));
 	}
-	cli_poll_in->fd = cli_fd;
+	cli_poll_in.fd = cli_fd;
 
 	cli_name_len = getnameinfo((struct sockaddr *) &cli_adrr_in, sizeof(cli_adrr_in), cli_name_in, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
 	if (cli_name_len != 0)
@@ -121,12 +122,13 @@ void Server::servConnect(void)
 
 	Client *client = new Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
-	_pclimap.insert(std::pair<t_pollfd *, Client *>(cli_poll_in, client));
+	_poll.push_back(cli_poll_in);
+	_pclimap.insert(std::make_pair(cli_fd, client));
 
 	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
 }
 
-void Server::servReceive(t_pollfd *pollfd)
+void Server::servReceive(int fd)
 {
 	long		bytes;
 	char		buffer[1024];
@@ -135,7 +137,7 @@ void Server::servReceive(t_pollfd *pollfd)
 	memset(buffer, 0, 1024);
 	while (!strstr(buffer, "\r\n"))
 	{
-		bytes = recv(pollfd->fd, buffer, 1024, 0);
+		bytes = recv(fd, buffer, 1024, 0);
 		if (bytes == -1)
 			throw std::runtime_error("Syscall recv() Failed in servReceive: " + (std::string) std::strerror(errno));
 		if (bytes == 0)
@@ -146,25 +148,33 @@ void Server::servReceive(t_pollfd *pollfd)
 
 	if (msg.empty())
 	{
-		servClose(pollfd);
+		servClose(fd);
 		return ;
 	}
 	else
-		_pclimap[pollfd]->cliReceive(msg);
+		_pclimap[fd]->cliReceive(msg);
 }
 
-void Server::servClose(t_pollfd *pollfd)
+void Server::servClose(int fd)
 {
-	if (close(pollfd->fd) == -1)
+	if (close(fd) == -1)
 		throw std::runtime_error("Syscall close() Failed in servClose: " + (std::string)std::strerror(errno));
 
-	it_pclimap it = _pclimap.find(pollfd);
+	for (it_poll it = _poll.begin(); it != _poll.end(); it++)
+	{
+		if (it->fd == fd)
+		{
+			_poll.erase(it);
+			break ;
+		}
+	}
+
+	it_pclimap it = _pclimap.find(fd);
 	if (it != _pclimap.end())
 	{
-		delete (it->first);
 		delete (it->second);
 		_pclimap.erase(it);
 	}
 
-	ft_print("Connection closed: fd " + ft_nbtos(pollfd->fd), LOG);
+	ft_print("Connection closed: fd " + ft_nbtos(fd), LOG);
 }

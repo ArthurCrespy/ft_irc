@@ -24,6 +24,8 @@ class Server
 		int			_srv_sock;
 		t_pclimap	_pclimap;
 
+		t_poll		_poll;
+
 	public:
 		Server(void);
 		Server(int argc, char **argv);
@@ -40,8 +42,8 @@ class Server
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
-		void		servReceive(t_pollfd *pollfd);
-		void		servClose(t_pollfd *pollfd);
+		void		servReceive(int fd);
+		void		servClose(int fd);
 
 		void		setPort(int port);
 		void		setPort(std::string const &input);
