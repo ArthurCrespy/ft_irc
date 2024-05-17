@@ -152,13 +152,15 @@ void Server::servReceive(int fd)
 		return ;
 	}
 	else
-		_client[fd].cliReceive(msg);
+		_client.at(fd).cliReceive(msg);
 }
 
 void Server::servClose(int fd)
 {
 	if (close(fd) == -1)
 		throw std::runtime_error("Syscall close() Failed in servClose: " + (std::string)std::strerror(errno));
+
+	ft_print("Connection closed: " + _client.at(fd).getHostname(), LOG);
 
 	for (it_poll it = _poll.begin(); it != _poll.end(); it++)
 	{
