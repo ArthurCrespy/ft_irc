@@ -12,6 +12,14 @@
 
 #include "../../includes/ft_irc.h"
 
+/**
+	*  @brief	Setup the server socket
+	*  @details Make the socket to accept any addresses (even local duplicates ones) from IPv4 on nonblocking I/O mode,
+	*  			bind the socket to the address, and listen on it
+	*  @param	None
+	*  @return	None
+	*  @throw	std::runtime_error if the syscall socket(), setsockopt(), fcntl(), bind(), or listen() fails
+*/
 void Server::servListen(void)
 {
 	int				srv_opt;
@@ -49,6 +57,12 @@ void Server::servListen(void)
 	ft_print("Server listening on port " + ft_nbtos(this->getPort()), RUN);
 }
 
+/**
+	*  @brief	Loop to poll the server socket and client sockets
+	*  @param	None
+	*  @return	None
+	*  @throw	std::runtime_error if the syscall poll() or timeout fails
+*/
 void Server::servPoll(void)
 {
 	int			srv_poll_ret;
@@ -92,6 +106,12 @@ void Server::servPoll(void)
 	}
 }
 
+/**
+	*  @brief	Accept a new connection on the server socket
+	*  @param	None
+	*  @return	None
+	*  @throw	std::runtime_error if the syscall accept() or getnameinfo() fails
+*/
 void Server::servConnect(void)
 {
 	int				cli_fd;
@@ -128,6 +148,12 @@ void Server::servConnect(void)
 	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
 }
 
+/**
+	*  @brief	Receive data from a client socket and send it to the client. Close the connection if the client send disconnect message
+	*  @param	int fd : file descriptor of the client socket
+	*  @return	None
+	*  @throw	std::runtime_error if the syscall recv() fails
+*/
 void Server::servReceive(int fd)
 {
 	long		bytes;
@@ -155,6 +181,12 @@ void Server::servReceive(int fd)
 		_client.at(fd).cliReceive(msg);
 }
 
+/**
+	*  @brief	Close a client socket and remove it from the poll list
+	*  @param	int fd : file descriptor of the client socket
+	*  @return	None
+	*  @throw	std::runtime_error if the syscall close() fails
+*/
 void Server::servClose(int fd)
 {
 	if (close(fd) == -1)

@@ -25,6 +25,12 @@ std::string ft_time(void)
 	return ((std::string)timeString);
 }
 
+/**
+	* @brief	Print a message with a timestamp, the server name and the level
+	* @param	std::string str : The message to print
+	* @param	std::string level : The level of the message
+	* @return	None
+ */
 void	ft_print(std::string const &str, std::string const &level)
 {
 	if (level == INPUT)

@@ -12,6 +12,13 @@
 
 #include "../../includes/ft_irc.h"
 
+/**
+	* @brief	Set the port and password of the server. Ask if user wants to use default values if not enough arguments are given
+	* @param	int argc : number of arguments
+	* @param	char **argv : arguments
+	* @return	None
+*/
+
 void Server::servSetup(int argc, char **argv)
 {
 	if (argc != 3)
