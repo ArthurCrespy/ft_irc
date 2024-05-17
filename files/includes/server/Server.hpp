@@ -23,7 +23,7 @@ class Server
 		std::string	_srv_password;
 
 		t_poll		_poll;
-		t_client	_pollcli;
+		t_client	_client;
 
 	public:
 		Server(void);

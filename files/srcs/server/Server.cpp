@@ -46,7 +46,7 @@ Server::Server(Server const &src)
 
 Server::~Server(void)
 {
-	_pollcli.clear();
+	_client.clear();
 	_poll.clear();
 
 	if (_srv_sock != -1)
@@ -63,7 +63,7 @@ Server &Server::operator=(Server const &rhs)
 		this->_srv_port = rhs._srv_port;
 		this->_srv_password = rhs._srv_password;
 		this->_poll = rhs._poll;
-		this->_pollcli = rhs._pollcli;
+		this->_client = rhs._client;
 	}
 	return (*this);
 }
