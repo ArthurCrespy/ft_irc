@@ -46,6 +46,16 @@ Server::Server(Server const &src)
 
 Server::~Server(void)
 {
+	for (it_pclimap it = _pclimap.begin(); it != _pclimap.end(); it++)
+	{
+		delete (it->first);
+		delete (it->second);
+	}
+	_pclimap.clear();
+
+	if (_srv_sock != -1)
+		close(_srv_sock);
+
 	ft_print("Server stopped", STOP);
 }
 

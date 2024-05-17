@@ -17,14 +17,12 @@
 
 class Client;
 
-typedef struct sockaddr_in	t_sockaddr_in;
-typedef	struct pollfd		t_pollfd;
-
 typedef	socklen_t	t_socklen;
 
-typedef std::map<t_pollfd *, Client, compare_fd>	t_pclimap;
+typedef	struct pollfd		t_pollfd;
+typedef struct sockaddr_in	t_sockaddr_in;
 
-typedef std::vector<pollfd>::iterator		it_pollfds;
-typedef std::map<pollfd *, Client>::iterator	it_pclimap;
+typedef std::map<pollfd *, Client *>::iterator		it_pclimap;
+typedef std::map<t_pollfd *, Client *, compare_fd>	t_pclimap;
 
 #endif

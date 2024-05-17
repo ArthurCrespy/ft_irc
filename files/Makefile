@@ -14,6 +14,7 @@ NAME        := ircserv
 
 SRCS		:= \
 				srcs/client/Client.cpp \
+				srcs/client/Client_utils.cpp \
 				srcs/server/Server.cpp \
 				srcs/server/Server_setup.cpp \
 				srcs/server/Server_start.cpp \

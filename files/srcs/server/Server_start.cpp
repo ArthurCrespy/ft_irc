@@ -26,38 +26,51 @@ void Server::servListen(void)
 	if (_srv_sock == -1)
 		throw std::runtime_error("Syscall socket() Failed in servListen: " + (std::string)std::strerror(errno));
 
-	// todo: from this line close the socket when exeption is thrown
+	try
+	{
+		if (setsockopt(_srv_sock, SOL_SOCKET, SO_REUSEADDR, &srv_opt, sizeof(srv_opt)) == -1)
+			throw std::runtime_error("Syscall setsockopt() Failed in servListen: " + (std::string) std::strerror(errno));
 
-	if (setsockopt(_srv_sock, SOL_SOCKET, SO_REUSEADDR, &srv_opt, sizeof(srv_opt)) == -1)
-		throw std::runtime_error("Syscall setsockopt() Failed in servListen: " + (std::string)std::strerror(errno));
+		if (fcntl(_srv_sock, F_SETFL, O_NONBLOCK) == -1)
+			throw std::runtime_error("Syscall fcntl() Failed in servListen: " + (std::string) std::strerror(errno));
 
-	if (fcntl(_srv_sock, F_SETFL, O_NONBLOCK) == -1)
-		throw std::runtime_error("Syscall fcntl() Failed in servListen: " + (std::string)std::strerror(errno));
+		if (bind(_srv_sock, (struct sockaddr *) &srv_sock_adrr, sizeof(srv_sock_adrr)) == -1)
+			throw std::runtime_error("Syscall bind() Failed in servListen: " + (std::string) std::strerror(errno));
 
-	if (bind(_srv_sock, (struct sockaddr *) &srv_sock_adrr, sizeof(srv_sock_adrr)) == -1)
-		throw std::runtime_error("Syscall bind() Failed in servListen: " + (std::string)std::strerror(errno));
-
-	if (listen(_srv_sock, SRV_MAX) == -1)
-		throw std::runtime_error("Syscall listen() Failed in servListen: " + (std::string)std::strerror(errno));
-
+		if (listen(_srv_sock, SRV_MAX) == -1)
+			throw std::runtime_error("Syscall listen() Failed in servListen: " + (std::string) std::strerror(errno));
+	}
+	catch (std::exception &e)
+	{
+		if (close(_srv_sock) == -1)
+			throw std::runtime_error("Syscall close() Failed: " + (std::string)std::strerror(errno) + " after syscall failure in servListen");
+		throw (e);
+	}
 	ft_print("Server listening on port " + ft_nbtos(this->getPort()), RUN);
 }
 
 void Server::servPoll(void)
 {
 	int			poll_ret;
-	t_pollfd	srv_poll;
+	t_pollfd	*srv_poll = new t_pollfd();
+	Client		*client = new Client(_srv_sock, this->getPort(), "server");
 
-	srv_poll.fd = _srv_sock;
-	srv_poll.events = POLLIN;
-	srv_poll.revents = 0;
-	_pclimap.insert(std::pair<t_pollfd *, Client>(&srv_poll, Client(_srv_sock, this->getPort(), "server")));
+
+	srv_poll->fd = _srv_sock;
+	srv_poll->events = POLLIN;
+	srv_poll->revents = 0;
+
+	_pclimap.insert(std::make_pair(srv_poll, client));
 
 	while (true)
 	{
 		poll_ret = poll(_pclimap.begin()->first, _pclimap.size(), TIMEOUT);
 		if (poll_ret == -1)
+		{
+            if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
+                continue ;
 			throw std::runtime_error("Syscall poll() Failed in servPoll: " + (std::string)std::strerror(errno));
+		}
 		if (poll_ret == 0)
 			throw std::runtime_error("Syscall poll() timeout'd in servPoll after " + ft_nbtos(TIMEOUT) + " ms");
 
@@ -73,12 +86,9 @@ void Server::servPoll(void)
 				servReceive(it->first);
 			else if (it->first->revents & POLLHUP)
 				servClose(it->first);
-			else
-				throw std::runtime_error("Syscall poll() Failed in servPoll: " + (std::string)std::strerror(errno));
 			break ;
 		}
 	}
-
 }
 
 void Server::servConnect(void)
@@ -88,44 +98,59 @@ void Server::servConnect(void)
 	char			cli_name_in[NI_MAXHOST];
 	t_sockaddr_in	cli_adrr_in;
 	t_socklen		cli_adrr_len;
-	t_pollfd		cli_poll_in;
+	t_pollfd		*cli_poll_in = new t_pollfd();
 
 	cli_adrr_len = sizeof(cli_adrr_in);
+	cli_poll_in->fd = -1;
+	cli_poll_in->events = POLLIN;
+	cli_poll_in->revents = 0;
+
 	cli_fd = accept(_srv_sock, (struct sockaddr *) &cli_adrr_in, &cli_adrr_len);
 	if (cli_fd == -1)
-		throw std::runtime_error("Syscall accept() Failed in servConnect: " + (std::string)std::strerror(errno));
-
-	cli_poll_in.fd = cli_fd;
-	cli_poll_in.events = POLLIN;
-	cli_poll_in.revents = 0;
+	{
+		if (errno == EWOULDBLOCK)
+			return ;
+		else
+			throw std::runtime_error("Syscall accept() Failed in servConnect: " + (std::string)std::strerror(errno));
+	}
+	cli_poll_in->fd = cli_fd;
 
 	cli_name_len = getnameinfo((struct sockaddr *) &cli_adrr_in, sizeof(cli_adrr_in), cli_name_in, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
 	if (cli_name_len != 0)
 		throw std::runtime_error("Syscall getnameinfo() Failed in servConnect: " + (std::string)std::strerror(errno));
 
-	_pclimap.insert(std::pair<t_pollfd *, Client>(&cli_poll_in, Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in)));
+	Client *client = new Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
+
+	_pclimap.insert(std::pair<t_pollfd *, Client *>(cli_poll_in, client));
 
 	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
 }
 
 void Server::servReceive(t_pollfd *pollfd)
 {
-	size_t		bytes;
+	long		bytes;
 	char		buffer[1024];
 	std::string	msg;
 
+	memset(buffer, 0, 1024);
 	while (!strstr(buffer, "\r\n"))
 	{
-		bytes = recv(pollfd->fd, buffer, 1024, 0); // Socket operation on non-socket
-//		bytes = recv(_srv_sock, buffer, 1024, 0); // Socket is not connected
+		bytes = recv(pollfd->fd, buffer, 1024, 0);
 		if (bytes == -1)
 			throw std::runtime_error("Syscall recv() Failed in servReceive: " + (std::string) std::strerror(errno));
 		if (bytes == 0)
-			servClose(pollfd);
+			break ;
 		else
-			msg += buffer;
+			msg.append(buffer, bytes);
 	}
-	_pclimap[pollfd].cliReceive(msg);
+
+	if (msg.empty())
+	{
+		servClose(pollfd);
+		return ;
+	}
+	else
+		_pclimap[pollfd]->cliReceive(msg);
 }
 
 void Server::servClose(t_pollfd *pollfd)
@@ -133,7 +158,13 @@ void Server::servClose(t_pollfd *pollfd)
 	if (close(pollfd->fd) == -1)
 		throw std::runtime_error("Syscall close() Failed in servClose: " + (std::string)std::strerror(errno));
 
-	ft_print("Connection closed: fd" + ft_nbtos(pollfd->fd), LOG);
+	it_pclimap it = _pclimap.find(pollfd);
+	if (it != _pclimap.end())
+	{
+		delete (it->first);
+		delete (it->second);
+		_pclimap.erase(it);
+	}
 
-	_pclimap.erase(_pclimap.find(pollfd));
+	ft_print("Connection closed: fd " + ft_nbtos(pollfd->fd), LOG);
 }
