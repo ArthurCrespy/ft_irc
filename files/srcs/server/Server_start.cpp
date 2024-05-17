@@ -52,7 +52,7 @@ void Server::servListen(void)
 	{
 		if (close(_srv_sock) == -1)
 			throw std::runtime_error("Syscall close() Failed: " + (std::string)std::strerror(errno) + " after syscall failure in servListen");
-		throw (e);
+		throw std::runtime_error(e.what());
 	}
 	ft_print("Server listening on port " + ft_nbtos(this->getPort()), RUN);
 }
