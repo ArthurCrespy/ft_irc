@@ -198,6 +198,8 @@ void Server::servReceive(int fd)
 	else
 		_client.at(fd).cliReceive(msg);
 }
+// todo: add the support of nc client
+//       add the ctrl+d + ctrl+z logic
 
 /**
 	*  @brief	Close a client socket and remove it from the poll list
