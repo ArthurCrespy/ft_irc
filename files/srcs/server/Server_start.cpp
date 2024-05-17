@@ -106,6 +106,24 @@ void Server::servPoll(void)
 	}
 }
 
+
+/**
+	*  @brief	Signal handler for SIGINT and SIGTERM
+	*  @param	None
+	*  @return	None
+	*  @throw	std::runtime_error if the syscall sigaction() fails
+*/
+void Server::servSignal(void)
+{
+	_signal.sa_sigaction = ft_servSHandler;
+	sigemptyset(&_signal.sa_mask);
+	_signal.sa_flags = SA_SIGINFO;
+
+	if (sigaction(SIGINT, &_signal, NULL) == -1
+		|| sigaction(SIGTERM, &_signal, NULL) == -1)
+		throw std::runtime_error("Syscall sigaction() Failed in servSignal: " + (std::string)std::strerror(errno));
+}
+
 /**
 	*  @brief	Accept a new connection on the server socket
 	*  @param	None

@@ -20,6 +20,8 @@
 # include <netdb.h>			// gethostbyname
 # include <fcntl.h>			// fcntl
 
+# include <csignal>	    	// sigaction
+
 # include <iostream>		// std::cout, std::endl
 # include <sstream>			// std::stringstream
 

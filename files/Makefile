@@ -21,6 +21,7 @@ SRCS		:= \
 				srcs/server/Server_utils.cpp \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
+				srcs/utils/ft_signal.cpp \
 				srcs/main.cpp \
 
 OBJ_DIR     := .objs

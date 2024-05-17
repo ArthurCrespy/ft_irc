@@ -20,6 +20,8 @@ class Client;
 typedef			socklen_t	t_sock_len;
 typedef struct	sockaddr_in	t_sock_addr_in;
 typedef	struct	pollfd		t_poll_fd;
+typedef			siginfo_t	t_siginfo;
+typedef struct	sigaction   t_signal;
 
 typedef std::vector<t_poll_fd>				t_poll;
 typedef std::vector<t_poll_fd>::iterator	it_poll;

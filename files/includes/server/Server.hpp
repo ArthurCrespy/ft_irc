@@ -24,6 +24,7 @@ class Server
 
 		t_poll		_poll;
 		t_client	_client;
+		t_signal 	_signal;
 
 	public:
 		Server(void);
@@ -43,6 +44,8 @@ class Server
 		void		servConnect(void);
 		void		servReceive(int fd);
 		void		servClose(int fd);
+
+		void		servSignal(void);
 
 		void		setPort(int port);
 		void		setPort(std::string const &input);
