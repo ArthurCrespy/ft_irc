@@ -17,15 +17,14 @@
 
 class Client;
 
-typedef	socklen_t	t_socklen;
+typedef			socklen_t	t_sock_len;
+typedef struct	sockaddr_in	t_sock_addr_in;
+typedef	struct	pollfd		t_poll_fd;
 
-typedef	struct pollfd		t_pollfd;
-typedef struct sockaddr_in	t_sockaddr_in;
+typedef std::vector<t_poll_fd>				t_poll;
+typedef std::vector<t_poll_fd>::iterator	it_poll;
 
-typedef std::vector<t_pollfd>			t_poll;
-typedef std::vector<t_pollfd>::iterator	it_poll;
-
-typedef std::map<int, Client *>::iterator	it_pollcli;
-typedef std::map<int, Client *, compare_fd>	t_pollcli;
+typedef std::map<int, Client>				t_client;
+typedef std::map<int, Client>::iterator		it_client;
 
 #endif

@@ -14,7 +14,6 @@
 
 # include "headers/ft_irc_define.h"
 # include "headers/ft_irc_include.h"
-# include "headers/ft_irc_struct.h"
 # include "headers/ft_irc_typedef.h"
 
 # include "utils/utils.h"

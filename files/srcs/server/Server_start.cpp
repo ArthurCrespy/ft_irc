@@ -15,7 +15,7 @@
 void Server::servListen(void)
 {
 	int				srv_opt;
-	t_sockaddr_in	srv_sock_adrr;
+	t_sock_addr_in	srv_sock_adrr;
 
 	srv_opt = 1;
 	srv_sock_adrr.sin_family = AF_INET;
@@ -51,9 +51,9 @@ void Server::servListen(void)
 
 void Server::servPoll(void)
 {
-	int			poll_ret;
-	t_pollfd	srv_poll;
-	Client		*client = new Client(_srv_sock, this->getPort(), "server");
+	int			srv_poll_ret;
+	t_poll_fd	srv_poll;
+	Client		client(_srv_sock, this->getPort(), "server");
 
 
 	srv_poll.fd = _srv_sock;
@@ -65,14 +65,14 @@ void Server::servPoll(void)
 
 	while (true)
 	{
-		poll_ret = poll(_poll.data(), _poll.size(), TIMEOUT);
-		if (poll_ret == -1)
+		srv_poll_ret = poll(_poll.data(), _poll.size(), TIMEOUT);
+		if (srv_poll_ret == -1)
 		{
             if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
                 continue ;
 			throw std::runtime_error("Syscall poll() Failed in servPoll: " + (std::string)std::strerror(errno));
 		}
-		if (poll_ret == 0)
+		if (srv_poll_ret == 0)
 			throw std::runtime_error("Syscall poll() timeout'd in servPoll after " + ft_nbtos(TIMEOUT) + " ms");
 
 		for (it_poll it = _poll.begin(); it != _poll.end(); ++it)
@@ -97,9 +97,9 @@ void Server::servConnect(void)
 	int				cli_fd;
 	int 			cli_name_len;
 	char			cli_name_in[NI_MAXHOST];
-	t_sockaddr_in	cli_adrr_in;
-	t_socklen		cli_adrr_len;
-	t_pollfd		cli_poll_in;
+	t_sock_addr_in	cli_adrr_in;
+	t_sock_len		cli_adrr_len;
+	t_poll_fd		cli_poll_in;
 
 	cli_adrr_len = sizeof(cli_adrr_in);
 	cli_poll_in.fd = -1;
@@ -120,7 +120,7 @@ void Server::servConnect(void)
 	if (cli_name_len != 0)
 		throw std::runtime_error("Syscall getnameinfo() Failed in servConnect: " + (std::string)std::strerror(errno));
 
-	Client *client = new Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
+	Client client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
 	_poll.push_back(cli_poll_in);
 	_pollcli.insert(std::make_pair(cli_fd, client));
@@ -152,7 +152,7 @@ void Server::servReceive(int fd)
 		return ;
 	}
 	else
-		_pollcli[fd]->cliReceive(msg);
+		_pollcli[fd].cliReceive(msg);
 }
 
 void Server::servClose(int fd)
@@ -168,13 +168,7 @@ void Server::servClose(int fd)
 			break ;
 		}
 	}
-
-	it_pollcli it = _pollcli.find(fd);
-	if (it != _pollcli.end())
-	{
-		delete (it->second);
-		_pollcli.erase(it);
-	}
+	_pollcli.erase(_pollcli.find(fd));
 
 	ft_print("Connection closed: fd " + ft_nbtos(fd), LOG);
 }
