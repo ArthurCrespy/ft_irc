@@ -70,6 +70,7 @@ Server &Server::operator=(Server const &rhs)
 
 void Server::servStart(void)
 {
+	this->servSignal();
 	this->servListen();
 	this->servPoll();
 }
