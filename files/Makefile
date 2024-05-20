@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+         #
+#    By: abinet <abinet@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/15 14:54:39 by acrespy           #+#    #+#              #
-#    Updated: 2023/05/16 15:01:53 by acrespy          ###   ########.fr        #
+#    Updated: 2024/05/20 22:55:15 by abinet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,18 @@ SRCS		:= \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \
 				srcs/main.cpp \
+
+INCLUDES	:= \
+			includes/client/Client.hpp \
+			includes/headers/ft_irc_define.h \
+			includes/headers/ft_irc_include.h \
+			includes/headers/ft_irc_typedef.h \
+			includes/headers/ft_irc_struct.h \
+			includes/server/Server.hpp \
+			includes/utils/utils.h \
+			includes/utils/Numeric_Rpl.hpp \
+			includes/ft_irc.h \
+
 
 OBJ_DIR     := .objs
 OBJS 		:= ${SRCS:%.cpp=${OBJ_DIR}/%.o}
@@ -41,7 +53,7 @@ ${NAME}: ${OBJS}
 	${CC} ${OBJS} -o ${NAME}
 	${info EXECUTABLE CREATED: ${NAME}}
 
-${OBJ_DIR}/%.o : %.cpp
+${OBJ_DIR}/%.o : %.cpp ${INCLUDES}
 	${DIR_DUP}
 	${CC} ${CFLAGS} ${CPPFLAGS} -c $< -o $@
 	${info OBJECT CREATED: $@}

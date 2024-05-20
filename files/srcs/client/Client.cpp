@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:49:33 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/15 16:49:33 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/05/21 01:03:15 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ Client &Client::operator=(Client const &rhs)
 	return (*this);
 }
 
-void	Client::cliReceive(std::string const &msg)
+void	Client::cliReceive(std::string const &msg, int fd)
 {
 	ft_print("Client received: " + msg, INFO);
+
+	if (msg.find("PING") != std::string::npos)
+		send(fd, RPL_PONG, strlen(RPL_PONG), 0);
 }
