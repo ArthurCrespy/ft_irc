@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:17:09 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/21 00:50:52 by abinet           ###   ########.fr       */
+/*   Updated: 2024/05/22 00:42:04 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,10 @@ class Client
 		std::string	getUsername(void) const;
 		std::string	getRealname(void) const;
 		std::string	getHostname(void) const;
+
+		void handlePrivMsg(const std::string &msg, int fd);
+		void msg_prv(int fd, const std::string& name, const std::string& message);
+		void msg_channel(int fd, const std::string& channel, const std::string& message);
 };
 
 #endif

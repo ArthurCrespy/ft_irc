@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:22:15 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/21 00:56:56 by abinet           ###   ########.fr       */
+/*   Updated: 2024/05/22 00:57:41 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,17 +182,22 @@ void Server::servReceive(int fd)
 	std::string	msg;
 
 	memset(buffer, 0, 1024);
-	bytes = recv(fd, buffer, 1024, 0);
-	if (bytes == -1)
-		throw std::runtime_error("Syscall recv() Failed in servReceive: " + std::string(std::strerror(errno)));
-	if (bytes == 0)
+	while (1)
 	{
-		 servClose(fd);
-		return;
+		bytes = recv(fd, buffer, sizeof(buffer), 0);
+		if (bytes == -1)
+			throw std::runtime_error("Syscall recv() Failed in servReceive: " + std::string(std::strerror(errno)));
+		if (bytes == 0)
+		{
+			servClose(fd);
+			return;
+		}
+		msg.append(buffer, bytes);
+		if (msg.find("\r\n") != std::string::npos)
+			break;
+		memset(buffer, 0, sizeof(buffer));
 	}
-	msg.append(buffer, bytes);
-	if (msg.find("\r\n") != std::string::npos)
-		_client.at(fd).cliReceive(msg, fd);
+	_client.at(fd).cliReceive(msg, fd);
 }
 
 // todo: add the support of nc client
