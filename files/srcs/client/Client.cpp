@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:49:33 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/15 16:49:33 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/05/22 00:52:24 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,103 @@ Client &Client::operator=(Client const &rhs)
 	return (*this);
 }
 
-void	Client::cliReceive(std::string const &msg)
+void	Client::cliReceive(std::string const &msg, int fd)
 {
 	ft_print("Client received: " + msg, INFO);
+
+
+	std::string command = msg.substr(0, msg.find(" "));
+	std::string remaining = msg.substr(msg.find(" ") + 1);
+
+	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE") &&
+		(remaining.empty() || remaining == "\r\n"))
+	{
+		send(fd, ERR_NEEDMOREPARAMS(getNickname(), command).c_str(), ERR_NEEDMOREPARAMS(getNickname(), command).size(), 0);
+		return;
+	}
+
+	if (msg.find("PING") != std::string::npos)
+	{
+		std::cout << "dans PING" << std::endl;
+		send(fd, RPL_PONG, strlen(RPL_PONG), 0);
+	}
+	else if (msg.find("PRIVMSG") != std::string::npos)
+	{
+		std::cout << "dans PRIVMSG" << std::endl;
+		handlePrivMsg(msg, fd);
+	}
+	else if (msg.find("JOIN") != std::string::npos)
+	{
+		std::cout << "dans JOIN" << std::endl;
+		/* besoin d'une classe channel*/
+	}
+}
+
+void Client::handlePrivMsg(const std::string &msg, int fd)
+{
+	size_t start = msg.find("PRIVMSG") + 8;
+	size_t end = msg.find(" ", start);
+
+	if (end == std::string::npos)
+	{
+		send(fd, ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG").c_str(), ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG").size(), 0);
+		return;
+	}
+	std::string name = msg.substr(start, end - start);
+	std::string message = msg.substr(end + 1);
+	if (message.empty() || message == "\r\n")
+	{
+
+		send(fd, ERR_NOTEXTTOSEND(getNickname()).c_str(), ERR_NOTEXTTOSEND(getNickname()).size(), 0);
+		return;
+	}
+	if (name[0] != '#' && name[0] != '&')
+		msg_prv(fd, name, message);
+	else
+		msg_channel(fd, name, message);
+}
+
+void Client::msg_prv(int fd, const std::string& msg, const std::string& name)
+{
+	std::string::size_type pos = msg.find(name);
+	if (pos != std::string::npos)
+	{
+		std::string::size_type start = pos + name.length() + 1;
+		std::string::size_type end = msg.find("\r\n", start);
+		if (end != std::string::npos)
+		{
+			std::string message = msg.substr(start, end - start);
+			send(getFd(), RPL_PRIVMSG_CLIENT(getNickname(), getUsername(), name, message).c_str(), RPL_PRIVMSG_CLIENT(getNickname(), getUsername(), name, message).size(), 0);
+		}
+	}
+	send(fd, ERR_NOSUCHNICK(getNickname()).c_str(), ERR_NOSUCHNICK(getNickname()).size(), 0);
+}
+
+void Client::msg_channel(int fd, const std::string& msg, const std::string& name)
+{
+	try
+	{
+		std::string::size_type start = msg.find(name);
+		if (start != std::string::npos)
+		{
+			start += name.length() + 1;
+			std::string::size_type end = msg.find("\r\n", start);
+			if (end != std::string::npos)
+			{
+				std::string message = msg.substr(start, end - start);
+				std::string channel_name = name.substr(1);
+				// if (/*comparer le nom avec les autres channels existant*/)
+				// {
+				// 	if (/*erreur si le message ne s'est pas envoye*/)
+				// 		send(fd, ERR_NOTONCHANNEL(getNickname(), channel_name).c_str(), ERR_NOTONCHANNEL(getNickname(), channel_name).size(), 0);
+				// }
+				// else
+				// 	send(fd, ERR_NOSUCHCHANNEL(getNickname(), channel_name).c_str(), ERR_NOSUCHCHANNEL(getNickname(), channel_name).size(), 0);
+			}
+		}
+	}
+	catch (const std::out_of_range&)
+	{
+		send(fd, ERR_NOSUCHCHANNEL(getNickname(), name).c_str(), ERR_NOSUCHCHANNEL(getNickname(), name).size(), 0);
+	}
 }

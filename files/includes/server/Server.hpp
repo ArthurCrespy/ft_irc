@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/14 14:28:57 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/05/22 00:54:41 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@ class Server
 		t_poll		_poll;
 		t_client	_client;
 		t_signal 	_signal;
+
+		// il faut rajouter les clients et les channels
+		//
+		// std::map<int, Client*> clients;
+		// std::map<std::string, Channel*> Channels;
+		//
 
 	public:
 		Server(void);
