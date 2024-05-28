@@ -37,10 +37,9 @@ Client &Client::operator=(Client const &rhs)
 	return (*this);
 }
 
-void	Client::cliReceive(std::string const &msg, int fd)
+void Client::cliReceive(std::string const &msg, int fd)
 {
 	ft_print("Client received: " + msg, INFO);
-
 
 	std::string command = msg.substr(0, msg.find(" "));
 	std::string remaining = msg.substr(msg.find(" ") + 1);
@@ -49,7 +48,7 @@ void	Client::cliReceive(std::string const &msg, int fd)
 		(remaining.empty() || remaining == "\r\n"))
 	{
 		send(fd, ERR_NEEDMOREPARAMS(getNickname(), command).c_str(), ERR_NEEDMOREPARAMS(getNickname(), command).size(), 0);
-		return;
+		return ;
 	}
 
 	if (msg.find("PING") != std::string::npos)
@@ -77,7 +76,7 @@ void Client::handlePrivMsg(const std::string &msg, int fd)
 	if (end == std::string::npos)
 	{
 		send(fd, ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG").c_str(), ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG").size(), 0);
-		return;
+		return ;
 	}
 	std::string name = msg.substr(start, end - start);
 	std::string message = msg.substr(end + 1);
@@ -85,7 +84,7 @@ void Client::handlePrivMsg(const std::string &msg, int fd)
 	{
 
 		send(fd, ERR_NOTEXTTOSEND(getNickname()).c_str(), ERR_NOTEXTTOSEND(getNickname()).size(), 0);
-		return;
+		return ;
 	}
 	if (name[0] != '#' && name[0] != '&')
 		msg_prv(fd, name, message);
