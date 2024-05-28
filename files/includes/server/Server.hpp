@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../includes/ft_irc.h"
+#include "../ft_irc.h"
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
@@ -25,12 +25,6 @@ class Server
 		t_poll		_poll;
 		t_client	_client;
 		t_signal 	_signal;
-
-		// il faut rajouter les clients et les channels
-		//
-		// std::map<int, Client*> clients;
-		// std::map<std::string, Channel*> Channels;
-		//
 
 	public:
 		Server(void);
