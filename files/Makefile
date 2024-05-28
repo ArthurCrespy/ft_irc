@@ -13,6 +13,7 @@
 NAME        := ircserv
 
 SRCS		:= \
+				srcs/channel/Channel.cpp \
 				srcs/client/Client.cpp \
 				srcs/client/Client_utils.cpp \
 				srcs/server/Server.cpp \

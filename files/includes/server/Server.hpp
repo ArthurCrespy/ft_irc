@@ -24,6 +24,7 @@ class Server
 
 		t_poll		_poll;
 		t_client	_client;
+		t_channel	_channel;
 		t_signal 	_signal;
 
 	public:

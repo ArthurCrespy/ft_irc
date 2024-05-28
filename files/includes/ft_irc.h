@@ -19,5 +19,6 @@
 # include "utils/replies.h"
 # include "utils/utils.h"
 
+# include "channel/Channel.hpp"
 # include "client/Client.hpp"
 # include "server/Server.hpp"

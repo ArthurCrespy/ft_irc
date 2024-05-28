@@ -64,6 +64,7 @@ Server &Server::operator=(Server const &rhs)
 		this->_srv_password = rhs._srv_password;
 		this->_poll = rhs._poll;
 		this->_client = rhs._client;
+		this->_channel = rhs._channel;
 		this->_signal = rhs._signal;
 	}
 	return (*this);
