@@ -1,5 +1,17 @@
-#ifndef NUMERIC_RPL_HPP
-# define  NUMERIC_RPL_HPP
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   replies.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
+/*   Updated: 2024/05/28 09:58:59 by acrespy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef REPLIES_H
+# define REPLIES_H
 
 # define user_id(nickname, username, cmd) (":" + nickname + "!~" + username + "@localhost " + cmd + " ") // used
 
@@ -95,35 +107,35 @@
 # define ERR_INVITEONLYCHAN(nickname, chanel) (":localhost 473 " +  nickname + " " + chanel + " :Cannot join channel (+i)\r\n") // used
 
             /* = = =    KICK     = = = */
-#define RPL_KICK(nickname, channel, cible, reason) (':' + nickname + " KICK #" + channel + " " + cible + " :" + reason + "\r\n")
-#define KICK_CLIENT(nickname, username, cmd, chanel, concerned_client_nickname) ((user_id(nickname, username, cmd)) + chanel + " " + concerned_client_nickname + " :\r\n") // used
+# define RPL_KICK(nickname, channel, cible, reason) (':' + nickname + " KICK #" + channel + " " + cible + " :" + reason + "\r\n")
+# define KICK_CLIENT(nickname, username, cmd, chanel, concerned_client_nickname) ((user_id(nickname, username, cmd)) + chanel + " " + concerned_client_nickname + " :\r\n") // used
             /* = = =    TOPIC     = = = */
 // 331
 
 #define SERVER_NAME "localhost"
-// #define RPL_NOTOPIC(nickname, chanel) (":localhost 331 " + nickname + " #" + chanel + " :No topic is set\r\n") // used
+// # define RPL_NOTOPIC(nickname, chanel) (":localhost 331 " + nickname + " #" + chanel + " :No topic is set\r\n") // used
 
 // 332
-#define SET_TOPIC(nickname, username, cmd, chanel, topic) ((user_id(nickname, username, cmd)) + chanel + " " + topic + "\r\n")
+# define SET_TOPIC(nickname, username, cmd, chanel, topic) ((user_id(nickname, username, cmd)) + chanel + " " + topic + "\r\n")
 // 331
-// #define RPL_NOTOPIC(nickname, chanel) (":localhost 331 " + nickname + " " + chanel + " :No topic is set\r\n")
+// # define RPL_NOTOPIC(nickname, chanel) (":localhost 331 " + nickname + " " + chanel + " :No topic is set\r\n")
 // 332
-// #define RPL_TOPIC(nickname, chanel, topic) (":localhost 332 " + nickname + " " + chanel + " " + topic + "\r\n")
+// # define RPL_TOPIC(nickname, chanel, topic) (":localhost 332 " + nickname + " " + chanel + " " + topic + "\r\n")
 // 333
-// #define ROL_TOPICWHOTIME(nickname, chanel, concerned_client_nickname, time ) (":localhost 333 " + nickname +  + " " + chanel + " " concerned_client_nickname + " " + time + "\r\n")
+// # define ROL_TOPICWHOTIME(nickname, chanel, concerned_client_nickname, time ) (":localhost 333 " + nickname +  + " " + chanel + " " concerned_client_nickname + " " + time + "\r\n")
 // 471
 
-#define RPL_NOTOPIC(nickname, channel) (std::string(":") + SERVER_NAME + " 331 " + nickname + " #" + channel + " :No topic is set" + "\r\n")
+# define RPL_NOTOPIC(nickname, channel) (std::string(":") + SERVER_NAME + " 331 " + nickname + " #" + channel + " :No topic is set" + "\r\n")
 
-#define RPL_TOPIC(nickname, channel, topic) (std::string(":") + SERVER_NAME + " 332 " + nickname + " #" + channel + " :" + topic + "\r\n")
+# define RPL_TOPIC(nickname, channel, topic) (std::string(":") + SERVER_NAME + " 332 " + nickname + " #" + channel + " :" + topic + "\r\n")
 
-#define PART(nickname, username, channel, message) (CLIENT_ID(nickname, username, "PART") + "#" + channel + " :" + message + "\r\n")
-#define ERR_UNKNOWNCOMMAND(nickname, command) (std::string(":") + SERVER_NAME + " 421 " + nickname + " " + command + " :Unknown command"+ "\r\n")
+# define PART(nickname, username, channel, message) (CLIENT_ID(nickname, username, "PART") + "#" + channel + " :" + message + "\r\n")
+# define ERR_UNKNOWNCOMMAND(nickname, command) (std::string(":") + SERVER_NAME + " 421 " + nickname + " " + command + " :Unknown command"+ "\r\n")
 
-#define ERR_NEEDMOREPARAMS(nickname, command) (std::string(":") + SERVER_NAME + " 461 " + nickname + " " + command + " :Not enough parameters\r\n")
+# define ERR_NEEDMOREPARAMS(nickname, command) (std::string(":") + SERVER_NAME + " 461 " + nickname + " " + command + " :Not enough parameters\r\n")
 
-#define ROL_TOPICWHOTIME(nickname, channel, concerned_client_nickname, time) (std::string(":") + SERVER_NAME + " 333 " + nickname + " " + channel + " " + concerned_client_nickname + " " + time + "\r\n")
-// #define CLIENT_ID(nickname, username, command) (":" + nickname + "!~" + username + "@" + chanel + " " + command + " ")
-// #define  NICK_RPL(nickname, username, new_nickname) (CLIENT_ID(nickname, username, "NICK") + ":" + new_nickname + "\r\n")
+# define ROL_TOPICWHOTIME(nickname, channel, concerned_client_nickname, time) (std::string(":") + SERVER_NAME + " 333 " + nickname + " " + channel + " " + concerned_client_nickname + " " + time + "\r\n")
+// # define CLIENT_ID(nickname, username, command) (":" + nickname + "!~" + username + "@" + chanel + " " + command + " ")
+// # define  NICK_RPL(nickname, username, new_nickname) (CLIENT_ID(nickname, username, "NICK") + ":" + new_nickname + "\r\n")
 
 #endif

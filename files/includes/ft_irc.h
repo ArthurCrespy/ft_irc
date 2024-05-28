@@ -16,6 +16,7 @@
 # include "headers/ft_irc_include.h"
 # include "headers/ft_irc_typedef.h"
 
+# include "utils/replies.h"
 # include "utils/utils.h"
 #include "utils/Numeric_Rpl.hpp"
 
