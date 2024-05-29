@@ -44,15 +44,3 @@ int ft_stoi(std::string const &str)
 
 	return (number);
 }
-
-/**
-	* @brief	Convert a string to a char *
-	* @param	std::string str : The string to convert
-	* @return	char * : The vector of string
- */
-const char *ft_stov(std::string const &str)
-{
-	std::string tmp;
-
-	return (tmp.c_str());
-}

@@ -27,12 +27,13 @@ SRCS		:= \
 				srcs/main.cpp \
 
 INCLUDES	:= \
+			includes/channel/Channel.hpp \
 			includes/client/Client.hpp \
 			includes/headers/ft_irc_define.h \
 			includes/headers/ft_irc_include.h \
 			includes/headers/ft_irc_typedef.h \
 			includes/server/Server.hpp \
-			includes/utils/replies.hpp \
+			includes/utils/replies.h \
 			includes/utils/utils.h \
 			includes/ft_irc.h \
 
@@ -50,11 +51,11 @@ DIR_DUP     = mkdir -p ${@D}
 
 all: ${NAME}
 
-${NAME}: ${OBJS}
+${NAME}: ${OBJS} ${INCLUDES}
 	${CC} ${OBJS} -o ${NAME}
 	${info EXECUTABLE CREATED: ${NAME}}
 
-${OBJ_DIR}/%.o : %.cpp ${INCLUDES}
+${OBJ_DIR}/%.o : %.cpp
 	${DIR_DUP}
 	${CC} ${CFLAGS} ${CPPFLAGS} -c $< -o $@
 	${info OBJECT CREATED: $@}

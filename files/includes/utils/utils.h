@@ -17,8 +17,6 @@
 
 std::string	ft_nbtos(int const &value);
 int 		ft_stoi(std::string const &str);
-const char *ft_stov(std::string const &str);
-
 
 void		ft_print(std::string const &str,std::string const &level);
 

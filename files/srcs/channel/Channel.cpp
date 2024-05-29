@@ -12,7 +12,16 @@
 
 #include "../../includes/ft_irc.h"
 
-Channel::Channel(void) {}
+Channel::Channel(void)
+{
+	_channel_name = "";
+	setTopic("");
+	setTopicRestriction(false);
+	setPassword("");
+	setLimit(-1);
+	setInviteOnly(false);
+	ft_print("Channel created: " + _channel_name, LOG);
+}
 
 Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 {
@@ -23,6 +32,9 @@ Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 	setInviteOnly(false);
 
 	_channel_admins.push_back(op);
+	_channel_members.push_back(op);
+
+	ft_print("Channel created: " + _channel_name, LOG);
 }
 
 Channel::Channel(Channel const &src)
@@ -30,7 +42,11 @@ Channel::Channel(Channel const &src)
 	*this = src;
 }
 
-Channel::~Channel(void) {}
+Channel::~Channel(void)
+{
+	_channel_members.clear();
+	_channel_admins.clear();
+}
 
 Channel &Channel::operator=(Channel const &rhs)
 {

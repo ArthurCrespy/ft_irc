@@ -162,8 +162,6 @@ void Server::servConnect(void)
 
 	std::string client_name = cli_name_in;
 	client.ft_send(cli_fd, RPL_WELCOME(client_name), 0);
-	send(cli_fd, RPL_WELCOME0(client_name).c_str(), RPL_WELCOME0(client_name).size(), 0);
-	std::cerr << RPL_WELCOME0(client_name) << std::endl;
 
 	_poll.push_back(cli_poll_in);
 	_client.insert(std::make_pair(cli_fd, client));
