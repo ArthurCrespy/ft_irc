@@ -47,6 +47,10 @@ class Client
 		std::string	getUsername(void) const;
 		std::string	getRealname(void) const;
 		std::string	getHostname(void) const;
+		std::string getPrefix(void) const;
+
+
+		void ft_send(int fd, std::string const &msg, int flags);
 
 		void handlePrivMsg(const std::string &msg, int fd);
 		void msg_prv(int fd, const std::string& name, const std::string& message);

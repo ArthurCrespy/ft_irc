@@ -161,7 +161,9 @@ void Server::servConnect(void)
 	Client client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
 	std::string client_name = cli_name_in;
-	send(cli_fd, RPL_WELCOME(client_name).c_str(), 1024, 0); // pas sur qu'il soit place a la bonne place mais c'est la reponse qu'attend le client
+	client.ft_send(cli_fd, RPL_WELCOME(client_name), 0);
+	send(cli_fd, RPL_WELCOME0(client_name).c_str(), RPL_WELCOME0(client_name).size(), 0);
+	std::cerr << RPL_WELCOME0(client_name) << std::endl;
 
 	_poll.push_back(cli_poll_in);
 	_client.insert(std::make_pair(cli_fd, client));

@@ -47,7 +47,7 @@ void Client::cliReceive(std::string const &msg, int fd)
 	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE") &&
 		(remaining.empty() || remaining == "\r\n"))
 	{
-		send(fd, ERR_NEEDMOREPARAMS(getNickname(), command).c_str(), ERR_NEEDMOREPARAMS(getNickname(), command).size(), 0);
+		ft_send(fd, ft_stov(ERR_NEEDMOREPARAMS(getNickname(), command)), 0);
 		return ;
 	}
 
@@ -75,15 +75,14 @@ void Client::handlePrivMsg(const std::string &msg, int fd)
 
 	if (end == std::string::npos)
 	{
-		send(fd, ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG").c_str(), ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG").size(), 0);
+		ft_send(fd, ft_stov(ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG")), 0);
 		return ;
 	}
 	std::string name = msg.substr(start, end - start);
 	std::string message = msg.substr(end + 1);
 	if (message.empty() || message == "\r\n")
 	{
-
-		send(fd, ERR_NOTEXTTOSEND(getNickname()).c_str(), ERR_NOTEXTTOSEND(getNickname()).size(), 0);
+		ft_send(fd, ERR_NOTEXTTOSEND(getNickname(), name), 0);
 		return ;
 	}
 	if (name[0] != '#' && name[0] != '&')
@@ -102,10 +101,10 @@ void Client::msg_prv(int fd, const std::string& msg, const std::string& name)
 		if (end != std::string::npos)
 		{
 			std::string message = msg.substr(start, end - start);
-			send(getFd(), RPL_PRIVMSG_CLIENT(getNickname(), getUsername(), name, message).c_str(), RPL_PRIVMSG_CLIENT(getNickname(), getUsername(), name, message).size(), 0);
+			ft_send(fd, RPL_PRIVMSG(getNickname(), name, message), 0);
 		}
 	}
-	send(fd, ERR_NOSUCHNICK(getNickname()).c_str(), ERR_NOSUCHNICK(getNickname()).size(), 0);
+	ft_send(fd, ERR_NOSUCHNICK(getNickname(), name), 0);
 }
 
 void Client::msg_channel(int fd, const std::string& msg, const std::string& name)
@@ -133,6 +132,17 @@ void Client::msg_channel(int fd, const std::string& msg, const std::string& name
 	}
 	catch (const std::out_of_range&)
 	{
-		send(fd, ERR_NOSUCHCHANNEL(getNickname(), name).c_str(), ERR_NOSUCHCHANNEL(getNickname(), name).size(), 0);
+		ft_send(fd, ERR_NOSUCHCHANNEL(getNickname(), name), 0);
 	}
+}
+
+void Client::ft_send(int fd, std::string const &msg, int flags)
+{
+//	std::string str = ":" + getPrefix() + " " + msg + "\r\n";
+	std::string str = ":localhost " + msg + "\r\n";
+
+	if (send(fd, ft_stov(str), ft_strlen(str), flags) == -1)
+		throw std::runtime_error("Syscall send() Failed in send: " + std::string(std::strerror(errno)));
+
+	std::cerr << str << std::endl;
 }

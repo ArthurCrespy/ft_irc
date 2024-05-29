@@ -23,6 +23,7 @@ SRCS		:= \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \
+				srcs/utils/ft_strlen.cpp \
 				srcs/main.cpp \
 
 INCLUDES	:= \
@@ -30,10 +31,9 @@ INCLUDES	:= \
 			includes/headers/ft_irc_define.h \
 			includes/headers/ft_irc_include.h \
 			includes/headers/ft_irc_typedef.h \
-			includes/headers/ft_irc_struct.h \
 			includes/server/Server.hpp \
+			includes/utils/replies.hpp \
 			includes/utils/utils.h \
-			includes/utils/Numeric_Rpl.hpp \
 			includes/ft_irc.h \
 
 
