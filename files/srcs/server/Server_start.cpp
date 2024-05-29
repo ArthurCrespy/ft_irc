@@ -190,11 +190,11 @@ void Server::servReceive(int fd)
 		if (bytes == 0)
 		{
 			servClose(fd);
-			return;
+			return ;
 		}
 		msg.append(buffer, bytes);
-		if (msg.find("\r\n") != std::string::npos)
-			break;
+		if (msg.find("\r\n") != std::string::npos || msg.find('\n') != std::string::npos)
+			break ;
 		memset(buffer, 0, sizeof(buffer));
 	}
 	_client.at(fd).cliReceive(msg, fd);

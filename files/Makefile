@@ -25,7 +25,7 @@ SRCS		:= \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \
 				srcs/utils/ft_strlen.cpp \
-				srcs/main.cpp \
+				srcs/main.cpp
 
 INCLUDES	:= \
 			includes/channel/Channel.hpp \
@@ -36,8 +36,7 @@ INCLUDES	:= \
 			includes/server/Server.hpp \
 			includes/utils/replies.h \
 			includes/utils/utils.h \
-			includes/ft_irc.h \
-
+			includes/ft_irc.h
 
 OBJ_DIR     := .objs
 OBJS 		:= ${SRCS:%.cpp=${OBJ_DIR}/%.o}
@@ -74,4 +73,4 @@ re:
 	${MAKE} all
 
 .PHONY: all clean fclean re
-.SILENT: ${NAME} ${OBJS} ${SRCS} ${IRSSI} clean fclean re
+.SILENT: ${NAME} ${SRCS} ${OBJS} ${INCLUDES} clean fclean re
