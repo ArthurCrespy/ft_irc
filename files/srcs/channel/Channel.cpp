@@ -12,7 +12,16 @@
 
 #include "../../includes/ft_irc.h"
 
-Channel::Channel(void) {}
+Channel::Channel(void)
+{
+	_channel_name = "";
+	setTopic("");
+	setTopicRestriction(false);
+	setPassword("");
+	setLimit(-1);
+	setInviteOnly(false);
+	ft_print("Channel created: " + _channel_name, LOG);
+}
 
 Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 {
@@ -23,6 +32,9 @@ Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 	setInviteOnly(false);
 
 	_channel_admins.push_back(op);
+	_channel_members.push_back(op);
+
+	ft_print("Channel created: " + _channel_name, LOG);
 }
 
 Channel::Channel(Channel const &src)
@@ -30,7 +42,11 @@ Channel::Channel(Channel const &src)
 	*this = src;
 }
 
-Channel::~Channel(void) {}
+Channel::~Channel(void)
+{
+	_channel_members.clear();
+	_channel_admins.clear();
+}
 
 Channel &Channel::operator=(Channel const &rhs)
 {
@@ -46,115 +62,4 @@ Channel &Channel::operator=(Channel const &rhs)
 		this->_channel_admins = rhs._channel_admins;
 	}
 	return (*this);
-}
-
-void Channel::setTopic(std::string const &topic)
-{
-	if (topic.empty())
-		_channel_topic = "No topic yet...";
-	else
-		_channel_topic = topic;
-}
-
-void Channel::setTopicRestriction(bool restrict)
-{
-	_channel_topic_restrict = restrict;
-}
-
-void Channel::setPassword(std::string const &password)
-{
-	if (password.empty())
-	{
-		_channel_password = "";
-		_channel_password_restrict = false;
-	}
-	else
-	{
-		_channel_password = password;
-		_channel_password_restrict = true;
-	}
-}
-
-void Channel::setPasswordRestriction(bool restrict)
-{
-	_channel_password_restrict = restrict;
-}
-
-void Channel::setLimit(int limit)
-{
-	_channel_limit = limit;
-}
-
-void Channel::setInviteOnly(bool io)
-{
-	_channel_invite_only = io;
-}
-
-std::string Channel::getName(void) const
-{
-	return (_channel_name);
-}
-
-std::string Channel::getTopic(void) const
-{
-	return (_channel_topic);
-}
-
-bool Channel::getTopicRestriction(void) const
-{
-	return (_channel_topic_restrict);
-}
-
-std::string Channel::getPassword(void) const
-{
-	return (_channel_password);
-}
-
-bool Channel::getPasswordRestriction(void) const
-{
-	return (_channel_password_restrict);
-}
-
-int Channel::getLimit(void) const
-{
-	return (_channel_limit);
-}
-
-bool Channel::getInviteOnly(void) const
-{
-	return (_channel_invite_only);
-}
-
-t_members Channel::getMembers(void) const
-{
-	return (_channel_members);
-}
-
-t_members Channel::getAdmins(void) const
-{
-	return (_channel_admins);
-}
-
-void Channel::addMember(Client *member)
-{
-	_channel_members.push_back(member);
-}
-
-void Channel::removeMember(Client *member)
-{
-	it_members it = std::find(_channel_members.begin(), _channel_members.end(), member);
-	if (it != _channel_members.end())
-		_channel_members.erase(it);
-}
-
-void Channel::addAdmin(Client *op)
-{
-	_channel_admins.push_back(op);
-}
-
-void Channel::removeAdmin(Client *op)
-{
-	it_members it = std::find(_channel_admins.begin(), _channel_admins.end(), op);
-	if (it != _channel_admins.end())
-		_channel_admins.erase(it);
 }

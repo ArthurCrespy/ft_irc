@@ -59,6 +59,8 @@ class Channel
 
 		void addAdmin(Client *op);
 		void removeAdmin(Client *op);
+
+		void broadcast(std::string const &msg);
 };
 
 #endif

@@ -14,6 +14,7 @@ NAME        := ircserv
 
 SRCS		:= \
 				srcs/channel/Channel.cpp \
+				srcs/channel/Channel_utils.cpp \
 				srcs/client/Client.cpp \
 				srcs/client/Client_utils.cpp \
 				srcs/server/Server.cpp \
@@ -23,6 +24,7 @@ SRCS		:= \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \
+				srcs/utils/ft_strlen.cpp \
 				srcs/main.cpp
 
 INCLUDES	:= \
@@ -35,7 +37,6 @@ INCLUDES	:= \
 			includes/utils/replies.h \
 			includes/utils/utils.h \
 			includes/ft_irc.h
-
 
 OBJ_DIR     := .objs
 OBJS 		:= ${SRCS:%.cpp=${OBJ_DIR}/%.o}
@@ -72,4 +73,4 @@ re:
 	${MAKE} all
 
 .PHONY: all clean fclean re
-.SILENT: ${NAME} ${OBJS} ${SRCS} ${INCLUDES} clean fclean re
+.SILENT: ${NAME} ${SRCS} ${OBJS} ${INCLUDES} clean fclean re
