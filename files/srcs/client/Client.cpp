@@ -79,7 +79,7 @@ void Client::handlePrivMsg(const std::string &msg, int fd)
 	std::string message = msg.substr(end + 1);
 	if (message.empty() || message == "\r\n")
 	{
-		ft_send(fd, ERR_NOTEXTTOSEND(getNickname(), name), 0);
+		ft_send(fd, ERR_NOTEXTTOSEND(getNickname()), 0);
 		return ;
 	}
 	if (name[0] != '#' && name[0] != '&')
