@@ -193,7 +193,7 @@ void Server::servReceive(int fd)
 			return ;
 		}
 		msg.append(buffer, bytes);
-		if (msg.find("\r\n") != std::string::npos || msg.find('\n') != std::string::npos)
+		if (msg.find("\r\n") != std::string::npos || msg.find('\n') != std::string::npos) // only \n for netcat ???
 			break ;
 		memset(buffer, 0, sizeof(buffer));
 	}

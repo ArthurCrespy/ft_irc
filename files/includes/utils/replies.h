@@ -46,7 +46,6 @@
 # define RPL_JOIN(nickname, channel)							":" + nickname + " JOIN :" + channel
 # define RPL_PART(nickname, channel)							":" + nickname + " PART :" + channel
 # define RPL_PING(nickname, token)								":" + nickname + " PONG :" + token
-# define RPL_PONG(nickname)										":" + nickname + " PONG " + nickname + " :" + nickname
 # define RPL_PRIVMSG(nickname, target, message)					":" + nickname + " PRIVMSG " + target + " :" + message
 # define RPL_NOTICE(nickname, target, message)					":" + nickname + " NOTICE " + target + " :" + message
 # define RPL_QUIT(nickname, message)							":" + nickname + " QUIT :Quit: " + message
@@ -54,7 +53,8 @@
 # define RPL_MODE(nickname, channel, modes, args)				":" + nickname + " MODE " + channel + " " + modes + " " + args
 
 /* Custom Responses */
-# define RPL_WELCOME(nickname)									"000 " + nickname + " :Welcome to the 42IRC network"
+# define RPL_WELCOME(nickname)									"001 " + nickname + " :Welcome to the 42IRC network"
 
+# define RPL_PONG(nickname) /*test*/							"PONG " + nickname + " :" + nickname
 
 #endif

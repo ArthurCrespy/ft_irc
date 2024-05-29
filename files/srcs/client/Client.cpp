@@ -52,7 +52,7 @@ void Client::cliReceive(std::string const &msg, int fd)
 	}
 
 	if (msg.find("PING") != std::string::npos)
-		ft_send(fd, RPL_PONG(getNickname()), 0);
+		ft_send(fd, RPL_PONG(getHostname()), 0); // nickname or hostname ?
 	else if (msg.find("PRIVMSG") != std::string::npos)
 	{
 		std::cerr << "cliReceive: PRIVMSG" << std::endl;
