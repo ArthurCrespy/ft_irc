@@ -72,4 +72,4 @@ re:
 	${MAKE} all
 
 .PHONY: all clean fclean re
-.SILENT: ${NAME} ${OBJS} ${SRCS} ${IRSSI} clean fclean re
+.SILENT: ${NAME} ${OBJS} ${SRCS} ${INCLUDES} clean fclean re
