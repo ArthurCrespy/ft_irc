@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_start.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:22:15 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/14 16:22:15 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/05/22 00:57:41 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,8 @@ void Server::servPoll(void)
 		srv_poll_ret = poll(_poll.data(), _poll.size(), TIMEOUT);
 		if (srv_poll_ret == -1)
 		{
-            if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
-                continue ;
+			if (errno == EAGAIN || errno == EINTR || errno == EWOULDBLOCK)
+				continue ;
 			throw std::runtime_error("Syscall poll() Failed in servPoll: " + (std::string)std::strerror(errno));
 		}
 		if (srv_poll_ret == 0)
@@ -160,6 +160,9 @@ void Server::servConnect(void)
 
 	Client client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
+	std::string client_name = cli_name_in;
+	client.ft_send(cli_fd, RPL_WELCOME(client_name), 0);
+
 	_poll.push_back(cli_poll_in);
 	_client.insert(std::make_pair(cli_fd, client));
 
@@ -179,25 +182,24 @@ void Server::servReceive(int fd)
 	std::string	msg;
 
 	memset(buffer, 0, 1024);
-	while (!strstr(buffer, "\r\n"))
+	while (1)
 	{
-		bytes = recv(fd, buffer, 1024, 0);
+		bytes = recv(fd, buffer, sizeof(buffer), 0);
 		if (bytes == -1)
-			throw std::runtime_error("Syscall recv() Failed in servReceive: " + (std::string) std::strerror(errno));
+			throw std::runtime_error("Syscall recv() Failed in servReceive: " + std::string(std::strerror(errno)));
 		if (bytes == 0)
+		{
+			servClose(fd);
+			return ;
+		}
+		msg.append(buffer, bytes);
+		if (msg.find("\r\n") != std::string::npos || msg.find('\n') != std::string::npos) // only \n for netcat ???
 			break ;
-		else
-			msg.append(buffer, bytes);
+		memset(buffer, 0, sizeof(buffer));
 	}
-
-	if (msg.empty())
-	{
-		servClose(fd);
-		return ;
-	}
-	else
-		_client.at(fd).cliReceive(msg);
+	_client.at(fd).cliReceive(msg, fd);
 }
+
 // todo: add the support of nc client
 //       add the ctrl+d + ctrl+z logic
 

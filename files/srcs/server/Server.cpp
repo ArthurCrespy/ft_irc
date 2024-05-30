@@ -12,7 +12,7 @@
 
 #include "../../includes/ft_irc.h"
 
-Server::Server(void) : _srv_sock(-1), _srv_port(6667), _srv_password("default")
+Server::Server(void) : _srv_sock(-1), _srv_port(6667), _srv_password("default"), _signal()
 {
 	ft_print("Server void constructor called, using default values", WARN);
 	ft_print("Port: " + ft_nbtos(this->getPort()), INFO);
@@ -20,19 +20,19 @@ Server::Server(void) : _srv_sock(-1), _srv_port(6667), _srv_password("default")
 	ft_print("Max simultaneous connections: " + ft_nbtos(SRV_MAX), INFO);
 }
 
-Server::Server(int argc, char **argv) : _srv_sock(-1), _srv_port(-1)
+Server::Server(int argc, char **argv) : _srv_sock(-1), _srv_port(-1), _signal()
 {
-	this->servSetup(argc, argv);
+	servSetup(argc, argv);
 
 	ft_print("Port: " + ft_nbtos(this->getPort()), INFO);
 	ft_print("Password: " + this->getPassword(), INFO);
 	ft_print("Max simultaneous connections: " + ft_nbtos(SRV_MAX), INFO);
 }
 
-Server::Server(int port, std::string const &password) : _srv_sock(-1), _srv_port(-1)
+Server::Server(int port, std::string const &password) : _srv_sock(-1), _srv_port(-1), _signal()
 {
-	this->setPort(port);
-	this->setPassword(password);
+	setPort(port);
+	setPassword(password);
 
 	ft_print("Port: " + ft_nbtos(this->getPort()), INFO);
 	ft_print("Password: " + this->getPassword(), INFO);
@@ -64,13 +64,15 @@ Server &Server::operator=(Server const &rhs)
 		this->_srv_password = rhs._srv_password;
 		this->_poll = rhs._poll;
 		this->_client = rhs._client;
+		this->_channel = rhs._channel;
+		this->_signal = rhs._signal;
 	}
 	return (*this);
 }
 
 void Server::servStart(void)
 {
-	this->servSignal();
-	this->servListen();
-	this->servPoll();
+	servSignal();
+	servListen();
+	servPoll();
 }

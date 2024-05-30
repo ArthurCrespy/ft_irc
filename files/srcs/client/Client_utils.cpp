@@ -71,3 +71,11 @@ std::string	Client::getHostname(void) const
 {
 	return (this->_cli_hostname);
 }
+
+std::string Client::getPrefix(void) const
+{
+    std::string username = _cli_username.empty() ? "" : "!" + _cli_username;
+    std::string hostname = _cli_hostname.empty() ? "" : "@" + _cli_hostname;
+
+    return (_cli_nickname + username + hostname);
+}

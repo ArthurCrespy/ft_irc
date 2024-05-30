@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_irc_struct.h                                    :+:      :+:    :+:   */
+/*   ft_strlen.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/16 11:09:54 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/16 11:09:54 by acrespy          ###   ########.fr       */
+/*   Created: 2024/05/29 10:26:49 by acrespy           #+#    #+#             */
+/*   Updated: 2024/05/29 10:26:49 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
 
-#ifndef FT_IRC_STRUCT_H
-# define FT_IRC_STRUCT_H
+/**
+	* @brief	Compute the length of a string
+	* @param	std::string str : The string to compute the length
+	* @return	The length of the string
+*/
 
-struct compare_fd
+size_t ft_strlen(std::string const &str)
 {
-    bool operator() (int const lhs, int const rhs) const
-    {
-        return (lhs != rhs);
-    }
-};
-
-#endif
+	return (str.size());
+}
