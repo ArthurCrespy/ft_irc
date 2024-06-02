@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:54:41 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/03 00:36:00 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Server
 		t_poll		_poll;
 		t_client	_client;
 		t_channel	_channel;
-		t_signal 	_signal;
+		t_signal	_signal;
 
 	public:
 		Server(void);
@@ -55,6 +55,7 @@ class Server
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
 		int			getSock(void) const;
+		Channel&	getchannel(const std::string& name_channel);
 };
 
 #endif

@@ -6,12 +6,14 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:17:09 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:42:04 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/03 00:20:33 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
+
+class Server;
 
 class Client
 {
@@ -32,7 +34,7 @@ class Client
 
 		Client &operator=(Client const &rhs);
 
-		void	cliReceive(std::string const &msg, int fd);
+		void	cliReceive(std::string const &msg, int fd, Server & server);
 
 		void	setFd(int fd);
 		void	setPort(int port);
@@ -52,9 +54,10 @@ class Client
 
 		void ft_send(int fd, std::string const &msg, int flags);
 
-		void handlePrivMsg(const std::string &msg, int fd);
+		void handleJoin(const std::string &msg, int fd, Server & server);
+		void handlePrivMsg(const std::string &msg, int fd, Server & server);
 		void msg_prv(int fd, const std::string& name, const std::string& message);
-		void msg_channel(int fd, const std::string& channel, const std::string& message);
+		void msg_channel(int fd, const std::string& channel, const std::string& message, Server & server);
 };
 
 #endif

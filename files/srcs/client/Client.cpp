@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:49:33 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:52:24 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/03 00:31:57 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 Client::Client(void) : _cli_fd(-1), _cli_port(-1) {}
 
-Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_hostname(hostname) {}
+Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_hostname(hostname)
+{
+	_cli_nickname = "nickname1";
+	_cli_realname = "realname1";
+	_cli_username = "username1";
+}
 
 Client::Client(Client const &src)
 {
@@ -37,7 +42,7 @@ Client &Client::operator=(Client const &rhs)
 	return (*this);
 }
 
-void Client::cliReceive(std::string const &msg, int fd)
+void Client::cliReceive(std::string const &msg, int fd, Server & server)
 {
 	ft_print("Client received: " + msg, INFO);
 
@@ -51,81 +56,74 @@ void Client::cliReceive(std::string const &msg, int fd)
 		return ;
 	}
 
-	if (msg.find("PING") != std::string::npos)
-		ft_send(fd, RPL_PONG(getHostname()), 0); // nickname or hostname ?
-	else if (msg.find("PRIVMSG") != std::string::npos)
+	if (command == "PING")
+		ft_send(fd, RPL_PONG(getNickname()), 0); // nickname or hostname ?
+	else if (command == "PRIVMSG")
 	{
-		std::cerr << "cliReceive: PRIVMSG" << std::endl;
-		handlePrivMsg(msg, fd);
+		// std::cerr << "cliReceive: PRIVMSG" << std::endl;
+		handlePrivMsg(remaining, fd, server);
 	}
 	else if (msg.find("JOIN") != std::string::npos)
 	{
-		std::cerr << "cliReceive: JOIN" << std::endl;
+		handleJoin(remaining, fd, server);
+		// std::cerr << "cliReceive: JOIN" << std::endl;
 		// Channel
 	}
 }
 
-void Client::handlePrivMsg(const std::string &msg, int fd)
+void Client::handleJoin(const std::string &msg, int fd, Server & server)
 {
-	size_t start = msg.find("PRIVMSG") + 8;
-	size_t end = msg.find(" ", start);
+	(void)fd;
+	(void)server;
+	std::string channel = msg;
+	if (channel[0] != '#' || channel[0] != '&')
+		return ft_send(fd, ERR_NOSUCHCHANNEL(getNickname(), channel), 0);
+	channel.erase(0, 1);
+	// il faut pouvoir acceder a server pour ensuite acceder aux channels ?
+	// c'est pour ca que j'ai mis server en parametre
 
+}
+
+void Client::handlePrivMsg(const std::string &msg, int fd, Server & server)
+{
+	std::cout << "msg :" << msg << std::endl;
+	size_t end = msg.find(" ");
 	if (end == std::string::npos)
 	{
 		ft_send(fd, ERR_NEEDMOREPARAMS(getNickname(), "PRIVMSG"), 0);
 		return ;
 	}
-	std::string name = msg.substr(start, end - start);
-	std::string message = msg.substr(end + 1);
+	std::string name = msg.substr(0, end);
+	std::string message = msg.substr(end + 2);
 	if (message.empty() || message == "\r\n")
 	{
 		ft_send(fd, ERR_NOTEXTTOSEND(getNickname()), 0);
 		return ;
 	}
 	if (name[0] != '#' && name[0] != '&')
-		msg_prv(fd, name, message);
+		msg_prv(fd, message, name);
 	else
-		msg_channel(fd, name, message);
+		msg_channel(fd, message, name, server);
 }
 
 void Client::msg_prv(int fd, const std::string& msg, const std::string& name)
 {
-	std::string::size_type pos = msg.find(name);
-	if (pos != std::string::npos)
-	{
-		std::string::size_type start = pos + name.length() + 1;
-		std::string::size_type end = msg.find("\r\n", start);
-		if (end != std::string::npos)
-		{
-			std::string message = msg.substr(start, end - start);
-			ft_send(fd, RPL_PRIVMSG(getNickname(), name, message), 0);
-		}
-	}
-	ft_send(fd, ERR_NOSUCHNICK(getNickname(), name), 0);
+	ft_send(fd, RPL_PRIVMSG(getNickname(), name, msg), 0);
+		return ;
 }
 
-void Client::msg_channel(int fd, const std::string& msg, const std::string& name)
+void Client::msg_channel(int fd, const std::string& msg, const std::string& name, Server & server)
 {
+	std::string name_channel = msg;
+	if (name_channel[0] != '#' || name_channel[0] != '&')
+		return ft_send(fd, ERR_NOSUCHCHANNEL(getNickname(), name_channel), 0);
+	name_channel.erase(0, 1);
 	try
 	{
-		std::string::size_type start = msg.find(name);
-		if (start != std::string::npos)
-		{
-			start += name.length() + 1;
-			std::string::size_type end = msg.find("\r\n", start);
-			if (end != std::string::npos)
-			{
-				std::string message = msg.substr(start, end - start);
-				std::string channel_name = name.substr(1);
-//				 if (/*comparer le nom avec les autres channels existant*/)
-//				 {
-//				 	if (/*erreur si le message ne s'est pas envoye*/)
-//				 		ft_send(fd, ERR_NOTONCHANNEL(getNickname(), channel_name), 0);
-//				 }
-//				 else
-//				 	ft_send(fd, ERR_NOSUCHCHANNEL(getNickname(), channel_name), 0);
-			}
-		}
+		Channel channel;
+		channel = server.getchannel(name_channel);
+		// if (/*envoyer le message, erreur si le message ne s'est pas envoye*/)
+			// ft_send(fd, ERR_NOTONCHANNEL(getNickname(), name_channel), 0);
 	}
 	catch (const std::out_of_range&)
 	{
