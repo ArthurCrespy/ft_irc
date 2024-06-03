@@ -23,6 +23,7 @@ class Server
 		std::string	_srv_password;
 
 		t_poll		_poll;
+		t_user		_user;
 		t_client	_client;
 		t_channel	_channel;
 		t_signal 	_signal;

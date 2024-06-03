@@ -22,6 +22,11 @@ void	Client::setPort(int port)
 	this->_cli_port = port;
 }
 
+void	Client::setRegistration(bool reg)
+{
+	this ->_cli_registered = reg;
+}
+
 void	Client::setNickname(std::string const &nickname)
 {
 	this->_cli_nickname = nickname;
@@ -50,6 +55,11 @@ int	Client::getFd(void) const
 int	Client::getPort(void) const
 {
 	return (this->_cli_port);
+}
+
+bool Client::getRegistration() const
+{
+	return (this->_cli_registered);
 }
 
 std::string	Client::getNickname(void) const
