@@ -6,7 +6,7 @@
 #    By: abinet <abinet@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/15 14:54:39 by acrespy           #+#    #+#              #
-#    Updated: 2024/05/20 22:55:15 by abinet           ###   ########.fr        #
+#    Updated: 2024/06/03 19:54:54 by abinet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRCS		:= \
 				srcs/server/Server_setup.cpp \
 				srcs/server/Server_start.cpp \
 				srcs/server/Server_utils.cpp \
+				srcs/server/Server_cmd.cpp \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \

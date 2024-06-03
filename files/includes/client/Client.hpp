@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:17:09 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/03 00:20:33 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/03 19:52:47 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,8 @@ class Client
 		std::string	getHostname(void) const;
 		std::string getPrefix(void) const;
 
-
 		void ft_send(int fd, std::string const &msg, int flags);
 
-		void handleJoin(const std::string &msg, int fd, Server & server);
-		void handlePrivMsg(const std::string &msg, int fd, Server & server);
-		void msg_prv(int fd, const std::string& name, const std::string& message);
-		void msg_channel(int fd, const std::string& channel, const std::string& message, Server & server);
 };
 
 #endif
