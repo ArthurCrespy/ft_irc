@@ -23,8 +23,8 @@ void Server::handleCommand(std::string const &msg, int fd)
 	std::string remaining;
 	std::getline(iss, remaining);
 
-	// std::string command = msg.substr(0, msg.find(" "));
-	// std::string remaining = msg.substr(msg.find(" ") + 1);
+//	 std::string command = msg.substr(0, msg.find(" "));
+//	 std::string remaining = msg.substr(msg.find(" ") + 1);
 
 //	if (!_client.at(fd)->getRegistration())
 //	{
@@ -45,28 +45,17 @@ void Server::handleCommand(std::string const &msg, int fd)
 	if (command == "PING")
 		ft_send(fd, RPL_PONG(_client.at(fd)->getNickname()), 0); // nickname or hostname ?
 	else if (command == "PRIVMSG")
-	{
-		// std::cerr << "cliReceive: PRIVMSG" << std::endl;
 		handlePrivMsg(remaining, fd);
-	}
-	else if (msg.find("JOIN") != std::string::npos)
-	{
-		//handleJoin(remaining, fd, server);
-		// std::cerr << "cliReceive: JOIN" << std::endl;
-		// Channel
-	}
+	else if (msg.find("JOIN") != std::string::npos) {}
+		// handleJoin(remaining, fd, server);
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
 {
-	(void)fd;
 	std::string channel = msg;
 	if (channel[0] != '#' || channel[0] != '&')
-		return ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel), 0);
+		return (ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel), 0));
 	channel.erase(0, 1);
-	// il faut pouvoir acceder a server pour ensuite acceder aux channels ?
-	// c'est pour ca que j'ai mis server en parametre
-
 }
 
 void Server::handlePrivMsg(const std::string &msg, int fd)
@@ -75,9 +64,7 @@ void Server::handlePrivMsg(const std::string &msg, int fd)
 	std::string target;
 	std::string message;
 
-
 	//to fix : name_channel, target, msg
-
 
 	iss >> target;
 	std::getline(iss, message);
@@ -146,7 +133,9 @@ void Server::logBot(int fd, std::string const &msg)
 		return ;
 	}
 
-	if (param == "HELP" || param == ":HELP")
+	if (param.empty())
+		ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "LOG"), 0);
+	else if (param == "HELP" || param == ":HELP")
 		ft_send(fd, RPL_LOGHELP, 0);
 	else if (param == "REGISTER" || param == ":REGISTER")
 	{
@@ -162,7 +151,7 @@ void Server::logBot(int fd, std::string const &msg)
 			ft_send(fd, RPL_LOGREGISTER(_client.at(fd)->getNickname()), 0);
 		}
 	}
-	else if (command == "LOGIN" && param == ":LOGIN")
+	else if (param == "LOGIN" || param == ":LOGIN")
 	{
 		if (password.empty() || nickname.empty())
 			ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "LOGIN"), 0);
