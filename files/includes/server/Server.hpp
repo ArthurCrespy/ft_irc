@@ -3,17 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:54:41 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 11:15:32 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include<map>
 #include "../ft_irc.h"
+#include "../channel/User.hpp"
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
+
+class User;
 
 class Server
 {
@@ -34,6 +38,7 @@ class Server
 		Server(Server const &src);
 		~Server(void);
 
+		// User							*findUserByFd(int fd);
 		Server &operator=(Server const &rhs);
 
 		void		servStart(void);
@@ -43,7 +48,7 @@ class Server
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
-		void		servReceive(int fd);
+		void		servReceive(std::vector<pollfd>::iterator &it);
 		void		servClose(int fd);
 
 		void		servSignal(void);
@@ -55,6 +60,7 @@ class Server
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
 		int			getSock(void) const;
+		// User*			findUserByFd(int fd);
 };
 
 #endif

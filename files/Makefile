@@ -3,16 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: abinet <abinet@student.42.fr>              +#+  +:+       +#+         #
+#    By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/15 14:54:39 by acrespy           #+#    #+#              #
-#    Updated: 2024/05/20 22:55:15 by abinet           ###   ########.fr        #
+#    Updated: 2024/06/03 15:57:29 by jdegluai         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME        := ircserv
 
 SRCS		:= \
+				srcs/channel/Join.cpp \
+				srcs/channel/User.cpp \
 				srcs/channel/Channel.cpp \
 				srcs/channel/Channel_utils.cpp \
 				srcs/client/Client.cpp \
@@ -28,6 +30,8 @@ SRCS		:= \
 				srcs/main.cpp
 
 INCLUDES	:= \
+			includes/channel/Join.hpp \
+			includes/channel/User.hpp \
 			includes/channel/Channel.hpp \
 			includes/client/Client.hpp \
 			includes/headers/ft_irc_define.h \

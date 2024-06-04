@@ -3,18 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:49:33 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:52:24 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 13:41:26 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
+#include "../../includes/client/Client.hpp"
+#include "../../includes/channel/User.hpp"
+#include "../../includes/server/Server.hpp"
+#include "../../includes/channel/Join.hpp"
+#include <deque>
+#include <string>
 
 Client::Client(void) : _cli_fd(-1), _cli_port(-1) {}
 
-Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_hostname(hostname) {}
+Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_hostname(hostname)
+{
+	_cli_nickname = "nickname1";
+	_cli_realname = "realname1";
+	_cli_username = "username1";
+}
 
 Client::Client(Client const &src)
 {
@@ -37,13 +48,49 @@ Client &Client::operator=(Client const &rhs)
 	return (*this);
 }
 
-void Client::cliReceive(std::string const &msg, int fd)
+std::deque<std::string> Client::split(std::string const &msg, std::string const &delimiters) {
+    std::deque<std::string> args;
+    std::string token;
+    size_t pos = 0;
+    std::string message = msg;
+
+    while ((pos = message.find_first_of(delimiters)) != std::string::npos) {
+        token = message.substr(0, pos);
+
+        if (!token.empty())
+            args.push_back(token);
+        message.erase(0, pos + 1);
+    }
+    if (!message.empty())
+        args.push_back(message);
+    return args;
+}
+
+void Client::ExecJoinTEST(const std::string &msg, int fd, Server & server, User &user)
+{
+	std::cout << "JE VAIS JOIN ATTENTION" << std::endl;
+	// std::deque<std::string>	channels = Client::split(commandArgs[1], ",");
+    (void)user;
+}
+
+User	*Client::findUserByFd(int fd) {
+	std::map<int, User>::iterator	it = this->_users.find(fd);
+
+	if (it == this->_users.end())
+		return (NULL);
+	return (&it->second);
+}
+
+void Client::cliReceive(std::string const &msg, int fd, Server & server)
 {
 	ft_print("Client received: " + msg, INFO);
 
+	User *user = findUserByFd(fd);
+		std::cout << user << std::endl;
 	std::string command = msg.substr(0, msg.find(" "));
 	std::string remaining = msg.substr(msg.find(" ") + 1);
 
+	
 	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE") &&
 		(remaining.empty() || remaining == "\r\n"))
 	{
@@ -61,7 +108,7 @@ void Client::cliReceive(std::string const &msg, int fd)
 	else if (msg.find("JOIN") != std::string::npos)
 	{
 		std::cerr << "cliReceive: JOIN" << std::endl;
-		// Channel
+		ExecJoinTEST(msg, fd, *this, user);
 	}
 }
 

@@ -3,19 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:17:09 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:42:04 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 13:43:13 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
+#include <deque>
+#include <string>
+#include"../channel/User.hpp"
+
+class User;
+class Server;
+
 class Client
 {
-	private:
+	protected:
 		int				_cli_fd;
 		int				_cli_port;
 
@@ -23,6 +30,7 @@ class Client
 		std::string		_cli_username;
 		std::string		_cli_realname;
 		std::string		_cli_hostname;
+		std::map<int, User>				_users;
 
 	public:
 		Client(void);
@@ -32,7 +40,7 @@ class Client
 
 		Client &operator=(Client const &rhs);
 
-		void	cliReceive(std::string const &msg, int fd);
+		void	cliReceive(std::string const &msg, int fd, Server & server);
 
 		void	setFd(int fd);
 		void	setPort(int port);
@@ -49,9 +57,12 @@ class Client
 		std::string	getHostname(void) const;
 		std::string getPrefix(void) const;
 
+		User							*findUserByFd(int fd);
+		std::deque<std::string> 		split(std::string const &msg, std::string const &delimiters);
 
 		void ft_send(int fd, std::string const &msg, int flags);
 
+		void ExecJoinTEST(const std::string &msg, int fd, Server & server, User &user);
 		void handlePrivMsg(const std::string &msg, int fd);
 		void msg_prv(int fd, const std::string& name, const std::string& message);
 		void msg_channel(int fd, const std::string& channel, const std::string& message);
