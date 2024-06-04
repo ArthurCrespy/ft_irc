@@ -22,6 +22,8 @@
 
 # include <csignal>	    	// sigaction
 
+# include <algorithm>		// std::find
+
 # include <iostream>		// std::cout, std::endl
 # include <sstream>			// std::stringstream
 

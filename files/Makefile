@@ -3,26 +3,41 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+         #
+#    By: abinet <abinet@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/15 14:54:39 by acrespy           #+#    #+#              #
-#    Updated: 2023/05/16 15:01:53 by acrespy          ###   ########.fr        #
+#    Updated: 2024/06/03 19:54:54 by abinet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME        := ircserv
 
 SRCS		:= \
+				srcs/channel/Channel.cpp \
+				srcs/channel/Channel_utils.cpp \
 				srcs/client/Client.cpp \
 				srcs/client/Client_utils.cpp \
 				srcs/server/Server.cpp \
 				srcs/server/Server_setup.cpp \
 				srcs/server/Server_start.cpp \
 				srcs/server/Server_utils.cpp \
+				srcs/server/Server_cmd.cpp \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \
-				srcs/main.cpp \
+				srcs/utils/ft_strlen.cpp \
+				srcs/main.cpp
+
+INCLUDES	:= \
+			includes/channel/Channel.hpp \
+			includes/client/Client.hpp \
+			includes/headers/ft_irc_define.h \
+			includes/headers/ft_irc_include.h \
+			includes/headers/ft_irc_typedef.h \
+			includes/server/Server.hpp \
+			includes/utils/replies.h \
+			includes/utils/utils.h \
+			includes/ft_irc.h
 
 OBJ_DIR     := .objs
 OBJS 		:= ${SRCS:%.cpp=${OBJ_DIR}/%.o}
@@ -37,7 +52,7 @@ DIR_DUP     = mkdir -p ${@D}
 
 all: ${NAME}
 
-${NAME}: ${OBJS}
+${NAME}: ${OBJS} ${INCLUDES}
 	${CC} ${OBJS} -o ${NAME}
 	${info EXECUTABLE CREATED: ${NAME}}
 
@@ -59,4 +74,4 @@ re:
 	${MAKE} all
 
 .PHONY: all clean fclean re
-.SILENT: ${NAME} ${OBJS} ${SRCS} ${IRSSI} clean fclean re
+.SILENT: ${NAME} ${SRCS} ${OBJS} ${INCLUDES} clean fclean re

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/14 14:28:57 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/03 19:50:24 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../includes/ft_irc.h"
+#include "../ft_irc.h"
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
@@ -23,8 +23,10 @@ class Server
 		std::string	_srv_password;
 
 		t_poll		_poll;
+		t_user		_user;
 		t_client	_client;
-		t_signal 	_signal;
+		t_channel	_channel;
+		t_signal	_signal;
 
 	public:
 		Server(void);
@@ -54,6 +56,17 @@ class Server
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
 		int			getSock(void) const;
+		Channel&	getchannel(const std::string& name_channel);
+
+		void handleCommand(const std::string & msg, int fd);
+		void handleJoin(const std::string &msg, int fd);
+		void handlePrivMsg(const std::string &msg, int fd);
+		void msg_prv(int fd, const std::string& name, const std::string& message);
+		void msg_channel(int fd, const std::string& channel, const std::string& message);
+
+		void logBot(int fd, std::string const &msg);
+
+		void ft_send(int fd, std::string const &msg, int flags);
 };
 
 #endif

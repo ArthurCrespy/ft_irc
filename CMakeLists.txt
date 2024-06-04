@@ -6,7 +6,3 @@ set(CMAKE_CXX_STANDARD 98)
 file(GLOB ft_irc_src CONFIGURE_DEPENDS "files/srcs/*/*.cpp" "files/srcs/*.cpp" "files/includes/*.hpp")
 
 add_executable(ft_irc ${ft_irc_src})
-
-
-
-

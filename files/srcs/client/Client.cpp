@@ -3,18 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:49:33 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/15 16:49:33 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/03 19:53:12 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
 
-Client::Client(void) : _cli_fd(-1), _cli_port(-1) {}
+Client::Client(void) : _cli_fd(-1), _cli_port(-1), _cli_registered(false) {}
 
-Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_hostname(hostname) {}
+Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_registered(false), _cli_hostname(hostname)
+{
+	_cli_username = "user_test";
+	_cli_nickname = "nick_test";
+	_cli_realname = "real_test";
+	_cli_password = "pass_test";
+}
 
 Client::Client(Client const &src)
 {
@@ -37,7 +43,10 @@ Client &Client::operator=(Client const &rhs)
 	return (*this);
 }
 
-void	Client::cliReceive(std::string const &msg)
+void Client::ft_send(int fd, std::string const &msg, int flags)
 {
-	ft_print("Client received: " + msg, INFO);
+	std::string str = ":" + getPrefix() + " " + msg + "\r\n";
+
+	if (send(fd, str.c_str(), ft_strlen(str), flags) == -1)
+		throw std::runtime_error("Syscall send() Failed in send: " + std::string(std::strerror(errno)));
 }
