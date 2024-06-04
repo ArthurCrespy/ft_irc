@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:22:15 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:57:41 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/03 19:50:08 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,8 @@ void Server::servReceive(int fd)
 			break ;
 		memset(buffer, 0, sizeof(buffer));
 	}
-		_client.at(fd)->cliReceive(fd, msg);
+	handleCommand(msg, fd);
+	//_client.at(fd).cliReceive(msg, fd, *this);
 }
 
 // todo: add the support of nc client
