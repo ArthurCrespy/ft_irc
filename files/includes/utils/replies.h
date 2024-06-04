@@ -16,6 +16,7 @@
 /* Error Responses */
 # define ERR_NONICKNAMEGIVEN(nickname)							"431 " + nickname + " :No nickname given"
 # define ERR_NICKNAMEINUSE(nickname)							"433 " + nickname + " " + nickname	+ " :Nickname is already in use"
+# define ERR_NOLOGIN(nickname)									"444 " + nickname + " :User not logged in"
 # define ERR_NOTREGISTERED(nickname)							"451 " + nickname + " :You have not registered"
 # define ERR_ALREADYREGISTERED(nickname)						"462 " + nickname + " :You may not register"
 # define ERR_PASSWDMISMATCH(nickname)							"464 " + nickname + " :Password incorrect"
@@ -54,6 +55,10 @@
 
 /* Custom Responses */
 # define RPL_WELCOME(nickname)									"001 " + nickname + " :Welcome to the 42IRC network"
+# define RPL_RGST(command)										"Cannot do " + command + "! Not authenticated...\nUse LOG, our bot! /msg LOG HELP"
+# define RPL_LOGHELP											"HELP for LOG bot:\nTo get help: /msg LOG HELP\nTo register: /msg LOG REGISTER <password> <nickname> <username> <realname>\nTo login   : /msg LOG LOGIN <password>"
+# define RPL_LOGREGISTER(nickname)								"Welcome " + nickname + " ! You are now registered"
+# define RPL_LOGLOGIN(nickname)									"Welcome back" + nickname + " ! You are now logged in"
 
 # define RPL_PONG(nickname) /*test*/							"PONG " + nickname + " :" + nickname
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   Channel_utils.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/24 09:48:34 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/03 00:32:17 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,4 +141,15 @@ void Channel::broadcast(std::string const &msg)
 {
 	for (it_members it = _channel_members.begin(); it != _channel_members.end(); it++)
 		(*it)->ft_send((*it)->getFd(), msg, 0);
+}
+
+int Channel::send_msg(const std::string & msg, int fd)
+{
+	(void)msg;
+	(void)fd;
+
+	//
+	//
+	//
+	return 0 ;
 }

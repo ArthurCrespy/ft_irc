@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client_utils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 16:53:14 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/16 16:53:14 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/03 21:53:02 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ void	Client::setFd(int fd)
 void	Client::setPort(int port)
 {
 	this->_cli_port = port;
+}
+
+void	Client::setRegistration(bool reg)
+{
+	this ->_cli_registered = reg;
 }
 
 void	Client::setNickname(std::string const &nickname)
@@ -52,6 +57,11 @@ int	Client::getPort(void) const
 	return (this->_cli_port);
 }
 
+bool Client::getRegistration() const
+{
+	return (this->_cli_registered);
+}
+
 std::string	Client::getNickname(void) const
 {
 	return (this->_cli_nickname);
@@ -72,10 +82,15 @@ std::string	Client::getHostname(void) const
 	return (this->_cli_hostname);
 }
 
+std::string	Client::getPassword(void) const
+{
+	return (this->_cli_password);
+}
+
 std::string Client::getPrefix(void) const
 {
-    std::string username = _cli_username.empty() ? "" : "!" + _cli_username;
-    std::string hostname = _cli_hostname.empty() ? "" : "@" + _cli_hostname;
+	std::string username = _cli_username.empty() ? "" : "!" + _cli_username;
+	std::string hostname = _cli_hostname.empty() ? "" : "@" + _cli_hostname;
 
-    return (_cli_nickname + username + hostname);
+	return (_cli_nickname + username + hostname);
 }

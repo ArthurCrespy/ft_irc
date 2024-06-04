@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:22:15 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/22 00:57:41 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/03 19:50:08 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,11 @@ void Server::servPoll(void)
 {
 	int			srv_poll_ret;
 	t_poll_fd	srv_poll;
-	Client		client(_srv_sock, this->getPort(), "server");
+	Client		*client = new Client();
 
+	client->setFd(_srv_sock);
+	client->setPort(this->getPort());
+	client->setHostname("server");
 
 	srv_poll.fd = _srv_sock;
 	srv_poll.events = POLLIN;
@@ -158,13 +161,20 @@ void Server::servConnect(void)
 	if (cli_name_len != 0)
 		throw std::runtime_error("Syscall getnameinfo() Failed in servConnect: " + (std::string)std::strerror(errno));
 
-	Client client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
+	Client *client = new Client();
+
+	client->setFd(cli_fd);
+	client->setPort(ntohs(cli_adrr_in.sin_port));
+	client->setHostname(cli_name_in);
 
 	std::string client_name = cli_name_in;
-	client.ft_send(cli_fd, RPL_WELCOME(client_name), 0);
+	client->ft_send(cli_fd, RPL_WELCOME(client_name), 0);
 
 	_poll.push_back(cli_poll_in);
+	_user.insert(std::make_pair(client_name, *client));
 	_client.insert(std::make_pair(cli_fd, client));
+
+	std::cerr << _client.at(cli_fd)->getNickname() << std::endl;
 
 	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
 }
@@ -197,7 +207,8 @@ void Server::servReceive(int fd)
 			break ;
 		memset(buffer, 0, sizeof(buffer));
 	}
-	_client.at(fd).cliReceive(msg, fd);
+	handleCommand(msg, fd);
+	//_client.at(fd).cliReceive(msg, fd, *this);
 }
 
 // todo: add the support of nc client
@@ -214,7 +225,7 @@ void Server::servClose(int fd)
 	if (close(fd) == -1)
 		throw std::runtime_error("Syscall close() Failed in servClose: " + (std::string)std::strerror(errno));
 
-	ft_print("Connection closed: " + _client.at(fd).getHostname(), LOG);
+	ft_print("Connection closed: " + _client.at(fd)->getHostname(), LOG);
 
 	for (it_poll it = _poll.begin(); it != _poll.end(); it++)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_utils.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:17:29 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/14 16:17:29 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/03 00:36:50 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,9 @@ std::string	Server::getPassword(void) const
 int Server::getSock(void) const
 {
 	return (this->_srv_sock);
+}
+
+Channel& Server::getchannel(const std::string & name_channel)
+{
+	return _channel.at(name_channel);
 }
