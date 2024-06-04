@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/24 09:48:34 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/04 17:05:35 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 	setLimit(-1);
 	setInviteOnly(false);
 
-	_channel_admins.push_back(op);
-	_channel_members.push_back(op);
+	_channel_admins.insert(std::make_pair(op->getUsername(), op));
+	_channel_members.insert(std::make_pair(op->getUsername(), op));
 
 	ft_print("Channel created: " + _channel_name, LOG);
 }

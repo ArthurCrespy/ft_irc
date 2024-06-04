@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/03 19:50:24 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 15:29:34 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ class Server
 		void handleJoin(const std::string &msg, int fd);
 		void handlePrivMsg(const std::string &msg, int fd);
 		void msg_prv(int fd, const std::string& name, const std::string& message);
-		void msg_channel(int fd, const std::string& channel, const std::string& message);
+		void msg_channel(int fd, const std::string& channel, std::string& message);
 
 		void logBot(int fd, std::string const &msg);
 

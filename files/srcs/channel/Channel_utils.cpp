@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/03 00:32:17 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 17:40:15 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,20 +102,17 @@ t_members Channel::getAdmins(void) const
 
 void Channel::addMember(Client *member)
 {
-	_channel_members.push_back(member);
+	_channel_members.insert(std::make_pair(member->getNickname(), member));
 }
 
 void Channel::removeMember(Client *member)
 {
-	it_members it = std::find(_channel_members.begin(), _channel_members.end(), member);
+	it_members it = _channel_members.find(member->getNickname());
 	if (it != _channel_members.end())
 	{
-		if (std::find(_channel_admins.begin(), _channel_admins.end(), member) != _channel_admins.end())
-		{
-			removeAdmin(member);
-			if (_channel_admins.empty())
-				addAdmin(_channel_members.front());
-		}
+		removeAdmin(member);
+		if (_channel_admins.empty())
+			addAdmin(_channel_members.begin()->second);
 		_channel_members.erase(it);
 	}
 
@@ -124,15 +121,15 @@ void Channel::removeMember(Client *member)
 void Channel::addAdmin(Client *op)
 {
 	op->ft_send(op->getFd(), RPL_CHANNELMODEIS(op->getNickname(), _channel_name, "+o ", op->getNickname()), 0);
-	_channel_admins.push_back(op);
+	_channel_admins.insert(std::make_pair(op->getNickname(), op));
 }
 
 void Channel::removeAdmin(Client *op)
 {
-	it_members it = std::find(_channel_admins.begin(), _channel_admins.end(), op);
+	it_members it = _channel_members.find(op->getNickname());
 	if (it != _channel_admins.end())
 	{
-		(*it)->ft_send((*it)->getFd(), RPL_CHANNELMODEIS((*it)->getNickname(), _channel_name, "-o ", op->getNickname()), 0);
+		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o ", op->getNickname()), 0);
 		_channel_admins.erase(it);
 	}
 }
@@ -140,16 +137,5 @@ void Channel::removeAdmin(Client *op)
 void Channel::broadcast(std::string const &msg)
 {
 	for (it_members it = _channel_members.begin(); it != _channel_members.end(); it++)
-		(*it)->ft_send((*it)->getFd(), msg, 0);
-}
-
-int Channel::send_msg(const std::string & msg, int fd)
-{
-	(void)msg;
-	(void)fd;
-
-	//
-	//
-	//
-	return 0 ;
+		(*it).second->ft_send((*it).second->getFd(), msg, 0);
 }
