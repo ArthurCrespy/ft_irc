@@ -64,6 +64,8 @@ class Server
 		void msg_prv(int fd, const std::string& name, const std::string& message);
 		void msg_channel(int fd, const std::string& channel, const std::string& message);
 
+		void logBot(int fd, std::string const &msg);
+
 		void ft_send(int fd, std::string const &msg, int flags);
 };
 
