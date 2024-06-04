@@ -27,14 +27,17 @@ typedef struct	sigaction   t_signal;
 typedef std::vector<int>							t_fd;
 typedef std::vector<int>::iterator					it_fd;
 
-typedef std::vector<Client *>						t_members;
-typedef std::vector<Client *>::iterator				it_members;
-
 typedef std::vector<t_poll_fd>						t_poll;
 typedef std::vector<t_poll_fd>::iterator			it_poll;
 
-typedef std::map<int, Client>						t_client;
-typedef std::map<int, Client>::iterator				it_client;
+typedef std::vector<Client *>						t_members;
+typedef std::vector<Client *>::iterator				it_members;
+
+typedef std::map<std::string, Client>						t_user;
+typedef std::map<std::string, Client>::iterator				it_user;
+
+typedef std::map<int, Client *>						t_client;
+typedef std::map<int, Client *>::iterator			it_client;
 
 typedef std::map<std::string, Channel>				t_channel;
 typedef std::map<std::string, Channel>::iterator	it_channel;
