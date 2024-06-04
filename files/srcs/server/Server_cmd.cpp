@@ -23,12 +23,14 @@ void Server::handleCommand(std::string const &msg, int fd)
 	std::string remaining;
 	std::getline(iss, remaining);
 
-	if (!_client.at(fd)->getRegistration() && false)
+	if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
 	{
-		if ((command.find("PRIVMSG") != std::string::npos || command.find("/msg") != std::string::npos) && remaining.find("LOG") != std::string::npos)
-			logBot(fd, remaining);
-		else
-			ft_send(_client.at(fd)->getFd(), ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
+		logBot(fd, remaining);
+		return ;
+	}
+	else if (!_client.at(fd)->getRegistration())
+	{
+		ft_send(fd, ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
 		return ;
 	}
 
@@ -121,56 +123,4 @@ void Server::msg_channel(int fd, const std::string& msg, std::string& name_chann
 	{
 		ft_send(fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), name_channel), 0);
 	}
-}
-
-void Server::ft_send(int fd, std::string const &msg, int flags)
-{
-	std::string str = ":" + _client.at(fd)->getPrefix() + " " + msg + "\r\n";
-
-	if (send(fd, str.c_str(), ft_strlen(str), flags) == -1)
-		throw std::runtime_error("Syscall send() Failed in send: " + std::string(std::strerror(errno)));
-}
-
-void Server::logBot(int fd, std::string const &msg)
-{
-	std::istringstream iss(msg);
-	std::string command, param, password, nickname, username, realname;
-
-	iss >> command >> param >> password >> nickname;
-
-	if (command != "LOG")
-	{
-		ft_send(fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command), 0);
-		return ;
-	}
-
-	if (param.empty())
-		ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "LOG"), 0);
-	else if (param == "HELP" || param == ":HELP")
-		ft_send(fd, RPL_LOGHELP, 0);
-	else if (param == "REGISTER" || param == ":REGISTER")
-	{
-		iss >> username >> realname;
-		if (username.empty() || realname.empty())
-			ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "REGISTER"), 0);
-		else
-		{
-			_client.at(fd)->setNickname(nickname);
-			_client.at(fd)->setUsername(username);
-			_client.at(fd)->setRealname(realname);
-			_client.at(fd)->setRegistration(true);
-			ft_send(fd, RPL_LOGREGISTER(_client.at(fd)->getNickname()), 0);
-		}
-	}
-	else if (param == "LOGIN" || param == ":LOGIN")
-	{
-		if (password.empty() || nickname.empty())
-			ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "LOGIN"), 0);
-		else if ( nickname == _client.at(fd)->getNickname() && password == _client.at(fd)->getPassword())
-			ft_send(fd, RPL_LOGLOGIN(_client.at(fd)->getNickname()), 0);
-		else
-			ft_send(fd, ERR_PASSWDMISMATCH(_client.at(fd)->getNickname()), 0);
-	}
-	else
-		ft_send(fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command), 0);
 }

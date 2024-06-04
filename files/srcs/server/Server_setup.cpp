@@ -18,7 +18,6 @@
 	* @param	char **argv : arguments
 	* @return	None
 */
-
 void Server::servSetup(int argc, char **argv)
 {
 	if (argc != 3)

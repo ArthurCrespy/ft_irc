@@ -33,8 +33,8 @@ typedef std::vector<t_poll_fd>::iterator			it_poll;
 typedef std::map<std::string, Client *>						t_members;
 typedef std::map<std::string, Client *>::iterator			it_members;
 
-typedef std::map<std::string, Client>						t_user;
-typedef std::map<std::string, Client>::iterator				it_user;
+typedef std::map<std::string, Client>				t_user;
+typedef std::map<std::string, Client>::iterator		it_user;
 
 typedef std::map<int, Client *>						t_client;
 typedef std::map<int, Client *>::iterator			it_client;
