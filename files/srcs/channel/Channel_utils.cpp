@@ -148,8 +148,5 @@ int Channel::send_msg(const std::string & msg, int fd)
 	(void)msg;
 	(void)fd;
 
-	//
-	//
-	//
-	return 0 ;
+	return (0);
 }

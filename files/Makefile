@@ -18,10 +18,12 @@ SRCS		:= \
 				srcs/client/Client.cpp \
 				srcs/client/Client_utils.cpp \
 				srcs/server/Server.cpp \
+				srcs/server/Server_botLog.cpp \
+				srcs/server/Server_cmd.cpp \
+				srcs/server/Server_send.cpp \
 				srcs/server/Server_setup.cpp \
 				srcs/server/Server_start.cpp \
 				srcs/server/Server_utils.cpp \
-				srcs/server/Server_cmd.cpp \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \
