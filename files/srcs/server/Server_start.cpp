@@ -67,11 +67,7 @@ void Server::servPoll(void)
 {
 	int			srv_poll_ret;
 	t_poll_fd	srv_poll;
-	Client		*client = new Client();
-
-	client->setFd(_srv_sock);
-	client->setPort(this->getPort());
-	client->setHostname("server");
+	Client		*client = new Client(_srv_sock, this->getPort(), "server");
 
 	srv_poll.fd = _srv_sock;
 	srv_poll.events = POLLIN;
@@ -108,7 +104,6 @@ void Server::servPoll(void)
 		}
 	}
 }
-
 
 /**
 	*  @brief	Signal handler for SIGINT and SIGTERM
@@ -161,11 +156,7 @@ void Server::servConnect(void)
 	if (cli_name_len != 0)
 		throw std::runtime_error("Syscall getnameinfo() Failed in servConnect: " + (std::string)std::strerror(errno));
 
-	Client *client = new Client();
-
-	client->setFd(cli_fd);
-	client->setPort(ntohs(cli_adrr_in.sin_port));
-	client->setHostname(cli_name_in);
+	Client *client = new Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
 	std::string client_name = cli_name_in;
 	client->ft_send(cli_fd, RPL_WELCOME(client_name), 0);
@@ -173,8 +164,6 @@ void Server::servConnect(void)
 	_poll.push_back(cli_poll_in);
 	_user.insert(std::make_pair(client_name, *client));
 	_client.insert(std::make_pair(cli_fd, client));
-
-	std::cerr << _client.at(cli_fd)->getNickname() << std::endl;
 
 	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
 }
@@ -208,7 +197,6 @@ void Server::servReceive(int fd)
 		memset(buffer, 0, sizeof(buffer));
 	}
 	handleCommand(msg, fd);
-	//_client.at(fd).cliReceive(msg, fd, *this);
 }
 
 // todo: add the support of nc client
@@ -236,4 +224,5 @@ void Server::servClose(int fd)
 		}
 	}
 	_client.erase(_client.find(fd));
+	_user.erase(_user.find(_client.at(fd)->getNickname()));
 }
