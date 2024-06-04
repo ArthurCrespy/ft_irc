@@ -27,7 +27,6 @@ class Client
 		std::string		_cli_username;
 		std::string		_cli_realname;
 		std::string		_cli_hostname;
-		std::string		_cli_password;
 
 	public:
 		Client(void);
@@ -52,7 +51,6 @@ class Client
 		std::string	getUsername(void) const;
 		std::string	getRealname(void) const;
 		std::string	getHostname(void) const;
-		std::string	getPassword(void) const;
 		std::string getPrefix(void) const;
 
 		void ft_send(int fd, std::string const &msg, int flags);

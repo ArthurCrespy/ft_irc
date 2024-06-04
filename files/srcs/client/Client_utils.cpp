@@ -82,11 +82,6 @@ std::string	Client::getHostname(void) const
 	return (this->_cli_hostname);
 }
 
-std::string	Client::getPassword(void) const
-{
-	return (this->_cli_password);
-}
-
 std::string Client::getPrefix(void) const
 {
 	std::string username = _cli_username.empty() ? "" : "!" + _cli_username;
