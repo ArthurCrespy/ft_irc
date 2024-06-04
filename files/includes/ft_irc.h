@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 10:35:05 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/20 22:54:43 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 14:52:33 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # pragma once
+
+# include <deque>
+# include <string>
 
 # include "headers/ft_irc_define.h"
 # include "headers/ft_irc_include.h"

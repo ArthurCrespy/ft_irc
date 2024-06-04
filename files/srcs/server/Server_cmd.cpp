@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_cmd.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/04 00:26:40 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 15:52:58 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,48 @@ void Server::handleCommand(std::string const &msg, int fd)
 		ft_send(fd, RPL_PONG(_client.at(fd)->getNickname()), 0); // nickname or hostname ?
 	else if (command == "PRIVMSG")
 		handlePrivMsg(remaining, fd);
-	else if (msg.find("JOIN") != std::string::npos) {}
-		// handleJoin(remaining, fd, server);
+	else if (msg.find("JOIN") != std::string::npos)
+	{
+		handleJoin(remaining, fd);
+	}
+}
+
+std::deque<std::string>	Server::split(std::string message, std::string delimiters) {
+	std::deque<std::string>		args;
+	std::string					token;
+	size_t						pos = 0;
+
+	while ((pos = message.find_first_of(delimiters)) != std::string::npos) {
+		token = message.substr(0, pos);
+
+		if (!token.empty())
+			args.push_back(token);
+		message.erase(0, pos + 1);
+	}
+	if (!message.empty())
+		args.push_back(message);
+	return (args);
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
 {
-	std::string channel = msg;
-	if (channel[0] != '#' || channel[0] != '&')
-		return (ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel), 0));
-	channel.erase(0, 1);
+    std::deque<std::string> channel = Server::split(msg, " ");
+
+    // std::cout << "Channels received:" << std::endl;
+    // for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it) {
+    //     std::cout << *it << std::endl;
+    // }
+	for (std::deque<std::string>::iterator channelsIt = channel.begin(); channelsIt != channel.end(); channelsIt++)
+	{
+		std::string	channelName = *channelsIt;
+		if (channelName.at(0) != '#') {
+			return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), channelName), 0);
+			continue ;
+		}
+	}
+	
+	// channel.erase(0, 1);
+	(void)fd;
 }
 
 void Server::handlePrivMsg(const std::string &msg, int fd)

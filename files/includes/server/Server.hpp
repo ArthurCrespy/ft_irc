@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/03 19:50:24 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/04 14:52:04 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ class Server
 		void handleCommand(const std::string & msg, int fd);
 		void handleJoin(const std::string &msg, int fd);
 		void handlePrivMsg(const std::string &msg, int fd);
+
+		std::deque<std::string>	split(std::string message, std::string delimiters);
 		void msg_prv(int fd, const std::string& name, const std::string& message);
 		void msg_channel(int fd, const std::string& channel, const std::string& message);
 
