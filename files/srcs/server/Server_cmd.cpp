@@ -26,14 +26,14 @@ void Server::handleCommand(std::string const &msg, int fd)
 //	 std::string command = msg.substr(0, msg.find(" "));
 //	 std::string remaining = msg.substr(msg.find(" ") + 1);
 
-//	if (!_client.at(fd)->getRegistration())
-//	{
-//		if ((command.find("PRIVMSG") != std::string::npos || command.find("/msg") != std::string::npos) && remaining.find("LOG") != std::string::npos)
-//			logBot(fd, remaining);
-//		else
-//			ft_send(_client.at(fd)->getFd(), ERR_NOTREGISTERED(_client.at(fd)->getHostname()), 0);
-//		return ;
-//	}
+	if (!_client.at(fd)->getRegistration() && false)
+	{
+		if ((command.find("PRIVMSG") != std::string::npos || command.find("/msg") != std::string::npos) && remaining.find("LOG") != std::string::npos)
+			logBot(fd, remaining);
+		else
+			ft_send(_client.at(fd)->getFd(), ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
+		return ;
+	}
 
 	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE") &&
 		(remaining.empty() || remaining == "\r\n"))

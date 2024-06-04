@@ -16,6 +16,7 @@
 /* Error Responses */
 # define ERR_NONICKNAMEGIVEN(nickname)							"431 " + nickname + " :No nickname given"
 # define ERR_NICKNAMEINUSE(nickname)							"433 " + nickname + " " + nickname	+ " :Nickname is already in use"
+# define ERR_NOLOGIN(nickname)									"444 " + nickname + " :User not logged in"
 # define ERR_NOTREGISTERED(nickname)							"451 " + nickname + " :You have not registered"
 # define ERR_ALREADYREGISTERED(nickname)						"462 " + nickname + " :You may not register"
 # define ERR_PASSWDMISMATCH(nickname)							"464 " + nickname + " :Password incorrect"
