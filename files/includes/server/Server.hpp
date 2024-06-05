@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/04 14:52:04 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/05 12:59:28 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
+
+class CLient;
 
 class Server
 {

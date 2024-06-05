@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/04 15:52:58 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/05 14:58:38 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,41 @@ std::deque<std::string>	Server::split(std::string message, std::string delimiter
 
 void Server::handleJoin(const std::string &msg, int fd)
 {
-    std::deque<std::string> channel = Server::split(msg, " ");
+    std::deque<std::string> channels = Server::split(msg, " ");
+	std::string password;
+	if (channels.size() < 2)
+        return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
 
     // std::cout << "Channels received:" << std::endl;
-    // for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it) {
+    // for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it)
     //     std::cout << *it << std::endl;
-    // }
-	for (std::deque<std::string>::iterator channelsIt = channel.begin(); channelsIt != channel.end(); channelsIt++)
-	{
-		std::string	channelName = *channelsIt;
-		if (channelName.at(0) != '#') {
-			return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), channelName), 0);
-			continue ;
-		}
-	}
 	
+	if (channels.size() > 2)
+		password = channels[2];
+
+	// if (channels.empty())
+    //     return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
+
+    std::string channelName = channels.front();
+    if (channelName.at(0) != '#') {
+        return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), channelName), 0);
+	}
+
+	if (_channel.find(channelName) != _channel.end()) {
+	
+        Channel &existingChannel = _channel[channelName];
+		// if (!existingChannel.checkPassword(password))
+		// 	return ft_send(fd, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName), 0);
+
+        existingChannel.addMember(_client.at(fd));
+		ft_send(fd, "You have joined the channel: " + channelName, 0);
+        existingChannel.broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
+    }
+	else {
+        Channel newChannel(channelName, _client.at(fd));
+        _channel[channelName] = newChannel;
+    }
+
 	// channel.erase(0, 1);
 	(void)fd;
 }

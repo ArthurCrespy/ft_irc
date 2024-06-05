@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/04 14:17:42 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/05 14:58:15 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class Channel
 		bool getPasswordRestriction(void) const;
 		int getLimit(void) const;
 		bool getInviteOnly(void) const;
+		// void checkPassword(std::string pass);
 		// int getMembersNb
 		t_members getMembers(void) const;
 		t_members getAdmins(void) const;
