@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/05 19:40:04 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/05 20:07:13 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ void Server::handleCommand(std::string const &msg, int fd)
 	std::string remaining;
 	std::getline(iss, remaining);
 
-	if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
-	{
-		logBot(fd, remaining);
-		return ;
-	}
-	else if (!_client.at(fd)->getRegistration())
-	{
-		ft_send(fd, ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
-		return ;
-	}
-
+	std::cout << "ici" << std::endl;
+	// if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
+	// {
+	// 	logBot(fd, remaining);
+	// 	return ;
+	// }
+	// else if (!_client.at(fd)->getRegistration())
+	// {
+	// 	ft_send(fd, ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
+	// 	return ;
+	// }
 	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE" ||
 		command == "/part" || command == "/mode" || command == "/msg" || command == "/join" || command == "/kick" || command == "/invite") &&
 		(remaining.empty() || remaining == "\r\n"))
@@ -48,6 +48,7 @@ void Server::handleCommand(std::string const &msg, int fd)
 		handlePrivMsg(remaining, fd);
 	else if (command == "JOIN" || command == "/join")
 	{
+		std::cout << "ici" << std::endl;
 		handleJoin(remaining, fd);
 	}
 }
@@ -61,6 +62,8 @@ void Server::handleJoin(const std::string &msg, int fd)
 
 	iss >> name_channel;
 
+	std::cout << "message :" << message << std::endl;
+	std::cout << "name :" << name_channel << std::endl;
 	if (name_channel.empty())
 		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
 	if (name_channel[0] != '#' && name_channel[0] !='&')
