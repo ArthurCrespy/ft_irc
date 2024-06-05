@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/04 17:38:54 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/05 19:40:04 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,48 @@ void Server::handleCommand(std::string const &msg, int fd)
 		handlePrivMsg(remaining, fd);
 	else if (command == "JOIN" || command == "/join")
 	{
-		// handleJoin(remaining, fd, server);
+		handleJoin(remaining, fd);
 	}
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
 {
-	std::string channel = msg;
-	if (channel[0] != '#' || channel[0] != '&')
-		return (ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel), 0));
-	channel.erase(0, 1);
+	std::istringstream iss(msg);
+
+	std::string name_channel;
+	std::string message;
+
+	iss >> name_channel;
+
+	if (name_channel.empty())
+		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
+	if (name_channel[0] != '#' && name_channel[0] !='&')
+		return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), name_channel), 0);
+
+	it_channel it;
+	it = _channel.find(name_channel);
+	if (it != _channel.end())
+	{
+		if (_channel.at(name_channel).getPasswordRestriction())
+		{
+			std::string mdp;
+			iss >> mdp;
+			if (mdp.empty() || _channel.at(name_channel).getPassword() != mdp)
+				return ft_send(fd, ERR_PASSWDMISMATCH(_client.at(fd)->getNickname()), 0);
+		}
+		_channel.at(name_channel).addMember(_client.at(fd));
+		ft_send(fd, "You have joined the channel: " + name_channel, 0);
+		_channel.at(name_channel).broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
+	}
+	else
+	{
+		Channel newChannel(name_channel, _client.at(fd));
+		_channel.insert(std::make_pair(name_channel, newChannel));
+	}
+	std::getline(iss, message);
+	msg_channel(fd, message, name_channel);
 }
+
 
 void Server::handlePrivMsg(const std::string &msg, int fd)
 {
@@ -68,13 +99,6 @@ void Server::handlePrivMsg(const std::string &msg, int fd)
 
 	iss >> name;
 	std::getline(iss, message);
-	// while (iss)
-	// {
-	// 	std::string temp;
-	// 	iss >> temp;
-	// 	message = message + " " + temp;
-	// }
-	std::cout << "message :" << message << std::endl;
 
 	if (message.empty() || message == "\r\n")
 	{
@@ -124,3 +148,60 @@ void Server::msg_channel(int fd, const std::string& msg, std::string& name_chann
 		ft_send(fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), name_channel), 0);
 	}
 }
+
+// std::deque<std::string>	Server::split(std::string message, std::string delimiters) {
+// 	std::deque<std::string>		args;
+// 	std::string					token;
+// 	size_t						pos = 0;
+
+// 	while ((pos = message.find_first_of(delimiters)) != std::string::npos) {
+// 		token = message.substr(0, pos);
+
+// 		if (!token.empty())
+// 			args.push_back(token);
+// 		message.erase(0, pos + 1);
+// 	}
+// 	if (!message.empty())
+// 		args.push_back(message);
+// 	return (args);
+// }
+
+// void Server::handleJoin(const std::string &msg, int fd)
+// {
+// 	std::deque<std::string> channels = Server::split(msg, " ");
+// 	std::string password;
+// 	if (channels.size() < 2)
+// 		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
+
+// 	// std::cout << "Channels received:" << std::endl;
+// 	// for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it)
+// 	//     std::cout << *it << std::endl;
+
+// 	if (channels.size() > 2)
+// 		password = channels[2];
+
+// 	// if (channels.empty())
+// 	// 	return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
+
+// 	std::string channelName = channels.front();
+// 	if (channelName.at(0) != '#') {
+// 		return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), channelName), 0);
+// 	}
+
+// 	if (_channel.find(channelName) != _channel.end()) {
+
+// 	Channel &existingChannel = _channel[channelName];
+// 		// if (!existingChannel.checkPassword(password))
+// 		// 	return ft_send(fd, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName), 0);
+
+// 		existingChannel.addMember(_client.at(fd));
+// 		ft_send(fd, "You have joined the channel: " + channelName, 0);
+// 		existingChannel.broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
+// 	}
+// 		else {
+// 			Channel newChannel(channelName, _client.at(fd));
+// 			_channel[channelName] = newChannel;
+// 	}
+// 	// channel.erase(0, 1);
+// }
+

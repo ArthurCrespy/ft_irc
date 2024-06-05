@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/04 15:29:34 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/05 20:01:16 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
+
+class CLient;
 
 class Server
 {
@@ -67,6 +69,8 @@ class Server
 		void logBot(int fd, std::string const &msg);
 
 		void ft_send(int fd, std::string const &msg, int flags);
+
+		//std::deque<std::string>	split(std::string message, std::string delimiters);
 };
 
 #endif

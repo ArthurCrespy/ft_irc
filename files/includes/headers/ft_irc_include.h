@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc_include.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 16:41:48 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/15 16:41:48 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/05 16:59:20 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 
 # include <vector>			// std::vector
 # include <map>				// std::map
+# include <deque>			// std::deque
 
 # include <ctime>			// std::time_t
 

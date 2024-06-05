@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/04 17:05:35 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/05 19:32:09 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 
 	_channel_admins.insert(std::make_pair(op->getUsername(), op));
 	_channel_members.insert(std::make_pair(op->getUsername(), op));
-
+	_channel_topic_restrict = false;
 	ft_print("Channel created: " + _channel_name, LOG);
 }
 
