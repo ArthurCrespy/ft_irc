@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/06 11:30:41 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/06 16:27:17 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ class Channel
 		t_members			_channel_members;
 		t_members			_channel_admins;
 
+		Client						*_owner;
+
 	public:
 		Channel(void);
 		Channel(std::string const &name, Client *op);
@@ -43,6 +45,7 @@ class Channel
 		void setPasswordRestriction(bool restrict);
 		void setLimit(int limit);
 		void setInviteOnly(bool io);
+		void setOwner(Client *owner);
 
 		std::string getName(void) const;
 		std::string getTopic(void) const;

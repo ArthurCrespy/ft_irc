@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel_utils.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/03 00:32:17 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/06 16:25:43 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,10 @@ void Channel::removeMember(Client *member)
 		_channel_members.erase(it);
 	}
 
+}
+
+void	Channel::setOwner(Client *owner) {
+	this->_owner = owner;
 }
 
 void Channel::addAdmin(Client *op)

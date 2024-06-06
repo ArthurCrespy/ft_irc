@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/06 14:14:19 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/06 16:57:08 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ std::deque<std::string>	Server::split(std::string message, std::string delimiter
 
 void Server::handleMode(const std::string &msg, int fd)
 {
-	;
+	(void)msg;
+	(void)fd;
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
@@ -81,11 +82,9 @@ void Server::handleJoin(const std::string &msg, int fd)
 	std::string password;
 	if (channels.size() < 1)
         return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
-
     // std::cout << "Channels received:" << std::endl;
     // for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it)
     //     std::cout << *it << std::endl;
-	
 	if (channels.size() > 2)
 		password = channels[2];
 	else
@@ -107,17 +106,20 @@ void Server::handleJoin(const std::string &msg, int fd)
 
         existingChannel.addMember(_client.at(fd));
 		ft_send(fd, "You have joined the channel: " + channelName, 0);
-        existingChannel.broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
+        // existingChannel.broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
     }
 	else {
         Channel newChannel(channelName, _client.at(fd));
 		// newChannel.
+		newChannel.setOwner(_client.at(fd));
+		newChannel.addAdmin(_client.at(fd));
 		if (!password.empty())
             newChannel.setPassword(password);
         _channel[channelName] = newChannel;
+		newChannel.addMember(_client.at(fd));
     }
-
 	// channel.erase(0, 1);
+
 	(void)fd;
 }
 
