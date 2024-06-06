@@ -16,9 +16,20 @@
 void Channel::setTopic(std::string const &topic)
 {
 	if (topic.empty())
-		_channel_topic = "No topic yet...";
+	{
+		_channel_topic = "No topic is set";
+		_channel_topic_set = false;
+	}
 	else
+	{
 		_channel_topic = topic;
+		_channel_topic_set = true;
+	}
+}
+
+void Channel::setTopicSet(bool set)
+{
+	_channel_topic_set = set;
 }
 
 void Channel::setTopicRestriction(bool restrict)
@@ -63,6 +74,11 @@ std::string Channel::getName(void) const
 std::string Channel::getTopic(void) const
 {
 	return (_channel_topic);
+}
+
+bool Channel::getTopicSet(void) const
+{
+	return (_channel_topic_set);
 }
 
 bool Channel::getTopicRestriction(void) const

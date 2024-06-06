@@ -15,6 +15,8 @@
 
 /* Error Responses */
 # define ERR_NONICKNAMEGIVEN(nickname)							"431 " + nickname + " :No nickname given"
+# define RPL_NOTOPIC(nickname, channel)							"331 " + nickname + " " + channel + " :No topic is set"
+# define RPL_TOPIC(nickname, channel, topic)					"332 " + nickname + " " + channel + " :" + topic
 # define ERR_NICKNAMEINUSE(nickname)							"433 " + nickname + " " + nickname	+ " :Nickname is already in use"
 # define ERR_NOLOGIN(nickname)									"444 " + nickname + " :User not logged in"
 # define ERR_NOTREGISTERED(nickname)							"451 " + nickname + " :You have not registered"
