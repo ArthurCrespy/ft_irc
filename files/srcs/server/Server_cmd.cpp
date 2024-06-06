@@ -23,33 +23,22 @@ void Server::handleCommand(std::string const &msg, int fd)
 	std::string remaining;
 	std::getline(iss, remaining);
 
-	if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
-	{
-		logBot(fd, remaining);
-		return ;
-	}
-	else if (!_client.at(fd)->getRegistration())
-	{
-		ft_send(fd, ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
-		return ;
-	}
-
-	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE" ||
-		command == "/part" || command == "/mode" || command == "/msg" || command == "/join" || command == "/kick" || command == "/invite") &&
-		(remaining.empty() || remaining == "\r\n"))
-	{
-		ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command), 0);
-		return ;
-	}
-
 	if (command == "PING" || command == "/ping")
-		ft_send(fd, RPL_PONG(_client.at(fd)->getNickname()), 0); // nickname or hostname ?
-	else if (command == "PRIVMSG" || command == "/msg")
+		return (ft_send(fd, RPL_PONG(_client.at(fd)->getNickname()), 0));
+	if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
+		return (logBot(fd, remaining));
+
+	if (!_client.at(fd)->getRegistration())
+		return (ft_send(fd, ERR_NOLOGIN(_client.at(fd)->getHostname()), 0));
+
+	if ((remaining.empty() || remaining == "\r\n"))
+		return (ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command), 0));
+
+
+	if (command == "PRIVMSG" || command == "/msg")
 		handlePrivMsg(remaining, fd);
 	else if (command == "JOIN" || command == "/join")
-	{
-		// handleJoin(remaining, fd, server);
-	}
+		{} // handleJoin(remaining, fd, server);
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
@@ -68,12 +57,6 @@ void Server::handlePrivMsg(const std::string &msg, int fd)
 
 	iss >> name;
 	std::getline(iss, message);
-	// while (iss)
-	// {
-	// 	std::string temp;
-	// 	iss >> temp;
-	// 	message = message + " " + temp;
-	// }
 	std::cout << "message :" << message << std::endl;
 
 	if (message.empty() || message == "\r\n")
