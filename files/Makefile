@@ -18,7 +18,7 @@ SRCS		:= \
 				srcs/client/Client.cpp \
 				srcs/client/Client_utils.cpp \
 				srcs/server/Server.cpp \
-				srcs/server/Server_botLog.cpp \
+				srcs/commands/Server_botLog.cpp \
 				srcs/commands/Server_kick.cpp \
 				srcs/commands/Server_topic.cpp \
 				srcs/server/Server_cmd.cpp \
