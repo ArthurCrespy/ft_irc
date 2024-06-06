@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/05 12:59:28 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/06 12:58:09 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ class Server
 		int			getSock(void) const;
 		Channel&	getchannel(const std::string& name_channel);
 
+		void handleMode(const std::string &msg, int fd);
 		void handleCommand(const std::string & msg, int fd);
 		void handleJoin(const std::string &msg, int fd);
 		void handlePrivMsg(const std::string &msg, int fd);

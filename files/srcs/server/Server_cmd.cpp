@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/05 14:58:38 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/06 14:14:19 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ void Server::handleCommand(std::string const &msg, int fd)
 	else if (command == "PRIVMSG")
 		handlePrivMsg(remaining, fd);
 	else if (msg.find("JOIN") != std::string::npos)
-	{
 		handleJoin(remaining, fd);
-	}
+	else if (command == "MODE")
+		handleMode(remaining, fd);
+	
 }
 
 std::deque<std::string>	Server::split(std::string message, std::string delimiters) {
@@ -69,11 +70,16 @@ std::deque<std::string>	Server::split(std::string message, std::string delimiter
 	return (args);
 }
 
+void Server::handleMode(const std::string &msg, int fd)
+{
+	;
+}
+
 void Server::handleJoin(const std::string &msg, int fd)
 {
     std::deque<std::string> channels = Server::split(msg, " ");
 	std::string password;
-	if (channels.size() < 2)
+	if (channels.size() < 1)
         return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
 
     // std::cout << "Channels received:" << std::endl;
@@ -82,6 +88,8 @@ void Server::handleJoin(const std::string &msg, int fd)
 	
 	if (channels.size() > 2)
 		password = channels[2];
+	else
+		password = std::string();
 
 	// if (channels.empty())
     //     return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
@@ -94,8 +102,8 @@ void Server::handleJoin(const std::string &msg, int fd)
 	if (_channel.find(channelName) != _channel.end()) {
 	
         Channel &existingChannel = _channel[channelName];
-		// if (!existingChannel.checkPassword(password))
-		// 	return ft_send(fd, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName), 0);
+		if (!existingChannel.getPassword().empty() && existingChannel.getPassword() != password)
+			return ft_send(fd, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName), 0);
 
         existingChannel.addMember(_client.at(fd));
 		ft_send(fd, "You have joined the channel: " + channelName, 0);
@@ -103,6 +111,9 @@ void Server::handleJoin(const std::string &msg, int fd)
     }
 	else {
         Channel newChannel(channelName, _client.at(fd));
+		// newChannel.
+		if (!password.empty())
+            newChannel.setPassword(password);
         _channel[channelName] = newChannel;
     }
 
