@@ -56,9 +56,11 @@ class Channel
 
 		void addMember(Client *member);
 		void removeMember(Client *member);
+		void removeMember(std::string const &member);
 
 		void addAdmin(Client *op);
 		void removeAdmin(Client *op);
+		void removeAdmin(std::string const &op);
 
 		void broadcast(std::string const &msg);
 };

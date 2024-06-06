@@ -118,6 +118,18 @@ void Channel::removeMember(Client *member)
 
 }
 
+void Channel::removeMember(std::string const &member)
+{
+	it_members it = _channel_members.find(member);
+	if (it != _channel_members.end())
+	{
+		removeAdmin((*it).second);
+		if (_channel_admins.empty())
+			addAdmin(_channel_members.begin()->second);
+		_channel_members.erase(it);
+	}
+}
+
 void Channel::addAdmin(Client *op)
 {
 	op->ft_send(op->getFd(), RPL_CHANNELMODEIS(op->getNickname(), _channel_name, "+o ", op->getNickname()), 0);
@@ -130,6 +142,16 @@ void Channel::removeAdmin(Client *op)
 	if (it != _channel_admins.end())
 	{
 		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o ", op->getNickname()), 0);
+		_channel_admins.erase(it);
+	}
+}
+
+void Channel::removeAdmin(std::string const &op)
+{
+	it_members it = _channel_members.find(op);
+	if (it != _channel_admins.end())
+	{
+		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o ", op), 0);
 		_channel_admins.erase(it);
 	}
 }

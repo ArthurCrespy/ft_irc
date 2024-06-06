@@ -67,6 +67,7 @@ class Server
 		void logBot(int fd, std::string const &msg);
 
 		void ft_send(int fd, std::string const &msg, int flags);
+		void kick(int fd, std::string const &msg);
 };
 
 #endif

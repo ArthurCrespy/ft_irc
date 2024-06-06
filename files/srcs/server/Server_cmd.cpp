@@ -39,6 +39,8 @@ void Server::handleCommand(std::string const &msg, int fd)
 		handlePrivMsg(remaining, fd);
 	else if (command == "JOIN" || command == "/join")
 		{} // handleJoin(remaining, fd, server);
+	else if (command == "KICK" || command == "/kick")
+		kick(fd, remaining);
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
