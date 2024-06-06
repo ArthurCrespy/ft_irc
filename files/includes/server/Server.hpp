@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/05 20:01:16 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/06 16:35:12 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class Server
 		void handleCommand(const std::string & msg, int fd);
 		void handleJoin(const std::string &msg, int fd);
 		void handlePrivMsg(const std::string &msg, int fd);
+		void handleInvite(const std::string &msg, int fd);
 		void msg_prv(int fd, const std::string& name, const std::string& message);
 		void msg_channel(int fd, const std::string& channel, std::string& message);
 

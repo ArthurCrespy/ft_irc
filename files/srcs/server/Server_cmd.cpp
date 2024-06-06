@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/05 20:07:13 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/06 17:18:43 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void Server::handleCommand(std::string const &msg, int fd)
 	std::string remaining;
 	std::getline(iss, remaining);
 
-	std::cout << "ici" << std::endl;
 	// if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
 	// {
 	// 	logBot(fd, remaining);
@@ -37,20 +36,40 @@ void Server::handleCommand(std::string const &msg, int fd)
 	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE" ||
 		command == "/part" || command == "/mode" || command == "/msg" || command == "/join" || command == "/kick" || command == "/invite") &&
 		(remaining.empty() || remaining == "\r\n"))
-	{
-		ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command), 0);
-		return ;
-	}
-
+		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command), 0);
 	if (command == "PING" || command == "/ping")
 		ft_send(fd, RPL_PONG(_client.at(fd)->getNickname()), 0); // nickname or hostname ?
 	else if (command == "PRIVMSG" || command == "/msg")
 		handlePrivMsg(remaining, fd);
 	else if (command == "JOIN" || command == "/join")
-	{
-		std::cout << "ici" << std::endl;
 		handleJoin(remaining, fd);
+	else if (command == "INVITE" || command == "/invite")
+		handleInvite(remaining, fd);
+}
+
+void Server::handleInvite(const std::string &msg, int fd)
+{
+	std::istringstream iss(msg);
+	std::string guest;
+	std::string name_channel;
+	iss >> guest >> name_channel;
+
+	if(guest.empty() || name_channel.empty())
+		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "INVITE"), 0);
+
+	if (!_client.at(fd))
+		return ft_send(fd, ERR_NOSUCHNICK(_client.at(fd)->getNickname(), guest), 0); // erreur sur guest attention
+	try
+	{
+		_channel.at(name_channel);
 	}
+	catch (const std::out_of_range&)
+	{
+		ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), name_channel), 0);
+	}
+	// if (_user.at(guest).getNickname())
+	// {
+	// }
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
@@ -62,12 +81,11 @@ void Server::handleJoin(const std::string &msg, int fd)
 
 	iss >> name_channel;
 
-	std::cout << "message :" << message << std::endl;
-	std::cout << "name :" << name_channel << std::endl;
 	if (name_channel.empty())
 		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
 	if (name_channel[0] != '#' && name_channel[0] !='&')
 		return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), name_channel), 0);
+	name_channel.erase(0, 1);
 
 	it_channel it;
 	it = _channel.find(name_channel);
@@ -88,11 +106,10 @@ void Server::handleJoin(const std::string &msg, int fd)
 	{
 		Channel newChannel(name_channel, _client.at(fd));
 		_channel.insert(std::make_pair(name_channel, newChannel));
+		_channel.at(name_channel).addMember(_client.at(fd));
+		ft_send(fd, "You have joined the channel: " + name_channel, 0);
 	}
-	std::getline(iss, message);
-	msg_channel(fd, message, name_channel);
 }
-
 
 void Server::handlePrivMsg(const std::string &msg, int fd)
 {
@@ -151,60 +168,3 @@ void Server::msg_channel(int fd, const std::string& msg, std::string& name_chann
 		ft_send(fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), name_channel), 0);
 	}
 }
-
-// std::deque<std::string>	Server::split(std::string message, std::string delimiters) {
-// 	std::deque<std::string>		args;
-// 	std::string					token;
-// 	size_t						pos = 0;
-
-// 	while ((pos = message.find_first_of(delimiters)) != std::string::npos) {
-// 		token = message.substr(0, pos);
-
-// 		if (!token.empty())
-// 			args.push_back(token);
-// 		message.erase(0, pos + 1);
-// 	}
-// 	if (!message.empty())
-// 		args.push_back(message);
-// 	return (args);
-// }
-
-// void Server::handleJoin(const std::string &msg, int fd)
-// {
-// 	std::deque<std::string> channels = Server::split(msg, " ");
-// 	std::string password;
-// 	if (channels.size() < 2)
-// 		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
-
-// 	// std::cout << "Channels received:" << std::endl;
-// 	// for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it)
-// 	//     std::cout << *it << std::endl;
-
-// 	if (channels.size() > 2)
-// 		password = channels[2];
-
-// 	// if (channels.empty())
-// 	// 	return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
-
-// 	std::string channelName = channels.front();
-// 	if (channelName.at(0) != '#') {
-// 		return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), channelName), 0);
-// 	}
-
-// 	if (_channel.find(channelName) != _channel.end()) {
-
-// 	Channel &existingChannel = _channel[channelName];
-// 		// if (!existingChannel.checkPassword(password))
-// 		// 	return ft_send(fd, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName), 0);
-
-// 		existingChannel.addMember(_client.at(fd));
-// 		ft_send(fd, "You have joined the channel: " + channelName, 0);
-// 		existingChannel.broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
-// 	}
-// 		else {
-// 			Channel newChannel(channelName, _client.at(fd));
-// 			_channel[channelName] = newChannel;
-// 	}
-// 	// channel.erase(0, 1);
-// }
-
