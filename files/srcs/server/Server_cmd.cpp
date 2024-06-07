@@ -6,11 +6,12 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/06 17:18:43 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/07 18:45:25 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
+
 
 void Server::handleCommand(std::string const &msg, int fd)
 {
@@ -50,15 +51,21 @@ void Server::handleCommand(std::string const &msg, int fd)
 void Server::handleInvite(const std::string &msg, int fd)
 {
 	std::istringstream iss(msg);
-	std::string guest;
+	std::string target;
 	std::string name_channel;
-	iss >> guest >> name_channel;
+	iss >> target >> name_channel;
 
-	if(guest.empty() || name_channel.empty())
+	if(target.empty() || name_channel.empty())
 		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "INVITE"), 0);
-
-	if (!_client.at(fd))
-		return ft_send(fd, ERR_NOSUCHNICK(_client.at(fd)->getNickname(), guest), 0); // erreur sur guest attention
+	try
+	{
+		_client.at(fd);
+		_user.at(target);
+	}
+	catch (const std::out_of_range&)
+	{
+		return ft_send(fd, ERR_NOSUCHNICK(_client.at(fd)->getNickname(), target), 0); // erreur sur target attention
+	}
 	try
 	{
 		_channel.at(name_channel);
@@ -67,9 +74,15 @@ void Server::handleInvite(const std::string &msg, int fd)
 	{
 		ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), name_channel), 0);
 	}
-	// if (_user.at(guest).getNickname())
-	// {
-	// }
+	try
+	{
+		_channel.at(name_channel).getMembers().find(_client.at(fd)->getNickname());
+	}
+	catch (const std::out_of_range&)
+	{
+		ft_send(fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), name_channel), 0);
+	}
+	ft_send(fd, RPL_INVITE(_client.at(fd)->getNickname(), target, name_channel), 0);
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
@@ -91,6 +104,7 @@ void Server::handleJoin(const std::string &msg, int fd)
 	it = _channel.find(name_channel);
 	if (it != _channel.end())
 	{
+		//pb a regler avec le mdp, parfois le mdp est demande alors qu'il n'y a pas de mdp sur ce channel
 		if (_channel.at(name_channel).getPasswordRestriction())
 		{
 			std::string mdp;

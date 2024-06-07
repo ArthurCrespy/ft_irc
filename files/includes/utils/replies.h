@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/06 16:33:21 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/07 18:40:50 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@
 # define RPL_QUIT(nickname, message)							":" + nickname + " QUIT :Quit: " + message
 # define RPL_KICK(nickname, channel, target, reason)			":" + nickname + " KICK " + channel + " " + target + " :" + reason
 # define RPL_MODE(nickname, channel, modes, args)				":" + nickname + " MODE " + channel + " " + modes + " " + args
+# define RPL_INVITE(nickname, target, channel)					":" + nickname + " INVITE " + target + " :" + channel
 
 /* Custom Responses */
 # define RPL_WELCOME(nickname)									"001 " + nickname + " :Welcome to the 42IRC network"
