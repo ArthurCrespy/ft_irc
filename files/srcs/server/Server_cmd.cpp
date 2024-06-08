@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/07 18:45:25 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/08 17:07:09 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ void Server::handleJoin(const std::string &msg, int fd)
 	if (it != _channel.end())
 	{
 		//pb a regler avec le mdp, parfois le mdp est demande alors qu'il n'y a pas de mdp sur ce channel
+		std::cout << "restriction : " <<_channel.at(name_channel).getPasswordRestriction() << std::endl;
 		if (_channel.at(name_channel).getPasswordRestriction())
 		{
 			std::string mdp;
