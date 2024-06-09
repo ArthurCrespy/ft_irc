@@ -42,6 +42,7 @@
 # define ERR_PASSWDMISMATCH(nickname)							"464 " + nickname +						" :Password incorrect"
 # define ERR_CHANNELISFULL(nickname, channel)					"471 " + nickname + " " + channel +		" :Cannot join channel (+l)"
 # define ERR_BADCHANNELKEY(nickname, channel)					"475 " + nickname + " " + channel +		" :Cannot join channel (+k)"
+# define ERR_BADCHANMASK(channel)								"476 " + channel +						" :Bad Channel Mask"
 # define ERR_CHANOPRIVSNEEDED(nickname, channel)				"482 " + nickname + " " + channel +		" :You're not channel operator"
 
 /* Custom Replies */

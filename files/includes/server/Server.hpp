@@ -60,7 +60,6 @@ class Server
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
 		Channel		&getchannel(std::string const &name_channel);
-		int			getSock(void) const;
 
 		void handleCommand(const std::string & msg, int fd);
 		void handleJoin(const std::string &msg, int fd);
