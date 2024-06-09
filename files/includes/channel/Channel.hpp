@@ -30,6 +30,8 @@ class Channel
 		t_members			_channel_members;
 		t_members			_channel_admins;
 
+		Client				*_owner;
+
 	public:
 		Channel(void);
 		Channel(std::string const &name, Client *op);
@@ -45,6 +47,7 @@ class Channel
 		void setPasswordRestriction(bool restrict);
 		void setLimit(int limit);
 		void setInviteOnly(bool io);
+		void setOwner(Client *owner);
 
 		std::string	getName(void) const;
 		std::string	getTopic(void) const;
@@ -54,6 +57,7 @@ class Channel
 		bool		getPasswordRestriction(void) const;
 		int			getLimit(void) const;
 		bool		getInviteOnly(void) const;
+		// int getMembersNb
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;
 

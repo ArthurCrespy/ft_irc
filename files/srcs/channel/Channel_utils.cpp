@@ -66,6 +66,11 @@ void Channel::setInviteOnly(bool io)
 	_channel_invite_only = io;
 }
 
+void Channel::setOwner(Client *owner)
+{
+	_owner = owner;
+}
+
 std::string Channel::getName(void) const
 {
 	return (_channel_name);

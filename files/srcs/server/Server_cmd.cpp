@@ -38,7 +38,11 @@ void Server::servCommand(int fd, std::string const &msg)
 	if (command == "PRIVMSG" || command == "/msg")
 		msgSend(fd, remaining);
 	else if (command == "JOIN" || command == "/join")
-		{} // join(remaining, fd, server);
+		{} // join(fd, remaining); // choose from Server_join.cpp after merge
 	else if (command == "KICK" || command == "/kick")
 		kick(fd, remaining);
+	else if (command == "MODE" || command == "/mode")
+		mode(fd, remaining);
+	else if (command == "TOPIC" || command == "/topic")
+		topic(fd, remaining);
 }

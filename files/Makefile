@@ -20,6 +20,7 @@ SRCS		:= \
 				srcs/commands/Server_botLog.cpp \
 				srcs/commands/Server_join.cpp \
 				srcs/commands/Server_kick.cpp \
+				srcs/commands/Server_mode.cpp \
 				srcs/commands/Server_msg.cpp \
 				srcs/commands/Server_topic.cpp \
 				srcs/server/Server.cpp \
