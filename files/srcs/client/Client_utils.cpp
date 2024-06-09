@@ -87,5 +87,8 @@ std::string Client::getPrefix(void) const
 	std::string username = _cli_username.empty() ? "" : "!" + _cli_username;
 	std::string hostname = _cli_hostname.empty() ? "" : "@" + _cli_hostname;
 
-	return (_cli_nickname + username + hostname);
+	if (_cli_nickname.empty() && _cli_username.empty())
+		return (_cli_hostname);
+	else
+		return (_cli_nickname + username + hostname);
 }

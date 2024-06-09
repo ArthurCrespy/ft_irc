@@ -38,13 +38,14 @@ class Server
 		Server &operator=(Server const &rhs);
 
 		void		servStart(void);
-
 		void		servSetup(int argc, char **argv);
 
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
 		void		servReceive(int fd);
+		void		servCommand(int fd, std::string const &msg);
+		void		servSend(int fd_src, int fd_dest, std::string const &msg);
 		void		servClose(int fd);
 
 		void		servSignal(void);
@@ -53,23 +54,19 @@ class Server
 		void		setPort(std::string const &input);
 		void		setPassword(std::string const &input);
 
+		int			getSock(void) const;
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
-		int			getSock(void) const;
-		Channel&	getchannel(const std::string& name_channel);
+		Channel		&getchannel(std::string const &name_channel);
 
-		void handleCommand(const std::string & msg, int fd);
-		void handleJoin(const std::string &msg, int fd);
-		void handlePrivMsg(const std::string &msg, int fd);
-		void msg_prv(int fd, const std::string& name, const std::string& message);
-		void msg_channel(int fd, const std::string& channel, std::string& message);
+		void		msgSend(int fd, std::string const &msg);
+		void		msgPrv(int fd, std::string const &name, std::string const &msg);
+		void		msgChannel(int fd, std::string &channel, std::string const &msg);
+		void		join(int fd, std::string const &msg);
+		void		kick(int fd, std::string const &msg);
+		void		topic(int fd, std::string const &msg);
 
-		void logBot(int fd, std::string const &msg);
-
-		void ft_send(int fd, std::string const &msg, int flags);
-
-		void kick(int fd, std::string const &msg);
-		void topic(int fd, std::string const &msg);
+		void		logBot(int fd, std::string const &msg);
 };
 
 #endif

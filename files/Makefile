@@ -17,10 +17,12 @@ SRCS		:= \
 				srcs/channel/Channel_utils.cpp \
 				srcs/client/Client.cpp \
 				srcs/client/Client_utils.cpp \
-				srcs/server/Server.cpp \
 				srcs/commands/Server_botLog.cpp \
+				srcs/commands/Server_join.cpp \
 				srcs/commands/Server_kick.cpp \
+				srcs/commands/Server_msg.cpp \
 				srcs/commands/Server_topic.cpp \
+				srcs/server/Server.cpp \
 				srcs/server/Server_cmd.cpp \
 				srcs/server/Server_send.cpp \
 				srcs/server/Server_setup.cpp \
