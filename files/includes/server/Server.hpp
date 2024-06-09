@@ -15,6 +15,8 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+class CLient;
+
 class Server
 {
 	private:
@@ -58,6 +60,14 @@ class Server
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
 		Channel		&getchannel(std::string const &name_channel);
+		int			getSock(void) const;
+
+		void handleCommand(const std::string & msg, int fd);
+		void handleJoin(const std::string &msg, int fd);
+		void handlePrivMsg(const std::string &msg, int fd);
+		void handleInvite(const std::string &msg, int fd);
+		void msg_prv(int fd, const std::string& name, const std::string& message);
+		void msg_channel(int fd, const std::string& channel, std::string& message);
 
 		void		msgSend(int fd, std::string const &msg);
 		void		msgPrv(int fd, std::string const &name, std::string const &msg);
@@ -65,8 +75,10 @@ class Server
 		void		join(int fd, std::string const &msg);
 		void		kick(int fd, std::string const &msg);
 		void		topic(int fd, std::string const &msg);
-
+  
 		void		logBot(int fd, std::string const &msg);
+
+		//std::deque<std::string>	split(std::string message, std::string delimiters);
 };
 
 #endif
