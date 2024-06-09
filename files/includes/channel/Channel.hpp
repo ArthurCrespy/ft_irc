@@ -46,16 +46,16 @@ class Channel
 		void setLimit(int limit);
 		void setInviteOnly(bool io);
 
-		std::string getName(void) const;
-		std::string getTopic(void) const;
-		bool getTopicSet(void) const;
-		bool getTopicRestriction(void) const;
-		std::string getPassword(void) const;
-		bool getPasswordRestriction(void) const;
-		int getLimit(void) const;
-		bool getInviteOnly(void) const;
-		t_members getMembers(void) const;
-		t_members getAdmins(void) const;
+		std::string	getName(void) const;
+		std::string	getTopic(void) const;
+		bool		getTopicSet(void) const;
+		bool		getTopicRestriction(void) const;
+		std::string	getPassword(void) const;
+		bool		getPasswordRestriction(void) const;
+		int			getLimit(void) const;
+		bool		getInviteOnly(void) const;
+		t_members	getMembers(void) const;
+		t_members	getAdmins(void) const;
 
 		void addMember(Client *member);
 		void removeMember(Client *member);
