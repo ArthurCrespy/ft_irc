@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/06 16:35:12 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/05 20:01:16 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ class Server
 		Server &operator=(Server const &rhs);
 
 		void		servStart(void);
-
 		void		servSetup(int argc, char **argv);
 
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
 		void		servReceive(int fd);
+		void		servCommand(int fd, std::string const &msg);
+		void		servSend(int fd_src, int fd_dest, std::string const &msg);
 		void		servClose(int fd);
 
 		void		servSignal(void);
@@ -55,10 +56,11 @@ class Server
 		void		setPort(std::string const &input);
 		void		setPassword(std::string const &input);
 
+		int			getSock(void) const;
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
+		Channel		&getchannel(std::string const &name_channel);
 		int			getSock(void) const;
-		Channel&	getchannel(const std::string& name_channel);
 
 		void handleCommand(const std::string & msg, int fd);
 		void handleJoin(const std::string &msg, int fd);
@@ -67,9 +69,14 @@ class Server
 		void msg_prv(int fd, const std::string& name, const std::string& message);
 		void msg_channel(int fd, const std::string& channel, std::string& message);
 
-		void logBot(int fd, std::string const &msg);
-
-		void ft_send(int fd, std::string const &msg, int flags);
+		void		msgSend(int fd, std::string const &msg);
+		void		msgPrv(int fd, std::string const &name, std::string const &msg);
+		void		msgChannel(int fd, std::string &channel, std::string const &msg);
+		void		join(int fd, std::string const &msg);
+		void		kick(int fd, std::string const &msg);
+		void		topic(int fd, std::string const &msg);
+  
+		void		logBot(int fd, std::string const &msg);
 
 		//std::deque<std::string>	split(std::string message, std::string delimiters);
 };

@@ -67,7 +67,7 @@ void Server::servPoll(void)
 {
 	int			srv_poll_ret;
 	t_poll_fd	srv_poll;
-	Client		*client = new Client(_srv_sock, this->getPort(), "server");
+	Client		*client = new Client(_srv_sock, this->getPort(), "localhost");
 
 	srv_poll.fd = _srv_sock;
 	srv_poll.events = POLLIN;
@@ -196,7 +196,7 @@ void Server::servReceive(int fd)
 			break ;
 		memset(buffer, 0, sizeof(buffer));
 	}
-	handleCommand(msg, fd);
+	servCommand(fd, msg);
 }
 
 // todo: add the support of nc client
