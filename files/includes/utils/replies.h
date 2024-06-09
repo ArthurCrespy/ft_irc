@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/05/28 09:58:59 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/07 18:40:50 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define ERR_NOSUCHCHANNEL(nickname, channel)					"403 " + nickname + " " + channel + " :No such channel"
 # define ERR_CANNOTSENDTOCHAN(nickname, channel)				"404 " + nickname + " " + channel + " :Cannot send to channel"
 # define ERR_TOOMANYCHANNELS(nickname, channel)					"405 " + nickname + " " + channel + " :You have joined too many channels"
+# define ERR_BADCHANMASK(nickname, channel)						"476 " + nickname + " " + channel + " :Incorrect format"
 # define ERR_NOTONCHANNEL(nickname, channel)					"442 " + nickname + " " + channel + " :You're not on that channel"
 # define ERR_CHANNELISFULL(nickname, channel)					"471 " + nickname + " " + channel + " :Cannot join channel (+l)"
 # define ERR_BADCHANNELKEY(nickname, channel)					"475 " + nickname + " " + channel + " :Cannot join channel (+k)"
@@ -52,6 +53,7 @@
 # define RPL_QUIT(nickname, message)							":" + nickname + " QUIT :Quit: " + message
 # define RPL_KICK(nickname, channel, target, reason)			":" + nickname + " KICK " + channel + " " + target + " :" + reason
 # define RPL_MODE(nickname, channel, modes, args)				":" + nickname + " MODE " + channel + " " + modes + " " + args
+# define RPL_INVITE(nickname, target, channel)					":" + nickname + " INVITE " + target + " :" + channel
 
 /* Custom Responses */
 # define RPL_WELCOME(nickname)									"001 " + nickname + " :Welcome to the 42IRC network"

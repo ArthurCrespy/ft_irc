@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/04 17:05:35 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/08 17:09:48 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Channel::Channel(void)
 	_channel_name = "";
 	setTopic("");
 	setTopicRestriction(false);
+	//setPasswordRestriction(false);
 	setPassword("");
 	setLimit(-1);
 	setInviteOnly(false);
@@ -27,13 +28,13 @@ Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 {
 	setTopic("");
 	setTopicRestriction(false);
+	//setPasswordRestriction(false);
 	setPassword("");
 	setLimit(-1);
 	setInviteOnly(false);
 
 	_channel_admins.insert(std::make_pair(op->getUsername(), op));
 	_channel_members.insert(std::make_pair(op->getUsername(), op));
-
 	ft_print("Channel created: " + _channel_name, LOG);
 }
 

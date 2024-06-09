@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/04 17:40:15 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/08 17:06:07 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Channel::setPassword(std::string const &password)
 {
 	if (password.empty())
 	{
-		_channel_password = "";
+		// _channel_password = "";
 		_channel_password_restrict = false;
 	}
 	else
@@ -136,6 +136,15 @@ void Channel::removeAdmin(Client *op)
 
 void Channel::broadcast(std::string const &msg)
 {
+	// for (it_members it = _channel_members.begin(); it != _channel_members.end(); ++it)
+	// {
+	// 	std::cout << "ici" << std::endl;
+	// 	std::cout << (*it).second->getNickname();
+	// 	if (it != --_channel_members.end())
+	// 		std::cout << ", ";
+	// }
+	// std::cout << std::endl;
+
 	for (it_members it = _channel_members.begin(); it != _channel_members.end(); it++)
 		(*it).second->ft_send((*it).second->getFd(), msg, 0);
 }

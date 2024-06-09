@@ -6,11 +6,12 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/04 17:38:54 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/08 17:07:09 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
+
 
 void Server::handleCommand(std::string const &msg, int fd)
 {
@@ -23,41 +24,106 @@ void Server::handleCommand(std::string const &msg, int fd)
 	std::string remaining;
 	std::getline(iss, remaining);
 
-	if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
-	{
-		logBot(fd, remaining);
-		return ;
-	}
-	else if (!_client.at(fd)->getRegistration())
-	{
-		ft_send(fd, ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
-		return ;
-	}
-
+	// if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
+	// {
+	// 	logBot(fd, remaining);
+	// 	return ;
+	// }
+	// else if (!_client.at(fd)->getRegistration())
+	// {
+	// 	ft_send(fd, ERR_NOLOGIN(_client.at(fd)->getHostname()), 0);
+	// 	return ;
+	// }
 	if ((command == "PART" || command == "MODE" || command == "PRIVMSG" || command == "JOIN" || command == "KICK" || command == "INVITE" ||
 		command == "/part" || command == "/mode" || command == "/msg" || command == "/join" || command == "/kick" || command == "/invite") &&
 		(remaining.empty() || remaining == "\r\n"))
-	{
-		ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command), 0);
-		return ;
-	}
-
+		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command), 0);
 	if (command == "PING" || command == "/ping")
 		ft_send(fd, RPL_PONG(_client.at(fd)->getNickname()), 0); // nickname or hostname ?
 	else if (command == "PRIVMSG" || command == "/msg")
 		handlePrivMsg(remaining, fd);
 	else if (command == "JOIN" || command == "/join")
+		handleJoin(remaining, fd);
+	else if (command == "INVITE" || command == "/invite")
+		handleInvite(remaining, fd);
+}
+
+void Server::handleInvite(const std::string &msg, int fd)
+{
+	std::istringstream iss(msg);
+	std::string target;
+	std::string name_channel;
+	iss >> target >> name_channel;
+
+	if(target.empty() || name_channel.empty())
+		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "INVITE"), 0);
+	try
 	{
-		// handleJoin(remaining, fd, server);
+		_client.at(fd);
+		_user.at(target);
 	}
+	catch (const std::out_of_range&)
+	{
+		return ft_send(fd, ERR_NOSUCHNICK(_client.at(fd)->getNickname(), target), 0); // erreur sur target attention
+	}
+	try
+	{
+		_channel.at(name_channel);
+	}
+	catch (const std::out_of_range&)
+	{
+		ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), name_channel), 0);
+	}
+	try
+	{
+		_channel.at(name_channel).getMembers().find(_client.at(fd)->getNickname());
+	}
+	catch (const std::out_of_range&)
+	{
+		ft_send(fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), name_channel), 0);
+	}
+	ft_send(fd, RPL_INVITE(_client.at(fd)->getNickname(), target, name_channel), 0);
 }
 
 void Server::handleJoin(const std::string &msg, int fd)
 {
-	std::string channel = msg;
-	if (channel[0] != '#' || channel[0] != '&')
-		return (ft_send(fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel), 0));
-	channel.erase(0, 1);
+	std::istringstream iss(msg);
+
+	std::string name_channel;
+	std::string message;
+
+	iss >> name_channel;
+
+	if (name_channel.empty())
+		return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
+	if (name_channel[0] != '#' && name_channel[0] !='&')
+		return ft_send(fd, ERR_BADCHANMASK(_client.at(fd)->getNickname(), name_channel), 0);
+	name_channel.erase(0, 1);
+
+	it_channel it;
+	it = _channel.find(name_channel);
+	if (it != _channel.end())
+	{
+		//pb a regler avec le mdp, parfois le mdp est demande alors qu'il n'y a pas de mdp sur ce channel
+		std::cout << "restriction : " <<_channel.at(name_channel).getPasswordRestriction() << std::endl;
+		if (_channel.at(name_channel).getPasswordRestriction())
+		{
+			std::string mdp;
+			iss >> mdp;
+			if (mdp.empty() || _channel.at(name_channel).getPassword() != mdp)
+				return ft_send(fd, ERR_PASSWDMISMATCH(_client.at(fd)->getNickname()), 0);
+		}
+		_channel.at(name_channel).addMember(_client.at(fd));
+		ft_send(fd, "You have joined the channel: " + name_channel, 0);
+		_channel.at(name_channel).broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
+	}
+	else
+	{
+		Channel newChannel(name_channel, _client.at(fd));
+		_channel.insert(std::make_pair(name_channel, newChannel));
+		_channel.at(name_channel).addMember(_client.at(fd));
+		ft_send(fd, "You have joined the channel: " + name_channel, 0);
+	}
 }
 
 void Server::handlePrivMsg(const std::string &msg, int fd)
@@ -68,13 +134,6 @@ void Server::handlePrivMsg(const std::string &msg, int fd)
 
 	iss >> name;
 	std::getline(iss, message);
-	// while (iss)
-	// {
-	// 	std::string temp;
-	// 	iss >> temp;
-	// 	message = message + " " + temp;
-	// }
-	std::cout << "message :" << message << std::endl;
 
 	if (message.empty() || message == "\r\n")
 	{
