@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/05 20:01:16 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/10 14:57:53 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 class Server
 {
-	private:
+	protected:
 		int			_srv_sock;
 		int			_srv_port;
 		std::string	_srv_password;
@@ -25,6 +25,7 @@ class Server
 		t_client	_client;
 		t_channel	_channel;
 		t_signal	_signal;
+		Client		*The_client;
 
 	public:
 		Server(void);

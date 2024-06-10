@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/09 13:55:03 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/10 12:59:41 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define RPL_YOURHOST(nickname)									"002 " + nickname +						" :Your host is 42IRC, running version 1.0"
 
 /* 200-399 | Command Replies */
+# define RPL_UMODEIS(nickname, mode)                            "221 " + nickname + " " + mode
 # define RPL_CHANNELMODEIS(nickname, channel, modes, params)	"324 " + nickname + " " + channel +		" " + modes + " " + params
 # define RPL_NOTOPIC(nickname, channel)							"331 " + nickname + " " + channel +		" :No topic is set"
 # define RPL_TOPIC(nickname, channel, topic)					"332 " + nickname + " " + channel +		" :" + topic

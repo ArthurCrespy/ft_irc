@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_join.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/09 12:52:43 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/10 15:10:12 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ void Server::join1(int fd, std::string const &msg)
 	// std::cout << "Channels received:" << std::endl;
 	// for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it)
 	//     std::cout << *it << std::endl;
-	if (channels.size() > 2)
-		password = channels[2];
+	if (channels.size() > 1)
+		password = channels[1];
 	else
 		password = std::string();
+
+	std::cout << password << std::endl;
 
 	// if (channels.empty())
 	//     return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
@@ -63,17 +65,27 @@ void Server::join1(int fd, std::string const &msg)
 
 	if (_channel.find(channelName) != _channel.end()) {
 
+		
 		Channel &existingChannel = _channel[channelName];
+		
+		if (existingChannel.hasMode('k') && existingChannel.getPassword() != password) {
+				return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
+			}
+		if (existingChannel.hasMode('l')) {
+			if (existingChannel.getMembers().size() >= static_cast<size_t>(existingChannel.getLimit()))
+				return servSend(fd, -1, ERR_CHANNELISFULL(_client.at(fd)->getNickname(), channelName));
+		}
+		if (existingChannel.hasMode('i') && !existingChannel.isInvited(this->The_client)) {
+			return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
+		}
+			
 		if (!existingChannel.getPassword().empty() && existingChannel.getPassword() != password)
 			return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
-
 		existingChannel.addMember(_client.at(fd));
 		servSend(fd, -1, "You have joined the channel: " + channelName);
-		// existingChannel.broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
 	}
 	else {
 		Channel newChannel(channelName, _client.at(fd));
-		// newChannel.
 		newChannel.setOwner(_client.at(fd));
 		newChannel.addAdmin(_client.at(fd));
 		if (!password.empty())

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/08 17:09:48 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/10 13:51:49 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ Channel &Channel::operator=(Channel const &rhs)
 {
 	if (this != &rhs)
 	{
+		this->_modes = rhs._modes;
 		this->_channel_name = rhs._channel_name;
 		this->_channel_topic = rhs._channel_topic;
 		this->_channel_topic_restrict = rhs._channel_topic_restrict;

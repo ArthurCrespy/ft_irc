@@ -3,15 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Channel_utils.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/08 17:06:07 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/10 14:48:36 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
 
+
+bool	Channel::isInvited(Client *user) const {
+	return (std::find(this->_inviteList.begin(), this->_inviteList.end(), user->getNickname()) != this->_inviteList.end());
+}
 
 void Channel::setTopic(std::string const &topic)
 {
@@ -49,6 +53,10 @@ void Channel::setPassword(std::string const &password)
 		_channel_password = password;
 		_channel_password_restrict = true;
 	}
+}
+
+bool	Channel::hasMode(char mode) const {
+	return (std::find(this->_modes.begin(), this->_modes.end(), mode) != this->_modes.end());
 }
 
 void Channel::setPasswordRestriction(bool restrict)
