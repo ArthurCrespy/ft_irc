@@ -14,7 +14,7 @@
 
 void Server::servCommand(int fd, std::string const &msg)
 {
-	ft_print("Client received: " + msg, INFO);
+	ft_print("Server received: " + msg, INFO);
 
 	std::istringstream iss(msg);
 	std::string command;

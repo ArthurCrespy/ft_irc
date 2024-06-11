@@ -46,13 +46,13 @@
 # define ERR_CHANOPRIVSNEEDED(nickname, channel)				"482 " + nickname + " " + channel +		" :You're not channel operator"
 
 /* Custom Replies */
-# define RPL_JOIN(channel)										" JOIN :" + channel
-# define RPL_PART(channel)										" PART :" + channel
-# define RPL_PRIVMSG(target, message)							" PRIVMSG " + target + " :" + message
-# define RPL_NOTICE(target, message)							" NOTICE " + target + " :" + message
-# define RPL_QUIT(message)										" QUIT :Quit: " + message
-# define RPL_KICK(channel, target, reason)						" KICK " + channel + " " + target + " :" + reason
-# define RPL_MODE(channel, modes, args)							" MODE " + channel + " " + modes + " " + args
+# define RPL_JOIN(channel)										"JOIN :" + channel
+# define RPL_PART(channel)										"PART :" + channel
+# define RPL_PRIVMSG(target, message)							"PRIVMSG " + target + " :" + message
+# define RPL_NOTICE(target, message)							"NOTICE " + target + " :" + message
+# define RPL_QUIT(message)										"QUIT :Quit: " + message
+# define RPL_KICK(channel, target, reason)						"KICK " + channel + " " + target + " :" + reason
+# define RPL_MODE(channel, modes, args)							"MODE " + channel + " " + modes + " " + args
 
 /* LogBot Replies */
 # define RPL_LBRGST(command)									"Cannot do " + command + "! Not authenticated...\nUse LOGBOT, our bot! /msg LOGBOT <password> <nickname> <username> <realname>"
