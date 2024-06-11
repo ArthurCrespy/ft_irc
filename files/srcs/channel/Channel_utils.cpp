@@ -6,12 +6,27 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/10 14:48:36 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/11 15:05:21 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
 
+// Une de ses versions (a voir)
+
+// bool	Channel::isInChannel(Client *user, int fd) {
+// 	if (std::find(user.begin(), this->user.end(), user) != this->_users.end())
+// 		return (true);
+// 	return (false);
+// }
+
+// bool Server::isInChannel(Client* client, const std::string& channelName) {
+//     Channel* channel = findchannelname(channelName);
+//     if (channel) {
+//         return channel->isMember(client);
+//     }
+//     return false;
+// }
 
 bool	Channel::isInvited(Client *user) const {
 	return (std::find(this->_inviteList.begin(), this->_inviteList.end(), user->getNickname()) != this->_inviteList.end());
@@ -129,6 +144,27 @@ t_members Channel::getAdmins(void) const
 	return (_channel_admins);
 }
 
+bool Channel::isAdmins(Client *user) const {
+    for (std::map<std::string, Client*>::const_iterator it = _channel_admins.begin(); it != _channel_admins.end(); ++it) {
+        if (it->second == user) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string	Channel::getMode(void) const {
+	std::string modeString = "+";
+
+	for (size_t i = 0; i < this->_modes.size(); i++)
+		modeString.push_back(this->_modes.at(i));
+	if (this->hasMode('k'))
+		modeString.append(" " + this->_channel_password);
+	if (this->hasMode('l'))
+		modeString.append(" " + toString(this->_channel_limit));
+	return (modeString);
+}
+
 void Channel::addMember(Client *member)
 {
 	_channel_members.insert(std::make_pair(member->getNickname(), member));
@@ -161,7 +197,7 @@ void Channel::removeMember(std::string const &member)
 
 void Channel::addAdmin(Client *op)
 {
-	op->ft_send(op->getFd(), RPL_CHANNELMODEIS(op->getNickname(), _channel_name, "+o ", op->getNickname()), 0);
+	op->ft_send(op->getFd(), RPL_CHANNELMODEIS(op->getNickname(), _channel_name, "+o "), 0);
 	_channel_admins.insert(std::make_pair(op->getNickname(), op));
 }
 
@@ -170,7 +206,7 @@ void Channel::removeAdmin(Client *op)
 	it_members it = _channel_members.find(op->getNickname());
 	if (it != _channel_admins.end())
 	{
-		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o ", op->getNickname()), 0);
+		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o "), 0);
 		_channel_admins.erase(it);
 	}
 }
@@ -180,7 +216,7 @@ void Channel::removeAdmin(std::string const &op)
 	it_members it = _channel_members.find(op);
 	if (it != _channel_admins.end())
 	{
-		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o ", op), 0);
+		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o "), 0);
 		_channel_admins.erase(it);
 	}
 }

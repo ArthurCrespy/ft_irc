@@ -6,12 +6,14 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/10 14:57:53 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/11 15:19:21 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
+
+class Channel;
 
 class Server
 {
@@ -39,6 +41,7 @@ class Server
 		void		servStart(void);
 		void		servSetup(int argc, char **argv);
 
+		Channel		*findchannelname(std::string name);
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
@@ -71,6 +74,12 @@ class Server
 		void		logBot(int fd, std::string const &msg);
 
 		std::deque<std::string>	split(std::string message, std::string delimiters);
+		template <class T> static std::string	toString(const T &value) {
+			std::ostringstream oss;
+
+			oss << value;
+			return (oss.str());
+		}
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/10 15:10:12 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/11 11:58:06 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ void Server::join1(int fd, std::string const &msg)
 			return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
 		}
 			
-		if (!existingChannel.getPassword().empty() && existingChannel.getPassword() != password)
-			return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
+		// if (!existingChannel.getPassword().empty() && existingChannel.getPassword() != password)
+		// 	return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
 		existingChannel.addMember(_client.at(fd));
 		servSend(fd, -1, "You have joined the channel: " + channelName);
 	}

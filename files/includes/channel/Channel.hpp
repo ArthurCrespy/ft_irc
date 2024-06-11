@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/10 14:48:46 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/11 15:06:07 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ class Channel
 		void setInviteOnly(bool io);
 		void setOwner(Client *owner);
 
+		std::string	getMode(void) const;
+		bool	isInChannel(Client *user, int fd);
 		bool	isInvited(Client *user) const;
 		std::string	getName(void) const;
 		std::string	getTopic(void) const;
@@ -65,6 +67,7 @@ class Channel
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;
 
+		bool	isAdmins(Client *user) const;
 		void addMember(Client *member);
 		void removeMember(Client *member);
 		void removeMember(std::string const &member);
@@ -74,6 +77,12 @@ class Channel
 		void removeAdmin(std::string const &op);
 
 		void broadcast(std::string const &msg);
+		template <class T> static std::string	toString(const T &value) {
+			std::ostringstream oss;
+
+			oss << value;
+			return (oss.str());
+		}
 };
 
 #endif

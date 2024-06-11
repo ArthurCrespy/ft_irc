@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/10 12:59:41 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/11 15:12:40 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 /* 200-399 | Command Replies */
 # define RPL_UMODEIS(nickname, mode)                            "221 " + nickname + " " + mode
-# define RPL_CHANNELMODEIS(nickname, channel, modes, params)	"324 " + nickname + " " + channel +		" " + modes + " " + params
+# define RPL_CHANNELMODEIS(nickname, channel, modes)	        "324 " + nickname + " " + channel +		" " + modes
 # define RPL_NOTOPIC(nickname, channel)							"331 " + nickname + " " + channel +		" :No topic is set"
 # define RPL_TOPIC(nickname, channel, topic)					"332 " + nickname + " " + channel +		" :" + topic
 # define RPL_NAMREPLY(nickname, channel, users)					"353 " + nickname + " = " + channel +	" :" + users
@@ -42,6 +42,7 @@
 # define ERR_ALREADYREGISTERED(nickname)						"462 " + nickname +						" :You may not register"
 # define ERR_PASSWDMISMATCH(nickname)							"464 " + nickname +						" :Password incorrect"
 # define ERR_CHANNELISFULL(nickname, channel)					"471 " + nickname + " " + channel +		" :Cannot join channel (+l)"
+# define ERR_UNKNOWNMODE(nickname, modeChar)                    "472 " + nickname + " " + modeChar + " :is unknown mode char to me"
 # define ERR_BADCHANNELKEY(nickname, channel)					"475 " + nickname + " " + channel +		" :Cannot join channel (+k)"
 # define ERR_BADCHANMASK(channel)								"476 " + channel +						" :Bad Channel Mask"
 # define ERR_CHANOPRIVSNEEDED(nickname, channel)				"482 " + nickname + " " + channel +		" :You're not channel operator"
