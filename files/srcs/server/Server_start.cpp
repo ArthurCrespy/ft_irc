@@ -52,6 +52,7 @@ void Server::servListen(void)
 	{
 		if (close(_srv_sock) == -1)
 			throw std::runtime_error("Syscall close() Failed: " + (std::string)std::strerror(errno) + " after syscall failure in servListen");
+		_srv_sock = -1;
 		throw std::runtime_error(e.what());
 	}
 	ft_print("Server listening on port " + ft_nbtos(this->getPort()), RUN);
@@ -210,10 +211,15 @@ void Server::servReceive(int fd)
 */
 void Server::servClose(int fd)
 {
+	std::string nickname;
+
 	if (close(fd) == -1)
 		throw std::runtime_error("Syscall close() Failed in servClose: " + (std::string)std::strerror(errno));
+	_client.at(fd)->setFd(-1);
 
-	ft_print("Connection closed: " + _client.at(fd)->getHostname(), LOG);
+	nickname = _client.at(fd)->getNickname();
+
+	ft_print("Connection closed: " + nickname, LOG);
 
 	for (it_poll it = _poll.begin(); it != _poll.end(); it++)
 	{
@@ -223,6 +229,7 @@ void Server::servClose(int fd)
 			break ;
 		}
 	}
+	delete (_client.at(fd));
 	_client.erase(_client.find(fd));
-	_user.erase(_user.find(_client.at(fd)->getNickname()));
+	_user.erase(_user.find(nickname));
 }

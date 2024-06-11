@@ -46,11 +46,21 @@ Server::Server(Server const &src)
 
 Server::~Server(void)
 {
+	while (!_client.empty())
+	{
+		if (_client.begin()->second->getFd() != -1)
+			if (close(_client.begin()->second->getFd()) == -1)
+				throw std::runtime_error("Syscall close() _client Failed in ~Server: " + (std::string)std::strerror(errno));
+		delete (_client.begin()->second);
+		_client.erase(_client.begin());
+	}
+	_channel.clear();
 	_client.clear();
 	_poll.clear();
 
 	if (_srv_sock != -1)
 		close(_srv_sock);
+	_srv_sock = -1;
 
 	ft_print("Server stopped", STOP);
 }
