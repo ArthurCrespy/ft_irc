@@ -153,7 +153,7 @@ void Channel::removeMember(std::string const &member)
 
 void Channel::addAdmin(Client *op)
 {
-	op->ft_send(op->getFd(), RPL_CHANNELMODEIS(op->getNickname(), _channel_name, "+o ", op->getNickname()), 0);
+	// send to the client who make the request that op is now MODE +o
 	_channel_admins.insert(std::make_pair(op->getNickname(), op));
 }
 
@@ -162,7 +162,7 @@ void Channel::removeAdmin(Client *op)
 	it_members it = _channel_members.find(op->getNickname());
 	if (it != _channel_admins.end())
 	{
-		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o ", op->getNickname()), 0);
+		// send to the client who make the request that op is now MODE -o
 		_channel_admins.erase(it);
 	}
 }
@@ -172,22 +172,31 @@ void Channel::removeAdmin(std::string const &op)
 	it_members it = _channel_members.find(op);
 	if (it != _channel_admins.end())
 	{
-		(*it).second->ft_send((*it).second->getFd(), RPL_CHANNELMODEIS((*it).second->getNickname(), _channel_name, "-o ", op), 0);
+		// send to the client who make the request that op is now MODE -o
 		_channel_admins.erase(it);
 	}
 }
 
-void Channel::broadcast(std::string const &msg)
+void Channel::broadcast(std::string const &name, std::string const &msg)
 {
-	// for (it_members it = _channel_members.begin(); it != _channel_members.end(); ++it)
-	// {
-	// 	std::cout << "ici" << std::endl;
-	// 	std::cout << (*it).second->getNickname();
-	// 	if (it != --_channel_members.end())
-	// 		std::cout << ", ";
-	// }
-	// std::cout << std::endl;
+	std::string channel;
 
+	channel = "#" + this->getName();
 	for (it_members it = _channel_members.begin(); it != _channel_members.end(); it++)
-		(*it).second->ft_send((*it).second->getFd(), msg, 0);
+	{
+		if ((*it).second->getNickname() == name)
+			continue ;
+		chaSend(name, (*it).second->getFd(), RPL_PRIVMSG(channel, msg));
+	}
 }
+
+void Channel::chaSend(std::string const &name_src, int fd_dest, std::string const &msg)
+{
+	std::string str;
+
+	str = ":" + _channel_members.at(name_src)->getPrefix() + " " + msg + "\r\n";
+
+	if (send(fd_dest, str.c_str(), ft_strlen(str), 0) == -1)
+		throw std::runtime_error("Syscall send() Failed in send: " + std::string(std::strerror(errno)));
+}
+

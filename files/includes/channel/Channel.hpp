@@ -69,7 +69,9 @@ class Channel
 		void removeAdmin(Client *op);
 		void removeAdmin(std::string const &op);
 
-		void broadcast(std::string const &msg);
+		void broadcast(std::string const &name, std::string const &msg);
+		void chaSend(std::string const &name_src, int fd_dest, std::string const &msg);
+
 };
 
 #endif

@@ -51,7 +51,7 @@ class Client
 		std::string	getHostname(void) const;
 		std::string getPrefix(void) const;
 
-		void ft_send(int fd, std::string const &msg, int flags);
+		void cliSend(int fd_src, int fd_dest, std::string const &msg);
 };
 
 #endif

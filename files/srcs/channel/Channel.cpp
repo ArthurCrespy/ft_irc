@@ -33,8 +33,8 @@ Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 	setLimit(-1);
 	setInviteOnly(false);
 
-	_channel_admins.insert(std::make_pair(op->getUsername(), op));
-	_channel_members.insert(std::make_pair(op->getUsername(), op));
+	_channel_admins.insert(std::make_pair(op->getNickname(), op));
+	_channel_members.insert(std::make_pair(op->getNickname(), op));
 	ft_print("Channel created: " + _channel_name, LOG);
 }
 
