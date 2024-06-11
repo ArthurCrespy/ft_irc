@@ -3,15 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   Channel_utils.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/08 17:06:07 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/11 15:05:21 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
 
+// Une de ces versions (a voir)
+
+// bool	Channel::isInChannel(Client *user, int fd)
+// {
+// 	if (std::find(user.begin(), this->user.end(), user) != this->_users.end())
+// 		return (true);
+// 	return (false);
+// }
+
+// bool Server::isInChannel(Client* client, std::string const &channelName)
+// {
+//     Channel* channel = findchannelname(channelName);
+//     if (channel) {
+//         return channel->isMember(client);
+//     }
+//     return false;
+// }
+
+bool	Channel::isInvited(Client *user) const
+{
+	return (std::find(this->_inviteList.begin(), this->_inviteList.end(), user->getNickname()) != this->_inviteList.end());
+}
 
 void Channel::setTopic(std::string const &topic)
 {
@@ -49,6 +71,10 @@ void Channel::setPassword(std::string const &password)
 		_channel_password = password;
 		_channel_password_restrict = true;
 	}
+}
+
+bool	Channel::hasMode(char mode) const {
+	return (std::find(this->_modes.begin(), this->_modes.end(), mode) != this->_modes.end());
 }
 
 void Channel::setPasswordRestriction(bool restrict)
@@ -119,6 +145,27 @@ t_members Channel::getMembers(void) const
 t_members Channel::getAdmins(void) const
 {
 	return (_channel_admins);
+}
+
+bool Channel::isAdmins(Client *user) const {
+    for (std::map<std::string, Client*>::const_iterator it = _channel_admins.begin(); it != _channel_admins.end(); ++it) {
+        if (it->second == user) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string	Channel::getMode(void) const {
+	std::string modeString = "+";
+
+	for (size_t i = 0; i < this->_modes.size(); i++)
+		modeString.push_back(this->_modes.at(i));
+	if (this->hasMode('k'))
+		modeString.append(" " + this->_channel_password);
+	if (this->hasMode('l'))
+		modeString.append(" " + toString(this->_channel_limit));
+	return (modeString);
 }
 
 void Channel::addMember(Client *member)

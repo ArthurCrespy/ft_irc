@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_join.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/09 12:52:43 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/11 11:58:06 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,81 @@ void Server::join(int fd, std::string const &msg)
 	}
 	// std::getline(iss, message); // normalement ca ne sert a rien si il y a d'autres messages apres
 }
+
+// merged from jdegluai
+std::deque<std::string>	Server::split(std::string message, std::string delimiters)
+{
+	std::deque<std::string>		args;
+	std::string					token;
+	size_t						pos = 0;
+
+	while ((pos = message.find_first_of(delimiters)) != std::string::npos) {
+		token = message.substr(0, pos);
+
+		if (!token.empty())
+			args.push_back(token);
+		message.erase(0, pos + 1);
+	}
+	if (!message.empty())
+		args.push_back(message);
+	return (args);
+}
+void Server::join0(int fd, std::string const &msg)
+{
+	std::deque<std::string> channels = this->split(msg, " ");
+	std::string password;
+	if (channels.size() < 1)
+		return servSend(fd, -1, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"));
+	// std::cout << "Channels received:" << std::endl;
+	// for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it)
+	//     std::cout << *it << std::endl;
+	if (channels.size() > 1)
+		password = channels[1];
+	else
+		password = std::string();
+
+	std::cout << password << std::endl;
+
+	// if (channels.empty())
+	//     return ft_send(fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"), 0);
+
+	std::string channelName = channels.front();
+	if (channelName.at(0) != '#') {
+		return servSend(fd, -1, ERR_BADCHANMASK(channelName));
+	}
+
+	if (_channel.find(channelName) != _channel.end()) {
+
+		
+		Channel &existingChannel = _channel[channelName];
+		
+		if (existingChannel.hasMode('k') && existingChannel.getPassword() != password) {
+				return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
+			}
+		if (existingChannel.hasMode('l')) {
+			if (existingChannel.getMembers().size() >= static_cast<size_t>(existingChannel.getLimit()))
+				return servSend(fd, -1, ERR_CHANNELISFULL(_client.at(fd)->getNickname(), channelName));
+		}
+		if (existingChannel.hasMode('i') && !existingChannel.isInvited(this->The_client)) {
+			return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
+		}
+			
+		// if (!existingChannel.getPassword().empty() && existingChannel.getPassword() != password)
+		// 	return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
+		existingChannel.addMember(_client.at(fd));
+		servSend(fd, -1, "You have joined the channel: " + channelName);
+	}
+	else {
+		Channel newChannel(channelName, _client.at(fd));
+		newChannel.setOwner(_client.at(fd));
+		newChannel.addAdmin(_client.at(fd));
+		if (!password.empty())
+			newChannel.setPassword(password);
+		_channel[channelName] = newChannel;
+		newChannel.addMember(_client.at(fd));
+	}
+	// channel.erase(0, 1);
+
+	(void)fd;
+}
+

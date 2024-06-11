@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/04 17:40:53 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/11 15:06:07 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ class Channel
 		bool				_channel_password_restrict;
 		int					_channel_limit;
 		bool				_channel_invite_only;
+		std::vector<char>			_modes;
+		std::vector<std::string>	_inviteList;
 
 		t_members			_channel_members;
 		t_members			_channel_admins;
@@ -49,6 +51,9 @@ class Channel
 		void setInviteOnly(bool io);
 		void setOwner(Client *owner);
 
+		std::string	getMode(void) const;
+		bool	isInChannel(Client *user, int fd);
+		bool	isInvited(Client *user) const;
 		std::string	getName(void) const;
 		std::string	getTopic(void) const;
 		bool		getTopicSet(void) const;
@@ -57,10 +62,12 @@ class Channel
 		bool		getPasswordRestriction(void) const;
 		int			getLimit(void) const;
 		bool		getInviteOnly(void) const;
+		bool		hasMode(char mode) const;
 		// int getMembersNb
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;
 
+		bool	isAdmins(Client *user) const;
 		void addMember(Client *member);
 		void removeMember(Client *member);
 		void removeMember(std::string const &member);
@@ -68,10 +75,17 @@ class Channel
 		void addAdmin(Client *op);
 		void removeAdmin(Client *op);
 		void removeAdmin(std::string const &op);
-
+  
 		void broadcast(std::string const &name, std::string const &msg);
 		void chaSend(std::string const &name_src, int fd_dest, std::string const &msg);
+  
+  	template <class T> static std::string	toString(const T &value)
+    {
+			std::ostringstream oss;
 
+			oss << value;
+			return (oss.str());
+		}
 };
 
 #endif

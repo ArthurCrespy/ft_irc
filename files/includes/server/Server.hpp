@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/05 20:01:16 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/11 15:19:21 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+class Channel;
+
 class Server
 {
-	private:
+	protected:
 		int			_srv_sock;
 		int			_srv_port;
 		std::string	_srv_password;
@@ -25,6 +27,7 @@ class Server
 		t_client	_client;
 		t_channel	_channel;
 		t_signal	_signal;
+		Client		*The_client;
 
 	public:
 		Server(void);
@@ -38,6 +41,7 @@ class Server
 		void		servStart(void);
 		void		servSetup(int argc, char **argv);
 
+		Channel		*findchannelname(std::string name);
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
@@ -61,11 +65,21 @@ class Server
 		void		msgPrv(int fd, std::string const &name, std::string const &msg);
 		void		msgChannel(int fd, std::string &channel, std::string const &msg);
 		void		join(int fd, std::string const &msg);
+  	void		join0(int fd, std::string const &msg);
 		void		kick(int fd, std::string const &msg);
 		void		topic(int fd, std::string const &msg);
 		void		mode(int fd, std::string const &msg);
   
 		void		logBot(int fd, std::string const &msg);
+
+		std::deque<std::string>	split(std::string message, std::string delimiters);
+		template <class T> static std::string	toString(const T &value)
+    {
+			std::ostringstream oss;
+
+			oss << value;
+			return (oss.str());
+		}
 };
 
 #endif
