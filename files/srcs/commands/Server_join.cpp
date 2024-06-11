@@ -12,8 +12,49 @@
 
 #include "../../includes/ft_irc.h"
 
-//merged from acrespy
-void Server::join0(int fd, std::string const &msg)
+// --- merged from abinet --- //
+void Server::join(int fd, std::string const &msg)
+{
+	std::istringstream iss(msg);
+
+	std::string name_channel;
+	std::string message;
+
+	iss >> name_channel;
+
+	if (name_channel.empty())
+		return servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"));
+	if (name_channel[0] != '#' && name_channel[0] !='&')
+		return servSend(_srv_sock, fd, ERR_BADCHANMASK(name_channel));
+	name_channel.erase(0, 1);
+
+	it_channel it;
+	it = _channel.find(name_channel);
+	if (it != _channel.end())
+	{
+		if (_channel.at(name_channel).getPasswordRestriction())
+		{
+			std::string mdp;
+			iss >> mdp;
+			if (mdp.empty() || _channel.at(name_channel).getPassword() != mdp)
+				return servSend(_srv_sock, fd, ERR_PASSWDMISMATCH(_client.at(fd)->getNickname()));
+		}
+		_channel.at(name_channel).addMember(_client.at(fd));
+		servSend(_srv_sock, fd, "You have joined the channel: " + name_channel);
+		_channel.at(name_channel).broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
+	}
+	else
+	{
+		Channel newChannel(name_channel, _client.at(fd));
+		_channel.insert(std::make_pair(name_channel, newChannel));
+		_channel.at(name_channel).addMember(_client.at(fd));
+		servSend(_srv_sock, fd, "You have joined the channel: " + name_channel);
+	}
+	// std::getline(iss, message); // normalement ca ne sert a rien si il y a d'autres messages apres
+}
+
+/* --- merged from acrespy --- //
+void Server::join(int fd, std::string const &msg)
 {
 	std::string channel = msg;
 	if (channel[0] != '#' || channel[0] != '&')
@@ -21,7 +62,7 @@ void Server::join0(int fd, std::string const &msg)
 	channel.erase(0, 1);
 }
 
-// merged from jdegluai
+// --- merged from jdegluai --- //
 std::deque<std::string>	Server::split(std::string message, std::string delimiters)
 {
 	std::deque<std::string>		args;
@@ -39,12 +80,12 @@ std::deque<std::string>	Server::split(std::string message, std::string delimiter
 		args.push_back(message);
 	return (args);
 }
-void Server::join1(int fd, std::string const &msg)
+void Server::join(int fd, std::string const &msg)
 {
 	std::deque<std::string> channels = this->split(msg, " ");
 	std::string password;
 	if (channels.size() < 1)
-		return servSend(fd, -1, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"));
+		return servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"));
 	// std::cout << "Channels received:" << std::endl;
 	// for (std::deque<std::string>::const_iterator it = channel.begin(); it != channel.end(); ++it)
 	//     std::cout << *it << std::endl;
@@ -58,17 +99,17 @@ void Server::join1(int fd, std::string const &msg)
 
 	std::string channelName = channels.front();
 	if (channelName.at(0) != '#') {
-		return servSend(fd, -1, ERR_BADCHANMASK(channelName));
+		return servSend(_srv_sock, fd, ERR_BADCHANMASK(channelName));
 	}
 
 	if (_channel.find(channelName) != _channel.end()) {
 
 		Channel &existingChannel = _channel[channelName];
 		if (!existingChannel.getPassword().empty() && existingChannel.getPassword() != password)
-			return servSend(fd, -1, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
+			return servSend(_srv_sock, fd, ERR_BADCHANNELKEY(_client.at(fd)->getNickname(), channelName));
 
 		existingChannel.addMember(_client.at(fd));
-		servSend(fd, -1, "You have joined the channel: " + channelName);
+		servSend(_srv_sock, fd, "You have joined the channel: " + channelName);
 		// existingChannel.broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
 	}
 	else {
@@ -84,45 +125,4 @@ void Server::join1(int fd, std::string const &msg)
 	// channel.erase(0, 1);
 
 	(void)fd;
-}
-
-// merged from abinet
-void Server::join2(int fd, std::string const &msg)
-{
-	std::istringstream iss(msg);
-
-	std::string name_channel;
-	std::string message;
-
-	iss >> name_channel;
-
-	if (name_channel.empty())
-		return servSend(fd, -1, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN"));
-	if (name_channel[0] != '#' && name_channel[0] !='&')
-		return servSend(fd, -1, ERR_BADCHANMASK(name_channel));
-	name_channel.erase(0, 1);
-
-	it_channel it;
-	it = _channel.find(name_channel);
-	if (it != _channel.end())
-	{
-		if (_channel.at(name_channel).getPasswordRestriction())
-		{
-			std::string mdp;
-			iss >> mdp;
-			if (mdp.empty() || _channel.at(name_channel).getPassword() != mdp)
-				return servSend(fd, -1, ERR_PASSWDMISMATCH(_client.at(fd)->getNickname()));
-		}
-		_channel.at(name_channel).addMember(_client.at(fd));
-		servSend(fd, -1, "You have joined the channel: " + name_channel);
-		_channel.at(name_channel).broadcast(_client.at(fd)->getNickname() + " has joined the channel.");
-	}
-	else
-	{
-		Channel newChannel(name_channel, _client.at(fd));
-		_channel.insert(std::make_pair(name_channel, newChannel));
-		_channel.at(name_channel).addMember(_client.at(fd));
-		servSend(fd, -1, "You have joined the channel: " + name_channel);
-	}
-	// std::getline(iss, message); // normalement ca ne sert a rien si il y a d'autres messages apres
-}
+}*/
