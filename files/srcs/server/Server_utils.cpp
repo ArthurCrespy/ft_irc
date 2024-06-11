@@ -65,7 +65,7 @@ int Server::getSock(void) const
 	return (this->_srv_sock);
 }
 
-Channel &Server::getchannel(const std::string & name_channel)
+Channel &Server::getChannel(std::string const &name)
 {
-	return (_channel.at(name_channel));
+	return (_channel.at(name));
 }

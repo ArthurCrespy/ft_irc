@@ -41,7 +41,6 @@ class Server
 		void		servStart(void);
 		void		servSetup(int argc, char **argv);
 
-		Channel		*findchannelname(std::string name);
 		void		servListen(void);
 		void		servPoll(void);
 		void		servConnect(void);
@@ -59,27 +58,19 @@ class Server
 		int			getSock(void) const;
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
-		Channel		&getchannel(std::string const &name_channel);
+		Channel		&getChannel(std::string const &name);
 
 		void		msgSend(int fd, std::string const &msg);
 		void		msgPrv(int fd, std::string const &name, std::string const &msg);
 		void		msgChannel(int fd, std::string &channel, std::string const &msg);
 		void		join(int fd, std::string const &msg);
-  	void		join0(int fd, std::string const &msg);
 		void		kick(int fd, std::string const &msg);
 		void		topic(int fd, std::string const &msg);
 		void		mode(int fd, std::string const &msg);
-  
+		void		modeMulti(int fd, std::istringstream &iss, Channel &channel, std::string &modes);
+		void		modeK(int fd, std::istringstream &iss, Channel &channel, char action);
+		void		modeO(int fd, std::istringstream &iss, Channel &channel, char action);
 		void		logBot(int fd, std::string const &msg);
-
-		std::deque<std::string>	split(std::string message, std::string delimiters);
-		template <class T> static std::string	toString(const T &value)
-    {
-			std::ostringstream oss;
-
-			oss << value;
-			return (oss.str());
-		}
 };
 
 #endif
