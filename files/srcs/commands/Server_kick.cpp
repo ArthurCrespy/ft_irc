@@ -12,6 +12,12 @@
 
 #include "../../includes/ft_irc.h"
 
+/**
+	*  @brief	Kick a user from a channel
+	*  @param	int fd : file descriptor of the client socket
+	*  @param	std::string msg : message received from the client
+	*  @return	None
+*/
 void Server::kick(int fd, std::string const &msg)
 {
 	std::string channel_name;
@@ -38,6 +44,10 @@ void Server::kick(int fd, std::string const &msg)
 	{
 		servSend(_srv_sock, fd, RPL_KICK(channel_name, nickname, reason));
 		_channel.find(channel_name)->second.removeMember(nickname);
+
+		if (_channel.find(channel_name)->second.getAdmins().find(nickname) != _channel.find(channel_name)->second.getAdmins().end())
+			_channel.find(channel_name)->second.removeAdmin(nickname);
+
 		if (_channel.find(channel_name)->second.getMembers().empty())
 			_channel.erase(channel_name);
 	}

@@ -75,9 +75,12 @@ class Channel
 		void addAdmin(Client *op);
 		void removeAdmin(Client *op);
 		void removeAdmin(std::string const &op);
-
-		void broadcast(std::string const &msg);
-		template <class T> static std::string	toString(const T &value) {
+  
+		void broadcast(std::string const &name, std::string const &msg);
+		void chaSend(std::string const &name_src, int fd_dest, std::string const &msg);
+  
+  	template <class T> static std::string	toString(const T &value)
+    {
 			std::ostringstream oss;
 
 			oss << value;

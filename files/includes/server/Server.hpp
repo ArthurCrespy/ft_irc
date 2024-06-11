@@ -64,9 +64,8 @@ class Server
 		void		msgSend(int fd, std::string const &msg);
 		void		msgPrv(int fd, std::string const &name, std::string const &msg);
 		void		msgChannel(int fd, std::string &channel, std::string const &msg);
-		void		join0(int fd, std::string const &msg);
-		void		join1(int fd, std::string const &msg);
-		void		join2(int fd, std::string const &msg);
+		void		join(int fd, std::string const &msg);
+  	void		join0(int fd, std::string const &msg);
 		void		kick(int fd, std::string const &msg);
 		void		topic(int fd, std::string const &msg);
 		void		mode(int fd, std::string const &msg);
@@ -74,7 +73,8 @@ class Server
 		void		logBot(int fd, std::string const &msg);
 
 		std::deque<std::string>	split(std::string message, std::string delimiters);
-		template <class T> static std::string	toString(const T &value) {
+		template <class T> static std::string	toString(const T &value)
+    {
 			std::ostringstream oss;
 
 			oss << value;

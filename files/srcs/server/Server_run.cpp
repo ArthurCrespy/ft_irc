@@ -52,6 +52,7 @@ void Server::servListen(void)
 	{
 		if (close(_srv_sock) == -1)
 			throw std::runtime_error("Syscall close() Failed: " + (std::string)std::strerror(errno) + " after syscall failure in servListen");
+		_srv_sock = -1;
 		throw std::runtime_error(e.what());
 	}
 	ft_print("Server listening on port " + ft_nbtos(this->getPort()), RUN);
@@ -106,23 +107,6 @@ void Server::servPoll(void)
 }
 
 /**
-	*  @brief	Signal handler for SIGINT and SIGTERM
-	*  @param	None
-	*  @return	None
-	*  @throw	std::runtime_error if the syscall sigaction() fails
-*/
-void Server::servSignal(void)
-{
-	_signal.sa_sigaction = ft_servSHandler;
-	sigemptyset(&_signal.sa_mask);
-	_signal.sa_flags = SA_SIGINFO;
-
-	if (sigaction(SIGINT, &_signal, NULL) == -1
-		|| sigaction(SIGTERM, &_signal, NULL) == -1)
-		throw std::runtime_error("Syscall sigaction() Failed in servSignal: " + (std::string)std::strerror(errno));
-}
-
-/**
 	*  @brief	Accept a new connection on the server socket
 	*  @param	None
 	*  @return	None
@@ -159,7 +143,7 @@ void Server::servConnect(void)
 	Client *client = new Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
 	std::string client_name = cli_name_in;
-	client->ft_send(cli_fd, RPL_WELCOME(client_name), 0);
+	servSend(_srv_sock, cli_fd, RPL_WELCOME(client_name));
 
 	_poll.push_back(cli_poll_in);
 	_user.insert(std::make_pair(client_name, *client));
@@ -198,31 +182,4 @@ void Server::servReceive(int fd)
 	}
 	servCommand(fd, msg);
 }
-
-// todo: add the support of nc client
-//       add the ctrl+d + ctrl+z logic
-
-/**
-	*  @brief	Close a client socket and remove it from the poll list
-	*  @param	int fd : file descriptor of the client socket
-	*  @return	None
-	*  @throw	std::runtime_error if the syscall close() fails
-*/
-void Server::servClose(int fd)
-{
-	if (close(fd) == -1)
-		throw std::runtime_error("Syscall close() Failed in servClose: " + (std::string)std::strerror(errno));
-
-	ft_print("Connection closed: " + _client.at(fd)->getHostname(), LOG);
-
-	for (it_poll it = _poll.begin(); it != _poll.end(); it++)
-	{
-		if (it->fd == fd)
-		{
-			_poll.erase(it);
-			break ;
-		}
-	}
-	_client.erase(_client.find(fd));
-	_user.erase(_user.find(_client.at(fd)->getNickname()));
-}
+// todo: verify if ctrl+d + ctrl+z works in netcat

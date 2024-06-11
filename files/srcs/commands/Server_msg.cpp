@@ -34,7 +34,7 @@ void Server::msgChannel(int fd, std::string &channel, std::string const &msg)
 		_channel.at(channel).getMembers().find(_client.at(fd)->getNickname());
 		try
 		{
-			_channel.at(channel).broadcast(msg);
+			_channel.at(channel).broadcast(_client.at(fd)->getNickname(), msg);
 		}
 		catch (const std::out_of_range &)
 		{

@@ -14,7 +14,7 @@
 
 void Server::servCommand(int fd, std::string const &msg)
 {
-	ft_print("Client received: " + msg, INFO);
+	ft_print("Server received: " + msg, INFO);
 
 	std::istringstream iss(msg);
 	std::string command;
@@ -38,7 +38,7 @@ void Server::servCommand(int fd, std::string const &msg)
 	if (command == "PRIVMSG" || command == "/msg")
 		msgSend(fd, remaining);
 	else if (command == "JOIN" || command == "/join")
-		{} // join(fd, remaining); // choose from Server_join.cpp after merge
+		join(fd, remaining);
 	else if (command == "KICK" || command == "/kick")
 		kick(fd, remaining);
 	else if (command == "MODE" || command == "/mode")

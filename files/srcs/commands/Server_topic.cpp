@@ -12,6 +12,12 @@
 
 #include "../../includes/ft_irc.h"
 
+/**
+	*  @brief	Change the topic of a channel
+	*  @param	int fd : file descriptor of the client socket
+	*  @param	std::string msg : message received from the client
+	*  @return	None
+*/
 void Server::topic(int fd, std::string const &msg)
 {
 	std::string channel_name;
