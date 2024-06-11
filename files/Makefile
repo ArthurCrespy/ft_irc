@@ -24,10 +24,12 @@ SRCS		:= \
 				srcs/commands/Server_msg.cpp \
 				srcs/commands/Server_topic.cpp \
 				srcs/server/Server.cpp \
+				srcs/server/Server_close.cpp \
 				srcs/server/Server_cmd.cpp \
+				srcs/server/Server_run.cpp \
 				srcs/server/Server_send.cpp \
 				srcs/server/Server_setup.cpp \
-				srcs/server/Server_start.cpp \
+				srcs/server/Server_signal.cpp \
 				srcs/server/Server_utils.cpp \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
