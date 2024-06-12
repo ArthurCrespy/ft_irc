@@ -25,13 +25,18 @@ void Server::kick(int fd, std::string const &msg)
 	std::string reason;
 	std::istringstream iss(msg);
 
-	iss >> channel_name >> nickname >> reason;
+	iss >> channel_name >> nickname;
+	std::getline(iss, reason);
+
 	if (channel_name.empty() || nickname.empty())
-	{
-		servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.find(fd)->second->getNickname(), "KICK"));
-		return ;
-	}
-	else if (reason.empty())
+		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.find(fd)->second->getNickname(), "KICK")));
+
+	if (channel_name[0] == '#' || channel_name[0] == '&')
+		channel_name.erase(0, 1);
+
+	if (reason[0] == ':')
+		reason.erase(0, 1);
+	if (reason.empty())
 		reason = "No reason given";
 
 	if (_channel.find(channel_name) == _channel.end())
