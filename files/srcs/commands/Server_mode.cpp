@@ -25,8 +25,7 @@ void Server::mode(int fd, std::string const &msg)
 	if (channel_name.empty() || modes.empty())
 		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "MODE")));
 	if (channel_name[0] != '#' && channel_name[0] != '&')
-		return (servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel_name)));
-
+		return (servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), "MODE")));
 
 	try
 	{
