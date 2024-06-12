@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/12 13:33:52 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:55:28 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,20 +202,32 @@ void Channel::addAdmin(Client *op)
 
 void Channel::removeAdmin(Client *op)
 {
-	it_members it = _channel_members.find(op->getNickname());
-	if (it != _channel_admins.end())
-		_channel_admins.erase(it);
-	else
-		throw std::runtime_error("Client is not an admin of the channel");
+    it_members it = _channel_members.find(op->getNickname());
+    if (it != _channel_members.end())
+    {
+        std::map<std::string, Client*>::iterator it_admin = _channel_admins.find(op->getNickname());
+        if (it_admin != _channel_admins.end())
+            _channel_admins.erase(it_admin);
+        else
+            throw std::runtime_error("Client is not an admin of the channel");
+    }
+    else
+        throw std::runtime_error("Client is not a member of the channel");
 }
 
-void Channel::removeAdmin(std::string const &op)
+void Channel::removeAdmin(const std::string &op)
 {
-	it_members it = _channel_members.find(op);
-	if (it != _channel_admins.end())
-		_channel_admins.erase(it);
-	else
+    std::map<std::string, Client*>::iterator it_member = _channel_members.find(op);
+    if (it_member != _channel_members.end())
+    {
+        std::map<std::string, Client*>::iterator it_admin = _channel_admins.find(op);
+        if (it_admin != _channel_admins.end())
+        {
+            _channel_admins.erase(it_admin);
+        }
+		else
 		throw std::runtime_error("Client is not an admin of the channel");
+    }
 }
 
 void Channel::broadcast(std::string const &name, std::string const &msg)
