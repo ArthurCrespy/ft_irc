@@ -30,6 +30,14 @@ void Server::servClose(int fd)
 
 	ft_print("Connection closed: " + _client.at(fd)->getHostname(), LOG);
 
+	for (it_channel it = _channel.begin(); it != _channel.end(); it++)
+	{
+		if (it->second.getMembers().find(nickname) != it->second.getMembers().end())
+			it->second.removeMember(nickname);
+		if (it->second.getAdmins().find(nickname) != it->second.getAdmins().end())
+			it->second.removeAdmin(nickname);
+	}
+
 	for (it_poll it = _poll.begin(); it != _poll.end(); it++)
 	{
 		if (it->fd == fd)
