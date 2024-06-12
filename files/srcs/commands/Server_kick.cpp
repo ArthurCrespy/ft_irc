@@ -25,7 +25,9 @@ void Server::kick(int fd, std::string const &msg)
 	std::string reason;
 	std::istringstream iss(msg);
 
-	iss >> channel_name >> nickname >> reason;
+	iss >> channel_name >> nickname;
+	std::getline(iss, reason);
+
 	if (channel_name.empty() || nickname.empty())
 		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.find(fd)->second->getNickname(), "KICK")));
 
