@@ -28,7 +28,7 @@ void Server::servClose(int fd)
 
 	nickname = _client.at(fd)->getNickname();
 
-	ft_print("Connection closed: " + nickname, LOG);
+	ft_print("Connection closed: " + _client.at(fd)->getHostname(), LOG);
 
 	for (it_poll it = _poll.begin(); it != _poll.end(); it++)
 	{
@@ -40,5 +40,6 @@ void Server::servClose(int fd)
 	}
 	delete (_client.at(fd));
 	_client.erase(_client.find(fd));
-	_user.erase(_user.find(nickname));
+	if (_user.find(nickname) != _user.end())
+		_user.erase(_user.find(nickname));
 }
