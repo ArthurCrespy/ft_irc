@@ -45,4 +45,6 @@ void Server::servCommand(int fd, std::string const &msg)
 		mode(fd, remaining);
 	else if (command == "TOPIC" || command == "/topic")
 		topic(fd, remaining);
+	else
+		servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command));
 }

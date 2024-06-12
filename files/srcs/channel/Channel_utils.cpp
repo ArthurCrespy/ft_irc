@@ -156,7 +156,8 @@ bool Channel::isAdmins(Client *user) const {
     return false;
 }
 
-std::string	Channel::getMode(void) const {
+std::string	Channel::getMode(void) const
+{
 	std::string modeString = "+";
 
 	for (size_t i = 0; i < this->_modes.size(); i++)
@@ -179,8 +180,6 @@ void Channel::removeMember(Client *member)
 	if (it != _channel_members.end())
 	{
 		removeAdmin(member);
-		if (_channel_admins.empty())
-			addAdmin(_channel_members.begin()->second);
 		_channel_members.erase(it);
 	}
 
@@ -192,15 +191,12 @@ void Channel::removeMember(std::string const &member)
 	if (it != _channel_members.end())
 	{
 		removeAdmin((*it).second);
-		if (_channel_admins.empty())
-			addAdmin(_channel_members.begin()->second);
 		_channel_members.erase(it);
 	}
 }
 
 void Channel::addAdmin(Client *op)
 {
-	// send to the client who make the request that op is now MODE +o
 	_channel_admins.insert(std::make_pair(op->getNickname(), op));
 }
 
@@ -208,20 +204,18 @@ void Channel::removeAdmin(Client *op)
 {
 	it_members it = _channel_members.find(op->getNickname());
 	if (it != _channel_admins.end())
-	{
-		// send to the client who make the request that op is now MODE -o
 		_channel_admins.erase(it);
-	}
+	else
+		throw std::runtime_error("Client is not an admin of the channel");
 }
 
 void Channel::removeAdmin(std::string const &op)
 {
 	it_members it = _channel_members.find(op);
 	if (it != _channel_admins.end())
-	{
-		// send to the client who make the request that op is now MODE -o
 		_channel_admins.erase(it);
-	}
+	else
+		throw std::runtime_error("Client is not an admin of the channel");
 }
 
 void Channel::broadcast(std::string const &name, std::string const &msg)
@@ -231,6 +225,8 @@ void Channel::broadcast(std::string const &name, std::string const &msg)
 	channel = "#" + this->getName();
 	for (it_members it = _channel_members.begin(); it != _channel_members.end(); it++)
 	{
+		if (!(*it).second)
+			continue ;
 		if ((*it).second->getNickname() == name)
 			continue ;
 		chaSend(name, (*it).second->getFd(), RPL_PRIVMSG(channel, msg));

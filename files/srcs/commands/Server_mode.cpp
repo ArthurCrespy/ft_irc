@@ -38,9 +38,6 @@ void Server::mode(int fd, std::string const &msg)
 			return (servSend(_srv_sock, fd, ERR_UNKNOWNMODE(_client.at(fd)->getNickname(), modes)));
 
 		modeMulti(fd, iss, channel, modes);
-
-		std::string response = ":" + _client.at(fd)->getNickname() + " MODE " + channel_name + " " + modes + " " + param;
-		channel.broadcast(_client.at(fd)->getNickname(), response);
 	}
 	catch (const std::out_of_range &)
 	{
@@ -57,9 +54,15 @@ void Server::modeMulti(int fd, std::istringstream &iss, Channel &channel, std::s
 	{
 		char mode = modes[i];
 		if (mode == 'i')
+		{
 			channel.setInviteOnly(action == '+');
+			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "i"));
+		}
 		else if (mode == 't')
+		{
 			channel.setTopicRestriction(action == '+');
+			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "t"));
+		}
 		else if (mode == 'k')
 			modeK(fd, iss, channel, action);
 		else if (mode == 'o')
@@ -82,6 +85,7 @@ void Server::modeK(int fd, std::istringstream &iss, Channel &channel, char actio
 	}
 	else
 		channel.setPasswordRestriction(false);
+	servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "k"));
 }
 
 void Server::modeO(int fd, std::istringstream &iss, Channel &channel, char action)
@@ -95,8 +99,9 @@ void Server::modeO(int fd, std::istringstream &iss, Channel &channel, char actio
 		Client &client = _user.at(param);
 		if (action == '+')
 			channel.addAdmin(&client);
-		else
+		else if (action == '-')
 			channel.removeAdmin(&client);
+		servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "o"));
 	}
 	catch (const std::out_of_range &)
 	{
