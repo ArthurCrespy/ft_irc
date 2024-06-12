@@ -64,6 +64,8 @@ void Server::msgSend(int fd, const std::string &msg)
 	}
 	while (message[0] == ' ' || message[0] == ':')
 		message.erase(0, 1);
+	if (std::find(message.begin(), message.end(), '\r') != message.end())
+		message.erase(message.end() - 1);
 	if (name[0] != '#' && name[0] != '&')
 		msgPrv(fd, name, message);
 	else
