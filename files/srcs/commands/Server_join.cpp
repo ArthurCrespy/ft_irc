@@ -40,7 +40,7 @@ void Server::join(int fd, std::string const &msg)
 		}
 		if (_channel.at(channel_name).hasMode('l') && (int)_channel.at(channel_name).getMembers().size() >= _channel.at(channel_name).getLimit())
 			return servSend(_srv_sock, fd, ERR_CHANNELISFULL(_client.at(fd)->getNickname(), channel_name));
-		if (_channel.at(channel_name).hasMode('i') && !_channel.at(channel_name).isInvited(_client.at(fd)))
+		if (_channel.at(channel_name).hasMode('i') && _channel.at(channel_name).getMembers().find(_client.at(fd)->getNickname()) == _channel.at(channel_name).getMembers().end())
 			return servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(_client.at(fd)->getNickname(), channel_name));
 		_channel.at(channel_name).addMember(_client.at(fd));
 		servSend(_srv_sock, fd, "You have joined the channel: " + channel_name);

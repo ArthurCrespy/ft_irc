@@ -26,13 +26,10 @@ class Channel
 		bool				_channel_password_restrict;
 		int					_channel_limit;
 		bool				_channel_invite_only;
-		std::vector<char>			_modes;
-		std::vector<std::string>	_inviteList;
 
+		t_mode				_channel_modes;
 		t_members			_channel_members;
 		t_members			_channel_admins;
-
-		Client				*_owner;
 
 	public:
 		Channel(void);
@@ -49,11 +46,9 @@ class Channel
 		void setPasswordRestriction(bool restrict);
 		void setLimit(int limit);
 		void setInviteOnly(bool io);
-		void setOwner(Client *owner);
 
 		std::string	getMode(void) const;
-		bool	isInChannel(Client *user, int fd);
-		bool	isInvited(Client *user) const;
+		bool		hasMode(char mode) const;
 		std::string	getName(void) const;
 		std::string	getTopic(void) const;
 		bool		getTopicSet(void) const;
@@ -62,30 +57,22 @@ class Channel
 		bool		getPasswordRestriction(void) const;
 		int			getLimit(void) const;
 		bool		getInviteOnly(void) const;
-		bool		hasMode(char mode) const;
-		// int getMembersNb
+//		int			getMembersNb(void) const;
+
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;
 
-		bool	isAdmins(Client *user) const;
 		void addMember(Client *member);
 		void removeMember(Client *member);
 		void removeMember(std::string const &member);
 
+		bool isAdmin(Client *member);
 		void addAdmin(Client *op);
 		void removeAdmin(Client *op);
 		void removeAdmin(std::string const &op);
-  
+
 		void broadcast(std::string const &name, std::string const &msg);
 		void chaSend(std::string const &name_src, int fd_dest, std::string const &msg);
-  
-  	template <class T> static std::string	toString(const T &value)
-    {
-			std::ostringstream oss;
-
-			oss << value;
-			return (oss.str());
-		}
 };
 
 #endif
