@@ -24,8 +24,8 @@ typedef	struct	pollfd		t_poll_fd;
 typedef			siginfo_t	t_siginfo;
 typedef struct	sigaction	t_signal;
 
-typedef std::vector<int>							t_fd;
-typedef std::vector<int>::iterator					it_fd;
+typedef std::vector<char>							t_mode;
+typedef std::vector<char>::iterator					it_mode;
 
 typedef std::vector<t_poll_fd>						t_poll;
 typedef std::vector<t_poll_fd>::iterator			it_poll;
