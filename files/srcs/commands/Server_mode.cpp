@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:36:45 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/12 13:44:17 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/12 16:27:56 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void Server::mode(int fd, std::string const &msg)
 	{
 		Channel &channel = _channel.at(channel_name.substr(1));
 		action = modes[0];
-		if (!channel.isAdmins(_client.at(fd)))
+		if (!channel.isAdmin(_client.at(fd)))
 			return servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), channel_name));
 		if (action != '+' && action != '-')
 			return (servSend(_srv_sock, fd, ERR_UNKNOWNMODE(_client.at(fd)->getNickname(), modes)));
