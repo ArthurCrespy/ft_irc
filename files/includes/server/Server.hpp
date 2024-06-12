@@ -27,7 +27,6 @@ class Server
 		t_client	_client;
 		t_channel	_channel;
 		t_signal	_signal;
-		Client		*The_client;
 
 	public:
 		Server(void);
