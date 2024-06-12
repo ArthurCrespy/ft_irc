@@ -29,7 +29,7 @@ void Server::mode(int fd, std::string const &msg)
 
 	try
 	{
-		Channel &channel = _channel.at(channel_name.substr(1));
+		Channel &channel = _channel.at(channel_name.erase(0, 1));
 		action = modes[0];
 		if (!channel.isAdmin(_client.at(fd)))
 			return servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), channel_name));
@@ -55,12 +55,12 @@ void Server::modeMulti(int fd, std::istringstream &iss, Channel &channel, std::s
 		if (mode == 'i')
 		{
 			channel.setInviteOnly(action == '+');
-			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "i"));
+			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "i"));
 		}
 		else if (mode == 't')
 		{
 			channel.setTopicRestriction(action == '+');
-			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "t"));
+			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "t"));
 		}
 		else if (mode == 'k')
 			modeK(fd, iss, channel, action);
@@ -84,7 +84,7 @@ void Server::modeK(int fd, std::istringstream &iss, Channel &channel, char actio
 	}
 	else
 		channel.setPasswordRestriction(false);
-	servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "k"));
+	servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "k"));
 }
 
 void Server::modeO(int fd, std::istringstream &iss, Channel &channel, char action)
@@ -100,7 +100,7 @@ void Server::modeO(int fd, std::istringstream &iss, Channel &channel, char actio
 			channel.addAdmin(&client);
 		else if (action == '-')
 			channel.removeAdmin(&client);
-		servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), "#" + channel.getName(), action + "o"));
+		servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "o"));
 	}
 	catch (const std::out_of_range &)
 	{
