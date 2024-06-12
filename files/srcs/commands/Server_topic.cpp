@@ -45,7 +45,7 @@ void Server::topic(int fd, std::string const &msg)
 			servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
 		else if (_channel.find(channel_name)->second.getMembers().find(_client.find(fd)->second->getNickname()) == _channel.find(channel_name)->second.getMembers().end())
 			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
-		else if (_channel.find(channel_name)->second.getAdmins().find(_client.find(fd)->second->getNickname()) == _channel.find(channel_name)->second.getAdmins().end())
+		else if (_channel.find(channel_name)->second.hasMode('t') && _channel.find(channel_name)->second.getAdmins().find(_client.find(fd)->second->getNickname()) == _channel.find(channel_name)->second.getAdmins().end())
 			servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.find(fd)->second->getNickname(), channel_name));
 		else
 		{
