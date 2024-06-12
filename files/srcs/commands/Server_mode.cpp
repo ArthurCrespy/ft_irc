@@ -32,7 +32,7 @@ void Server::mode(int fd, std::string const &msg)
 	{
 		Channel &channel = _channel.at(channel_name.substr(1));
 		action = modes[0];
-		if (!channel.isAdmins(_client.at(fd)))
+		if (!channel.isAdmin(_client.at(fd)))
 			return servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), channel_name));
 		if (action != '+' && action != '-')
 			return (servSend(_srv_sock, fd, ERR_UNKNOWNMODE(_client.at(fd)->getNickname(), modes)));
