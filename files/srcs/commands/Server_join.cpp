@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_join.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/11 11:58:06 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/13 16:18:42 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,15 @@ void Server::join(int fd, std::string const &msg)
 			if (mdp.empty() || _channel.at(channel_name).getPassword() != mdp)
 				return (servSend(_srv_sock, fd, ERR_PASSWDMISMATCH(_client.at(fd)->getNickname())));
 		}
+
+		if (_channel.at(channel_name).getMembers().count(_client.at(fd)->getNickname()) != 0)
+			return (servSend(_srv_sock, fd, _client.at(fd)->getNickname() + ": already in the channel")); // pas trouve le msg a renvoye dans ce genre de cas
+
 		if (_channel.at(channel_name).hasMode('l') && (int)_channel.at(channel_name).getMembers().size() >= _channel.at(channel_name).getLimit())
 			return (servSend(_srv_sock, fd, ERR_CHANNELISFULL(_client.at(fd)->getNickname(), channel_name)));
-		if (_channel.at(channel_name).hasMode('i') && _channel.at(channel_name).getMembers().find(_client.at(fd)->getNickname()) == _channel.at(channel_name).getMembers().end())
-			return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(_client.at(fd)->getNickname(), channel_name)));
+		if (_channel.at(channel_name).getInviteOnly())
+				return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(_client.at(fd)->getNickname(), channel_name)));
+
 		_channel.at(channel_name).addMember(_client.at(fd));
 		servSend(_srv_sock, fd, "You have joined the channel: " + channel_name);
 		_channel.at(channel_name).broadcast(_client.at(fd)->getNickname(), _client.at(fd)->getNickname() + " has joined the channel.");

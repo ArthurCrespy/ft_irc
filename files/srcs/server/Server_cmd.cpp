@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_cmd.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/12 14:05:26 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/13 11:29:03 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void Server::servCommand(int fd, std::string const &msg)
 		mode(fd, remaining);
 	else if (command == "TOPIC" || command == "/topic")
 		topic(fd, remaining);
+	else if (command == "INVITE" || command == "/invite")
+		invite(fd, remaining);
 	else
 		servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command));
 }

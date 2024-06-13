@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   replies.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/11 15:12:40 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/13 12:38:55 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # define RPL_CHANNELMODEIS(nickname, channel, modes)	        "324 " + nickname + " #" + channel +	" " + modes
 # define RPL_NOTOPIC(nickname, channel)							"331 " + nickname + " #" + channel +	" :No topic is set"
 # define RPL_TOPIC(nickname, channel, topic)					"332 " + nickname + " #" + channel +	" :" + topic
+# define RPL_INVITING(nickname, target, channel)				"341 " + nickname + " " + target + " #" + channel
 # define RPL_NAMREPLY(nickname, channel, users)					"353 " + nickname + " = #" + channel +	" :" + users
 # define RPL_ENDOFNAMES(nickname, channel)						"366 " + nickname + " #" + channel +	" :End of /NAMES list."
 
