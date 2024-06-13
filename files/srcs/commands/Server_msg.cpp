@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_msg.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:51:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/11 10:57:03 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/13 17:49:18 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void Server::msgPrv(int fd, std::string const &name, std::string const &msg)
     if (_user.count(name) == 0)
         return (servSend(_srv_sock, fd, ERR_NOSUCHNICK(_client.at(fd)->getNickname(), msg)));
 
-    servSend(_client.at(fd)->getFd(), _user.at(name).getFd(), RPL_PRIVMSG(_client.at(_user.at(name).getFd())->getNickname(), msg));
+	servSend(fd, _user.at(name).getFd(), RPL_PRIVMSG(_client.at(_user.at(name).getFd())->getNickname(), msg));
 }
 
 void Server::msgChannel(int fd, std::string &channel, std::string const &msg)

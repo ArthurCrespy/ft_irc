@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/13 12:38:55 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/13 17:18:20 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # define ERR_NICKNAMEINUSE(nickname)							"433 " + nickname + " " + nickname	+	" :Nickname is already in use"
 # define ERR_NONICKNAMEGIVEN(nickname)							"431 " + nickname +						" :No nickname given"
 # define ERR_USERNOTINCHANNEL(nickname, channel)				"441 " + nickname + " #" + channel +	" :They aren't on that channel"
+# define ERR_USERONCHANNEL(nickname, channel) 					"443 " + nickname + " #" + channel +	" :is already on channel"
 # define ERR_NOTONCHANNEL(nickname, channel)					"442 " + nickname + " #" + channel +	" :You're not on that channel"
 # define ERR_NOLOGIN(nickname)									"444 " + nickname +						" :User not logged in"
 # define ERR_NOTREGISTERED(nickname)							"451 " + nickname +						" :You have not registered"
@@ -64,5 +65,9 @@
 /* PING/PONG Replies */
 # define RPL_PING(nickname)										"PING " + nickname
 # define RPL_PONG(nickname)										"PONG " + nickname + " :" + nickname
+
+/* Invite message */
+# define MSG_INVITE(nickname, guest, channel)					":" + nickname + " INVITE " + guest + " :" + channel
+
 
 #endif

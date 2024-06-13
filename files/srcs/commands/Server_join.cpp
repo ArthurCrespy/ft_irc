@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/13 16:18:42 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/13 16:54:12 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void Server::join(int fd, std::string const &msg)
 		}
 
 		if (_channel.at(channel_name).getMembers().count(_client.at(fd)->getNickname()) != 0)
-			return (servSend(_srv_sock, fd, _client.at(fd)->getNickname() + ": already in the channel")); // pas trouve le msg a renvoye dans ce genre de cas
+			return (servSend(_srv_sock, fd, ERR_USERONCHANNEL(_client.at(fd)->getNickname(), channel_name)));
 
 		if (_channel.at(channel_name).hasMode('l') && (int)_channel.at(channel_name).getMembers().size() >= _channel.at(channel_name).getLimit())
 			return (servSend(_srv_sock, fd, ERR_CHANNELISFULL(_client.at(fd)->getNickname(), channel_name)));

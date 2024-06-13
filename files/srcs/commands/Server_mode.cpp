@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:36:45 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/13 14:18:54 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/13 16:28:18 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,7 @@ void Server::modeMulti(int fd, std::istringstream &iss, Channel &channel, std::s
 		char mode = modes[i];
 		if (mode == 'i')
 		{
-			std::cout << "action :" << (action == '+') << std::endl;
 			channel.setInviteOnly(action == '+');
-			std::cout << "invteonly :" << channel.getInviteOnly() << std::endl;
 			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "i"));
 		}
 		else if (mode == 't')
