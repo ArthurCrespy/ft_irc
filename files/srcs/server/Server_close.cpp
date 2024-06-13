@@ -48,6 +48,4 @@ void Server::servClose(int fd)
 	}
 	delete (_client.at(fd));
 	_client.erase(_client.find(fd));
-	if (_user.find(nickname) != _user.end())
-		_user.erase(_user.find(nickname));
 }

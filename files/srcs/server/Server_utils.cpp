@@ -65,7 +65,27 @@ int Server::getSock(void) const
 	return (this->_srv_sock);
 }
 
+Client		&Server::getClient(std::string const &name)
+{
+	for (it_client it = _client.begin(); it != _client.end(); it++)
+	{
+		if (it->second->getNickname() == name)
+			return (*(it)->second);
+	}
+	throw std::invalid_argument("Client not found");
+}
+
 Channel &Server::getChannel(std::string const &name)
 {
 	return (_channel.at(name));
+}
+
+bool Server::isClient(std::string const &name)
+{
+	for (it_client it = _client.begin(); it != _client.end(); it++)
+	{
+		if (it->second->getNickname() == name)
+			return (true);
+	}
+	return (false);
 }
