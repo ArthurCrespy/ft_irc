@@ -22,15 +22,15 @@ void Server::msgPrv(int fd, std::string const &name, std::string const &msg)
 
 void Server::msgChannel(int fd, std::string &channel, std::string const &msg)
 {
-    if (channel[0] != '#' && channel[0] != '&')
-        return (servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel)));
-    channel.erase(0, 1);
+	if (channel[0] != '#' && channel[0] != '&')
+		return (servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel)));
+	channel.erase(0, 1);
 
-    if (_channel.count(channel) == 0)
-        return (servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel)));
+	if (_channel.count(channel) == 0)
+		return (servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel)));
 
-    if (_channel.at(channel).getMembers().count(_client.at(fd)->getNickname()) == 0)
-        return (servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), channel)));
+	if (_channel.at(channel).getMembers().count(_client.at(fd)->getNickname()) == 0)
+		return (servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), channel)));
 
 	_channel.at(channel).broadcast(_client.at(fd)->getNickname(), RPL_CHANNEL(channel, msg));
 }
