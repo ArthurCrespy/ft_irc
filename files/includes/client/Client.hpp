@@ -19,6 +19,7 @@ class Client
 		int				_cli_fd;
 		int				_cli_port;
 
+		bool			_cli_identified;
 		bool			_cli_registered;
 
 		std::string		_cli_nickname;
@@ -36,6 +37,7 @@ class Client
 
 		void	setFd(int fd);
 		void	setPort(int port);
+		void	setIdentification(bool id);
 		void	setRegistration(bool reg);
 		void	setNickname(std::string const &nickname);
 		void	setUsername(std::string const &username);
@@ -44,6 +46,7 @@ class Client
 
 		int			getFd(void) const;
 		int			getPort(void) const;
+		bool		getIdentification(void) const;
 		bool		getRegistration(void) const;
 		std::string	getNickname(void) const;
 		std::string	getUsername(void) const;

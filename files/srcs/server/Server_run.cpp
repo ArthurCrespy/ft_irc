@@ -143,7 +143,6 @@ void Server::servConnect(void)
 	Client *client = new Client(cli_fd, ntohs(cli_adrr_in.sin_port), cli_name_in);
 
 	std::string client_name = cli_name_in;
-	servSend(_srv_sock, cli_fd, RPL_WELCOME(client_name));
 
 	_poll.push_back(cli_poll_in);
 	_user.insert(std::make_pair(client_name, *client));
