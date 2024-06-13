@@ -20,41 +20,42 @@
 */
 void Server::kick(int fd, std::string const &msg)
 {
-	std::string channel_name;
-	std::string nickname;
 	std::string reason;
+	std::string nickname;
+	std::string channel_name;
 	std::istringstream iss(msg);
 
 	iss >> channel_name >> nickname;
 	std::getline(iss, reason);
 
-	if (channel_name.empty() || nickname.empty())
-		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.find(fd)->second->getNickname(), "KICK")));
-
 	if (channel_name[0] == '#' || channel_name[0] == '&')
 		channel_name.erase(0, 1);
-
-	while (reason[0] == ' ' || reason[0] == ':' || reason[0] == '\r')
+	if (channel_name.empty() || nickname.empty())
+		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.find(fd)->second->getNickname(), "KICK")));
+	while (reason[0] == ' ' || reason[0] == ':')
 		reason.erase(0, 1);
 	if (reason.empty())
 		reason = "No reason given";
-
-	if (_channel.find(channel_name) == _channel.end())
-		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
-	else if (_channel.find(channel_name)->second.getAdmins().find(nickname) == _channel.find(channel_name)->second.getAdmins().end())
-		servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.find(fd)->second->getNickname(), channel_name));
-	else if (_channel.find(channel_name)->second.getMembers().find(nickname) == _channel.find(channel_name)->second.getMembers().end())
-		servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
-	else
+	
+	if (_channel.count(channel_name) != 0)
 	{
-		servSend(fd, fd, RPL_KICK(channel_name, nickname, reason));
-		_channel.find(channel_name)->second.broadcast(_client.find(fd)->second->getNickname(), RPL_KICK(channel_name, nickname, reason));
-		_channel.find(channel_name)->second.removeMember(nickname);
-
-		if (_channel.find(channel_name)->second.getAdmins().find(nickname) != _channel.find(channel_name)->second.getAdmins().end())
-			_channel.find(channel_name)->second.removeAdmin(nickname);
-
-		if (_channel.find(channel_name)->second.getMembers().empty())
-			_channel.erase(channel_name);
+		Channel &channel = _channel.at(channel_name);
+		Client *client = _client.at(fd);
+		if (channel.getAdmins().find(nickname) == channel.getAdmins().end())
+			servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(client->getNickname(), channel_name));
+		else if (channel.getMembers().find(nickname) == channel.getMembers().end())
+			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(client->getNickname(), channel_name));
+		else
+		{
+			servSend(fd, fd, RPL_KICK(channel_name, nickname, reason));
+			channel.broadcast(client->getNickname(), RPL_KICK(channel_name, nickname, reason));
+			channel.removeMember(nickname);
+			channel.removeAdmin(nickname);
+	
+			if (channel.getMembers().empty() && channel.getAdmins().empty())
+				_channel.erase(channel_name);
+		}
 	}
+	else
+		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
 }
