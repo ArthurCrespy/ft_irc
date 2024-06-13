@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/11 15:19:21 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/13 11:31:15 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ class Server
 		void		modeMulti(int fd, std::istringstream &iss, Channel &channel, std::string &modes);
 		void		modeK(int fd, std::istringstream &iss, Channel &channel, char action);
 		void		modeO(int fd, std::istringstream &iss, Channel &channel, char action);
+		void		invite(int fd, std::string const &msg);
 		void		logBot(int fd, std::string const &msg);
 };
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_mode.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:36:45 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/12 16:27:56 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/13 14:18:54 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void Server::mode(int fd, std::string const &msg)
 		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "MODE")));
 	if (channel_name[0] != '#' && channel_name[0] != '&')
 		return (servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), "MODE")));
-
 	try
 	{
 		Channel &channel = _channel.at(channel_name.erase(0, 1));
@@ -35,7 +34,6 @@ void Server::mode(int fd, std::string const &msg)
 			return servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), channel_name));
 		if (action != '+' && action != '-')
 			return (servSend(_srv_sock, fd, ERR_UNKNOWNMODE(_client.at(fd)->getNickname(), modes)));
-
 		modeMulti(fd, iss, channel, modes);
 	}
 	catch (const std::out_of_range &)
@@ -54,7 +52,9 @@ void Server::modeMulti(int fd, std::istringstream &iss, Channel &channel, std::s
 		char mode = modes[i];
 		if (mode == 'i')
 		{
+			std::cout << "action :" << (action == '+') << std::endl;
 			channel.setInviteOnly(action == '+');
+			std::cout << "invteonly :" << channel.getInviteOnly() << std::endl;
 			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "i"));
 		}
 		else if (mode == 't')
