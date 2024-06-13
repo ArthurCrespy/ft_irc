@@ -181,4 +181,3 @@ void Server::servReceive(int fd)
 	}
 	servCommand(fd, msg);
 }
-// todo: verify if ctrl+d + ctrl+z works in netcat
