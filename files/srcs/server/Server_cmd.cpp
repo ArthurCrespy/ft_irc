@@ -12,39 +12,61 @@
 
 #include "../../includes/ft_irc.h"
 
+std::vector<std::string> splitter(std::string const &str)
+{
+	std::string line;
+	std::istringstream iss(str);
+	std::vector<std::string> result;
+
+		while (std::getline(iss, line))
+		{
+			if (!line.empty() && line[line.size() - 1] == '\r')
+				line.erase(line.size() - 1);
+			result.push_back(line);
+		}
+		return (result);
+}
+
 void Server::servCommand(int fd, std::string const &msg)
 {
-	ft_print("Server received: " + msg, INFO);
+	std::vector<std::string> commands = splitter(msg);
 
-	std::istringstream iss(msg);
-	std::string command;
-	iss >> command;
+	for (std::vector<std::string>::iterator it = commands.begin(); it != commands.end(); ++it)
+	{
+		std::string command_str = *it;
+		std::istringstream iss(command_str);
+		std::string command;
+		iss >> command;
 
-	std::string remaining;
-	std::getline(iss, remaining);
+		std::string remaining;
+		std::getline(iss, remaining);
 
-	if (command == "PING" || command == "/ping")
-		return (servSend(_srv_sock, fd, RPL_PONG(_client.at(fd)->getNickname())));
-	if ((command == "PRIVMSG" || command == "/msg") && remaining.find("LOGBOT") == 1)
-		return (logBot(fd, remaining));
+		if (remaining[0] == ' ')
+			remaining.erase(0, 1);
 
-	if (!_client.at(fd)->getRegistration())
-		return (servSend(_srv_sock, fd, ERR_NOLOGIN(_client.at(fd)->getHostname())));
-
-	if ((remaining.empty() || remaining == "\r\n"))
-		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command)));
-
-
-	if (command == "PRIVMSG" || command == "/msg")
-		msgSend(fd, remaining);
-	else if (command == "JOIN" || command == "/join")
-		join(fd, remaining);
-	else if (command == "KICK" || command == "/kick")
-		kick(fd, remaining);
-	else if (command == "MODE" || command == "/mode")
-		mode(fd, remaining);
-	else if (command == "TOPIC" || command == "/topic")
-		topic(fd, remaining);
-	else
-		servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command));
+		if (command == "PING" || command == "/ping")
+			servSend(_srv_sock, fd, RPL_PONG(_client.at(fd)->getNickname()));
+		else if ((command == "NICK" || command == "/nick"))
+			nick(fd, remaining);
+		else if ((command == "USER" || command == "/user"))
+			user(fd, remaining);
+		else if ((command == "PRIVMSG" || command == "/msg") && remaining.find("logbot") == 0)
+			logBot(fd, remaining);
+		else if (!_client.at(fd)->getRegistration())
+			servSend(_srv_sock, fd, ERR_NOLOGIN(_client.at(fd)->getHostname()));
+		else if ((remaining.empty() || remaining == "\r\n"))
+			servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command));
+		else if (command == "PRIVMSG" || command == "/msg")
+			msgSend(fd, remaining);
+		else if (command == "JOIN" || command == "/join")
+			join(fd, remaining);
+		else if (command == "KICK" || command == "/kick")
+			kick(fd, remaining);
+		else if (command == "MODE" || command == "/mode")
+			mode(fd, remaining);
+		else if (command == "TOPIC" || command == "/topic")
+			topic(fd, remaining);
+		else
+			servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command));
+	}
 }
