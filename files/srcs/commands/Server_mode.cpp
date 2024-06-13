@@ -15,46 +15,45 @@
 void Server::mode(int fd, std::string const &msg)
 {
 	char action;
-	std::string channel_name;
 	std::string modes;
 	std::string param;
+	std::string channel_name;
 	std::istringstream iss(msg);
 
 	iss >> channel_name >> modes;
-
 	if (channel_name.empty() || modes.empty())
 		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "MODE")));
 	if (channel_name[0] != '#' && channel_name[0] != '&')
-		return (servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), "MODE")));
-	try
+		return (servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), "MODE on user")));
+	else
+		channel_name.erase(0, 1);
+
+	if (_channel.count(channel_name) != 0)
 	{
-		Channel &channel = _channel.at(channel_name.erase(0, 1));
+		Channel &channel = _channel.at(channel_name);
 		action = modes[0];
 		if (!channel.isAdmin(_client.at(fd)))
-			return servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), channel_name));
+			return (servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.at(fd)->getNickname(), channel_name)));
 		if (action != '+' && action != '-')
 			return (servSend(_srv_sock, fd, ERR_UNKNOWNMODE(_client.at(fd)->getNickname(), modes)));
 		modeMulti(fd, iss, channel, modes);
 	}
-	catch (const std::out_of_range &)
-	{
+	else
 		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel_name));
-	}
 }
 
 void Server::modeMulti(int fd, std::istringstream &iss, Channel &channel, std::string &modes)
 {
+	char action;
 	std::string param;
-	char action = modes[0];
 
+	action = modes[0];
 	for (size_t i = 1; i < modes.length(); ++i)
 	{
 		char mode = modes[i];
 		if (mode == 'i')
 		{
-			std::cout << "action :" << (action == '+') << std::endl;
 			channel.setInviteOnly(action == '+');
-			std::cout << "invteonly :" << channel.getInviteOnly() << std::endl;
 			servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "i"));
 		}
 		else if (mode == 't')
@@ -93,17 +92,14 @@ void Server::modeO(int fd, std::istringstream &iss, Channel &channel, char actio
 
 	if (!(iss >> param))
 		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "MODE")));
-	try
+
+	if (isClient(param))
 	{
-		Client &client = _user.at(param);
+		Client &client = getClient(param);
 		if (action == '+')
 			channel.addAdmin(&client);
 		else if (action == '-')
 			channel.removeAdmin(&client);
 		servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "o"));
-	}
-	catch (const std::out_of_range &)
-	{
-		servSend(_srv_sock, fd, ERR_NOSUCHNICK(_client.at(fd)->getNickname(), param));
 	}
 }

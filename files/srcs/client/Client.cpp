@@ -38,14 +38,3 @@ Client &Client::operator=(Client const &rhs)
 	}
 	return (*this);
 }
-
-void Client::cliSend(int fd_src, int fd_dest, std::string const &msg)
-{
-	(void)fd_src;
-	std::string str;
-
-	str = ":" + this->getPrefix() + " " + msg + "\r\n";
-
-	if (send(fd_dest, str.c_str(), ft_strlen(str), 0) == -1)
-		throw std::runtime_error("Syscall send() Failed in send: " + std::string(std::strerror(errno)));
-}
