@@ -24,7 +24,7 @@ void Server::logBot(int fd, std::string const &msg)
 
 	iss >> command >> password >> nickname >> username >> realname;
 
-	if (command != "LOGBOT")
+	if (command != "logbot")
 	{
 		servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getHostname(), command));
 		return ;
@@ -39,20 +39,31 @@ void Server::logBot(int fd, std::string const &msg)
 	if (!password.empty() && password[0] == ':')
 		password.erase(0, 1);
 
-	if (password.empty() || nickname.empty() || username.empty() || realname.empty())
+	if (!password.empty() && nickname.empty() && username.empty() && realname.empty() && _client.at(fd)->getIdentification())
+	{
+		if (password == _srv_password)
+		{
+			_client.at(fd)->setRegistration(true);
+			servSend(_srv_sock, fd, RPL_LBLOGGED(_client.at(fd)->getNickname()));
+		}
+		else
+			servSend(_srv_sock, fd, ERR_PASSWDMISMATCH(_client.at(fd)->getHostname()));
+	}
+	else if (password.empty() || nickname.empty() || username.empty() || realname.empty())
 		servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getHostname(), command));
 	else if (password == _srv_password)
 	{
-		if (_user.count(nickname) || nickname == "LOGBOT" || nickname == "localhost")
+		if (_user.count(nickname) || nickname == "logbot" || nickname == "localhost")
 			servSend(_srv_sock, fd, ERR_NICKNAMEINUSE(nickname));
 		else
 		{
 			_client.at(fd)->setNickname(nickname);
 			_client.at(fd)->setUsername(username);
 			_client.at(fd)->setRealname(realname);
+			_client.at(fd)->setIdentification(true);
 			_client.at(fd)->setRegistration(true);
 			_user.insert(std::make_pair(nickname, *_client.at(fd)));
-			servSend(_srv_sock, fd, RPL_LBTREGISTER(_client.at(fd)->getNickname()));
+			servSend(_srv_sock, fd, RPL_LBLOGGED(_client.at(fd)->getNickname()));
 			servSend(_srv_sock, fd, RPL_LBWELCOME(_client.at(fd)->getNickname(), _client.at(fd)->getUsername(), _client.at(fd)->getHostname()));
 		}
 	}

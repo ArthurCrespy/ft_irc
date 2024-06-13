@@ -218,16 +218,13 @@ void Channel::removeAdmin(const std::string &op)
 
 void Channel::broadcast(std::string const &name, std::string const &msg)
 {
-	std::string channel;
-
-	channel = "#" + this->getName();
 	for (it_members it = _channel_members.begin(); it != _channel_members.end(); it++)
 	{
 		if (!(*it).second)
 			continue ;
 		if ((*it).second->getNickname() == name)
 			continue ;
-		chaSend(name, (*it).second->getFd(), RPL_PRIVMSG(channel, msg));
+		chaSend(name, (*it).second->getFd(), msg);
 	}
 }
 

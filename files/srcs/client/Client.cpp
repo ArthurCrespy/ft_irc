@@ -12,9 +12,9 @@
 
 #include "../../includes/ft_irc.h"
 
-Client::Client(void) : _cli_fd(-1), _cli_port(-1), _cli_registered(false) {}
+Client::Client(void) : _cli_fd(-1), _cli_port(-1), _cli_identified(false) , _cli_registered(false){}
 
-Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_registered(false), _cli_hostname(hostname) {}
+Client::Client(int cli_fd, int cli_port, std::string const &hostname) : _cli_fd(cli_fd), _cli_port(cli_port), _cli_identified(false), _cli_registered(false), _cli_hostname(hostname) {}
 
 Client::Client(Client const &src)
 {
@@ -29,6 +29,7 @@ Client &Client::operator=(Client const &rhs)
 	{
 		this->_cli_fd = rhs._cli_fd;
 		this->_cli_port = rhs._cli_port;
+		this->_cli_identified = rhs._cli_identified;
 		this->_cli_registered = rhs._cli_registered;
 		this->_cli_nickname = rhs._cli_nickname;
 		this->_cli_username = rhs._cli_username;

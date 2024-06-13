@@ -34,7 +34,7 @@ void Server::kick(int fd, std::string const &msg)
 	if (channel_name[0] == '#' || channel_name[0] == '&')
 		channel_name.erase(0, 1);
 
-	if (reason[0] == ':')
+	while (reason[0] == ' ' || reason[0] == ':' || reason[0] == '\r')
 		reason.erase(0, 1);
 	if (reason.empty())
 		reason = "No reason given";
@@ -47,7 +47,8 @@ void Server::kick(int fd, std::string const &msg)
 		servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
 	else
 	{
-		servSend(_srv_sock, fd, RPL_KICK(channel_name, nickname, reason));
+		servSend(fd, fd, RPL_KICK(channel_name, nickname, reason));
+		_channel.find(channel_name)->second.broadcast(_client.find(fd)->second->getNickname(), RPL_KICK(channel_name, nickname, reason));
 		_channel.find(channel_name)->second.removeMember(nickname);
 
 		if (_channel.find(channel_name)->second.getAdmins().find(nickname) != _channel.find(channel_name)->second.getAdmins().end())

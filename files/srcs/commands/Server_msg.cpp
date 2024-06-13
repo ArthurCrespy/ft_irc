@@ -32,7 +32,7 @@ void Server::msgChannel(int fd, std::string &channel, std::string const &msg)
     if (_channel.at(channel).getMembers().count(_client.at(fd)->getNickname()) == 0)
         return (servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), channel)));
 
-    _channel.at(channel).broadcast(_client.at(fd)->getNickname(), msg);
+	_channel.at(channel).broadcast(_client.at(fd)->getNickname(), RPL_CHANNEL(channel, msg));
 }
 
 void Server::msgSend(int fd, const std::string &msg)

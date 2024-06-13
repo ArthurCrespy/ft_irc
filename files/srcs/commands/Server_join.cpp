@@ -21,6 +21,8 @@ void Server::join(int fd, std::string const &msg)
 
 	iss >> channel_name;
 
+	if (channel_name[0] == ':')
+		channel_name.erase(0, 1);
 	if (channel_name.empty())
 		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN")));
 	if (channel_name[0] != '#' && channel_name[0] != '&')
@@ -43,13 +45,13 @@ void Server::join(int fd, std::string const &msg)
 		if (_channel.at(channel_name).hasMode('i') && _channel.at(channel_name).getMembers().find(_client.at(fd)->getNickname()) == _channel.at(channel_name).getMembers().end())
 			return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(_client.at(fd)->getNickname(), channel_name)));
 		_channel.at(channel_name).addMember(_client.at(fd));
-		servSend(_srv_sock, fd, "You have joined the channel: " + channel_name);
-		_channel.at(channel_name).broadcast(_client.at(fd)->getNickname(), _client.at(fd)->getNickname() + " has joined the channel.");
+		servSend(fd, fd, RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
+		_channel.at(channel_name).broadcast(_client.at(fd)->getNickname(), RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
 	}
 	else
 	{
 		Channel newChannel(channel_name, _client.at(fd));
 		_channel.insert(std::make_pair(channel_name, newChannel));
-		servSend(_srv_sock, fd, "You have joined the channel: " + channel_name);
+		servSend(fd, fd, RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
 	}
 }

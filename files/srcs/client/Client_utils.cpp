@@ -22,6 +22,10 @@ void	Client::setPort(int port)
 	this->_cli_port = port;
 }
 
+void	Client::setIdentification(bool id)
+{
+	this ->_cli_identified = id;
+}
 void	Client::setRegistration(bool reg)
 {
 	this ->_cli_registered = reg;
@@ -55,6 +59,11 @@ int	Client::getFd(void) const
 int	Client::getPort(void) const
 {
 	return (this->_cli_port);
+}
+
+bool Client::getIdentification() const
+{
+	return (this->_cli_identified);
 }
 
 bool Client::getRegistration() const
