@@ -16,16 +16,16 @@
 class Client
 {
 	private:
-		int				_cli_fd;
-		int				_cli_port;
+		int			_cli_fd;
+		int			_cli_port;
 
-		bool			_cli_identified;
-		bool			_cli_registered;
+		bool		_cli_identified;
+		bool		_cli_registered;
 
-		std::string		_cli_nickname;
-		std::string		_cli_username;
-		std::string		_cli_realname;
-		std::string		_cli_hostname;
+		std::string	_cli_nickname;
+		std::string	_cli_username;
+		std::string	_cli_realname;
+		std::string	_cli_hostname;
 
 	public:
 		Client(void);
@@ -35,14 +35,14 @@ class Client
 
 		Client &operator=(Client const &rhs);
 
-		void	setFd(int fd);
-		void	setPort(int port);
-		void	setIdentification(bool id);
-		void	setRegistration(bool reg);
-		void	setNickname(std::string const &nickname);
-		void	setUsername(std::string const &username);
-		void	setRealname(std::string const &realname);
-		void	setHostname(std::string const &hostname);
+		void		setFd(int fd);
+		void		setPort(int port);
+		void		setIdentification(bool id);
+		void		setRegistration(bool reg);
+		void		setNickname(std::string const &nickname);
+		void		setUsername(std::string const &username);
+		void		setRealname(std::string const &realname);
+		void		setHostname(std::string const &hostname);
 
 		int			getFd(void) const;
 		int			getPort(void) const;
@@ -53,8 +53,6 @@ class Client
 		std::string	getRealname(void) const;
 		std::string	getHostname(void) const;
 		std::string getPrefix(void) const;
-
-		void cliSend(int fd_src, int fd_dest, std::string const &msg);
 };
 
 #endif

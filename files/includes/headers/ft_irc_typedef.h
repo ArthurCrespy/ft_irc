@@ -27,6 +27,9 @@ typedef struct	sigaction	t_signal;
 typedef std::vector<char>							t_mode;
 typedef std::vector<char>::iterator					it_mode;
 
+typedef std::vector<std::string>					t_cmd;
+typedef std::vector<std::string>::iterator			it_cmd;
+
 typedef std::vector<t_poll_fd>						t_poll;
 typedef std::vector<t_poll_fd>::iterator			it_poll;
 

@@ -29,9 +29,9 @@ std::vector<std::string> splitter(std::string const &str)
 
 void Server::servCommand(int fd, std::string const &msg)
 {
-	std::vector<std::string> commands = splitter(msg);
+	t_cmd commands = splitter(msg);
 
-	for (std::vector<std::string>::iterator it = commands.begin(); it != commands.end(); ++it)
+	for (it_cmd it = commands.begin(); it != commands.end(); ++it)
 	{
 		std::string command_str = *it;
 		std::istringstream iss(command_str);
@@ -44,6 +44,8 @@ void Server::servCommand(int fd, std::string const &msg)
 		if (remaining[0] == ' ')
 			remaining.erase(0, 1);
 
+		if ((remaining.empty() || remaining == "\r\n"))
+			servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command));
 		if (command == "PING" || command == "/ping")
 			servSend(_srv_sock, fd, RPL_PONG(_client.at(fd)->getNickname()));
 		else if ((command == "NICK" || command == "/nick"))
@@ -54,8 +56,6 @@ void Server::servCommand(int fd, std::string const &msg)
 			logBot(fd, remaining);
 		else if (!_client.at(fd)->getRegistration())
 			servSend(_srv_sock, fd, ERR_NOLOGIN(_client.at(fd)->getHostname()));
-		else if ((remaining.empty() || remaining == "\r\n"))
-			servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command));
 		else if (command == "PRIVMSG" || command == "/msg")
 			msgSend(fd, remaining);
 		else if (command == "JOIN" || command == "/join")
