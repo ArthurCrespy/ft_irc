@@ -17,7 +17,7 @@ void Server::servSend(int fd_src, int fd_dest, std::string const &msg)
 	std::string str;
 
 	if (fd_src == -1)
-		str = ":LOGBOT!localhost@localhost " + msg + "\r\n";
+		str = ":logbot!localhost@localhost " + msg + "\r\n";
 	else
 		str = ":" + _client.at(fd_src)->getPrefix() + " " + msg + "\r\n";
 

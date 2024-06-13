@@ -45,6 +45,8 @@ void Server::topic(int fd, std::string const &msg)
 	{
 		if (channel_name[0] == '#' || channel_name[0] == '&')
 			channel_name.erase(0, 1);
+		if (topic[0] == ':')
+			topic.erase(0, 1);
 		if (_channel.find(channel_name) == _channel.end())
 			servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
 		else if (_channel.find(channel_name)->second.getMembers().find(_client.find(fd)->second->getNickname()) == _channel.find(channel_name)->second.getMembers().end())

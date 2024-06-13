@@ -63,6 +63,8 @@ class Server
 		void		msgPrv(int fd, std::string const &name, std::string const &msg);
 		void		msgChannel(int fd, std::string &channel, std::string const &msg);
 		void		join(int fd, std::string const &msg);
+		void		nick(int fd, std::string const &msg);
+		void		user(int fd, std::string const &msg);
 		void		kick(int fd, std::string const &msg);
 		void		topic(int fd, std::string const &msg);
 		void		mode(int fd, std::string const &msg);

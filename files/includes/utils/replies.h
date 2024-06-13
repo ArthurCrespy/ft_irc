@@ -50,12 +50,15 @@
 # define ERR_CHANOPRIVSNEEDED(nickname, channel)				"482 " + nickname + " #" + channel +	" :You're not channel operator"
 
 /* Custom Replies */
-# define RPL_PRIVMSG(target, message)							"PRIVMSG " + target + " :" + message
+# define RPL_PRIVMSG(nickname, message)							"PRIVMSG " + nickname + " :" + message
+# define RPL_CHANNEL(channel, message)							"PRIVMSG #" + channel + " :" + message
 # define RPL_KICK(channel, target, reason)						"KICK #" + channel + " " + target + " :" + reason
+# define RPL_JOIN(nickname, channel)							"JOIN #" + channel
+# define RPL_NICK(nickname, nc)									"NICK " + nickname + " :" + nc
 
 /* LogBot Replies */
 # define RPL_LBRGST(command)									"Cannot do " + command + "! Not authenticated...\nUse LOGBOT, our bot! /msg LOGBOT <password> <nickname> <username> <realname>"
-# define RPL_LBTREGISTER(nickname)								"Hey " + nickname + " ! You are now registered"
+# define RPL_LBLOGGED(nickname)									"Hey " + nickname + " ! You are now logged"
 # define RPL_LBWELCOME(nickname, username, hostname)			"001 " + nickname +	" :Welcome to the 42IRC network " + nickname + "!" + username + "@" + hostname
 
 /* PING/PONG Replies */
