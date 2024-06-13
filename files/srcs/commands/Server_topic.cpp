@@ -20,43 +20,48 @@
 */
 void Server::topic(int fd, std::string const &msg)
 {
-	std::string channel_name;
 	std::string topic;
+	std::string nickname;
+	std::string channel_name;
 	std::istringstream iss(msg);
 
-	iss >> channel_name >> topic;
+	iss >> channel_name;
+	std::getline(iss, topic);
+
+	nickname = _client.find(fd)->second->getNickname();
+	if (channel_name[0] == '#' || channel_name[0] == '&')
+		channel_name.erase(0, 1);
 	if (channel_name.empty())
-		servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.find(fd)->second->getNickname(), "TOPIC"));
-	else if (topic.empty())
+		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(nickname, "TOPIC")));
+	if (topic[0] == ':')
+		topic.erase(0, 1);
+
+	if (_channel.count(channel_name) != 0)
 	{
-		if (channel_name[0] == '#' || channel_name[0] == '&')
-			channel_name.erase(0, 1);
-		if (_channel.find(channel_name) == _channel.end())
-			servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
-		else if (_channel.find(channel_name)->second.getMembers().find(_client.find(fd)->second->getNickname()) == _channel.find(channel_name)->second.getMembers().end())
-			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
-		else if (_channel.find(channel_name)->second.getTopic().empty())
-			servSend(_srv_sock, fd, RPL_NOTOPIC(_client.find(fd)->second->getNickname(), channel_name));
+		Channel &channel = _channel.at(channel_name);
+		if (channel.isMember(_client.find(fd)->second))
+		{
+			if (topic.empty())
+			{
+				if (channel.getTopic().empty())
+					servSend(_srv_sock, fd, RPL_NOTOPIC(nickname, channel_name));
+				else
+					servSend(_srv_sock, fd, RPL_TOPIC(nickname, channel_name, channel.getTopic()));
+			}
+			else
+			{
+				if (channel.hasMode('t') && !channel.isAdmin(_client.find(fd)->second))
+					servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(nickname, channel_name));
+				else
+				{
+					channel.setTopic(topic);
+					servSend(_srv_sock, fd, RPL_TOPIC(nickname, channel_name, topic));
+				}
+			}
+		}
 		else
-			servSend(_srv_sock, fd, RPL_TOPIC(_client.find(fd)->second->getNickname(), channel_name,
-			                          _channel.find(channel_name)->second.getTopic()));
+			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(nickname, channel_name));
 	}
 	else
-	{
-		if (channel_name[0] == '#' || channel_name[0] == '&')
-			channel_name.erase(0, 1);
-		if (topic[0] == ':')
-			topic.erase(0, 1);
-		if (_channel.find(channel_name) == _channel.end())
-			servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
-		else if (_channel.find(channel_name)->second.getMembers().find(_client.find(fd)->second->getNickname()) == _channel.find(channel_name)->second.getMembers().end())
-			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
-		else if (_channel.find(channel_name)->second.hasMode('t') && _channel.find(channel_name)->second.getAdmins().find(_client.find(fd)->second->getNickname()) == _channel.find(channel_name)->second.getAdmins().end())
-			servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.find(fd)->second->getNickname(), channel_name));
-		else
-		{
-			_channel.find(channel_name)->second.setTopic(topic);
-			servSend(_srv_sock, fd, RPL_TOPIC(_client.find(fd)->second->getNickname(), channel_name, topic));
-		}
-	}
+		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(nickname, channel_name));
 }
