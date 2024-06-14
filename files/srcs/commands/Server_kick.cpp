@@ -41,7 +41,7 @@ void Server::kick(int fd, std::string const &msg)
 	{
 		Channel &channel = _channel.at(channel_name);
 		Client *client = _client.at(fd);
-		if (channel.isAdmin(_client.at(fd)) == 0)
+		if (!channel.isAdmin(client))
 			servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(client->getNickname(), channel_name));
 		else if (channel.getMembers().find(nickname) == channel.getMembers().end())
 			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(client->getNickname(), channel_name));

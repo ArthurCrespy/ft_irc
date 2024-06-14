@@ -34,11 +34,10 @@ void Server::invite(int fd, std::string const &msg)
 			if (!channel.isAdmin(_client.at(fd)))
 				return (servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.find(fd)->second->getNickname(), channel_name)));
 		}
-		servSend(_srv_sock, getClient(guestname).getFd(), ":" + _client.at(fd)->getNickname() + " INVITE " + guestname + " :" + channel_name);
+		channel.addInvite(&getClient(guestname));
+		servSend(fd, fd, RPL_INVITING(_client.find(fd)->second->getNickname(), channel_name, guestname));
+		servSend(fd, getClient(guestname).getFd(), RPL_INVITING(_client.find(fd)->second->getNickname(), channel_name, guestname));
 	}
 	else
-	{
-		servSend(_srv_sock, getClient(guestname).getFd(), ":" + _client.at(fd)->getNickname() + " INVITE " + guestname + " :" + channel_name);
-	}
-	servSend(_srv_sock, fd, RPL_INVITING(_client.find(fd)->second->getNickname(), guestname, channel_name));
+    	servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
 }

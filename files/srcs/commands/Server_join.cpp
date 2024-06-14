@@ -43,9 +43,11 @@ void Server::join(int fd, std::string const &msg)
 
 		if (channel.hasMode('l') && (int)channel.getMembers().size() >= channel.getLimit())
 			return (servSend(_srv_sock, fd, ERR_CHANNELISFULL(_client.at(fd)->getNickname(), channel_name)));
-		if (channel.getInviteOnly())
+		if (channel.getInviteOnly() && !channel.isInvited(_client.at(fd)))
 				return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(_client.at(fd)->getNickname(), channel_name)));
 
+		if (channel.isInvited(_client.at(fd)))
+			channel.removeInvite(_client.at(fd));
 		channel.addMember(_client.at(fd));
 		servSend(fd, fd, RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
 		channel.broadcast(_client.at(fd)->getNickname(), RPL_JOIN(_client.at(fd)->getNickname(), channel_name));

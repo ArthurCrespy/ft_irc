@@ -57,7 +57,7 @@ void Server::logBot(int fd, std::string const &msg)
 	else if (password == _srv_password)
 	{
 		if (isClient(nickname) || nickname == "logbot" || nickname == "localhost")
-			servSend(_srv_sock, fd, ERR_NICKNAMEINUSE(result, nickname));
+			servSend(_srv_sock, fd, ERR_NICKNAMEINUSE(nickname, nickname));
 		else
 		{
 			client->setNickname(nickname);
