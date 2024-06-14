@@ -138,19 +138,6 @@ t_members Channel::getAdmins(void) const
 	return (_channel_admins);
 }
 
-std::string	Channel::getMode(void) const
-{
-	std::string modeString = "+";
-
-	for (size_t i = 0; i < this->_channel_modes.size(); i++)
-		modeString.push_back(this->_channel_modes.at(i));
-	if (this->hasMode('k'))
-		modeString.append(" " + this->_channel_password);
-	if (this->hasMode('l'))
-		modeString.append(" " + ft_nbtos(this->_channel_limit));
-	return (modeString);
-}
-
 bool Channel::isInvited(Client *member)
 {
     for (it_members it = _channel_invite.begin(); it != _channel_invite.end(); ++it)

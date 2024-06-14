@@ -49,8 +49,6 @@ class Channel
 		void		setLimit(int limit);
 		void		setInviteOnly(bool io);
 
-		std::string	getMode(void) const;
-		bool		hasMode(char mode) const;
 		std::string	getName(void) const;
 		std::string	getTopic(void) const;
 		bool		getTopicSet(void) const;
@@ -59,6 +57,8 @@ class Channel
 		bool		getPasswordRestriction(void) const;
 		int			getLimit(void) const;
 		bool		getInviteOnly(void) const;
+
+		bool		hasMode(char mode) const;
 
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;

@@ -16,12 +16,13 @@ void Server::join(int fd, std::string const &msg)
 {
 	std::string channel_name;
 	std::istringstream iss(msg);
+	Client *client = _client.at(fd);
 
 	iss >> channel_name;
 	if (channel_name[0] == ':')
 		channel_name.erase(0, 1);
 	if (channel_name.empty())
-		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "JOIN")));
+		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN")));
 	if (channel_name[0] != '#' && channel_name[0] != '&')
 		return (servSend(_srv_sock, fd, ERR_BADCHANMASK(channel_name)));
 	else
@@ -35,27 +36,27 @@ void Server::join(int fd, std::string const &msg)
 			std::string mdp;
 			iss >> mdp;
 			if (mdp.empty() || channel.getPassword() != mdp)
-				return (servSend(_srv_sock, fd, ERR_PASSWDMISMATCH(_client.at(fd)->getNickname())));
+				return (servSend(_srv_sock, fd, ERR_PASSWDMISMATCH(client->getNickname())));
 		}
 
-		if (channel.getMembers().count(_client.at(fd)->getNickname()) != 0)
-			return (servSend(_srv_sock, fd, ERR_USERONCHANNEL(_client.at(fd)->getNickname(), channel_name)));
+		if (channel.getMembers().count(client->getNickname()) != 0)
+			return (servSend(_srv_sock, fd, ERR_USERONCHANNEL(client->getNickname(), channel_name)));
 
 		if (channel.hasMode('l') && (int)channel.getMembers().size() >= channel.getLimit())
-			return (servSend(_srv_sock, fd, ERR_CHANNELISFULL(_client.at(fd)->getNickname(), channel_name)));
-		if (channel.getInviteOnly() && !channel.isInvited(_client.at(fd)))
-				return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(_client.at(fd)->getNickname(), channel_name)));
+			return (servSend(_srv_sock, fd, ERR_CHANNELISFULL(client->getNickname(), channel_name)));
+		if (channel.getInviteOnly() && !channel.isInvited(client))
+				return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(client->getNickname(), channel_name)));
 
-		if (channel.isInvited(_client.at(fd)))
-			channel.removeInvite(_client.at(fd));
-		channel.addMember(_client.at(fd));
+		if (channel.isInvited(client))
+			channel.removeInvite(client);
+		channel.addMember(client);
 		servSend(fd, fd, RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
-		channel.broadcast(_client.at(fd)->getNickname(), RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
+		channel.broadcast(client->getNickname(), RPL_JOIN(client->getNickname(), channel_name));
 	}
 	else
 	{
-		Channel newChannel(channel_name, _client.at(fd));
-		_channel.insert(std::make_pair(channel_name, newChannel));
+		Channel channel_new(channel_name, _client.at(fd));
+		_channel.insert(std::make_pair(channel_name, channel_new));
 		servSend(fd, fd, RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
 	}
 }
