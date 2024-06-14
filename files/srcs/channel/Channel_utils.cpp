@@ -151,6 +151,28 @@ std::string	Channel::getMode(void) const
 	return (modeString);
 }
 
+bool Channel::isInvited(Client *member)
+{
+    for (it_members it = _channel_invite.begin(); it != _channel_invite.end(); ++it)
+	{
+        if (it->second == member)
+            return (true);
+    }
+    return (false);
+}
+
+void Channel::addInvite(Client *member)
+{
+	_channel_invite.insert(std::make_pair(member->getNickname(), member));
+}
+
+void Channel::removeInvite(Client *member)
+{
+	it_members it = _channel_invite.find(member->getNickname());
+	if (it != _channel_invite.end())
+		_channel_invite.erase(it);
+}
+
 bool Channel::isMember(Client *member)
 {
     for (it_members it = _channel_members.begin(); it != _channel_members.end(); ++it)
@@ -171,7 +193,6 @@ void Channel::removeMember(Client *member)
 	it_members it = _channel_members.find(member->getNickname());
 	if (it != _channel_members.end())
 		_channel_members.erase(it);
-
 }
 
 void Channel::removeMember(std::string const &member)
