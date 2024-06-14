@@ -28,6 +28,8 @@ class Channel
 		bool		_channel_invite_only;
 
 		t_mode		_channel_modes;
+
+		t_members	_channel_invite;
 		t_members	_channel_members;
 		t_members	_channel_admins;
 
@@ -60,6 +62,10 @@ class Channel
 
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;
+
+		bool		isInvited(Client *member);
+		void		addInvite(Client *member);
+		void		removeInvite(Client *member);
 
 		bool		isMember(Client *member);
 		void		addMember(Client *member);

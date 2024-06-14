@@ -34,16 +34,10 @@ void Server::invite(int fd, std::string const &msg)
 			if (!channel.isAdmin(_client.at(fd)))
 				return (servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(_client.find(fd)->second->getNickname(), channel_name)));
 		}
-		servSend(_srv_sock, getClient(guestname).getFd(), ":" + _client.at(fd)->getNickname() + " INVITE " + guestname + " :" + channel_name);
-		channel.addMember(&getClient(guestname));
-		channel.broadcast(guestname, guestname + " has joined the channel.");
+		channel.addInvite(&getClient(guestname));
+		servSend(fd, fd, RPL_INVITING(_client.find(fd)->second->getNickname(), channel_name, guestname));
+		servSend(fd, getClient(guestname).getFd(), RPL_INVITING(_client.find(fd)->second->getNickname(), channel_name, guestname));
 	}
 	else
-	{
-    	servSend(_srv_sock, getClient(guestname).getFd(), ":" + _client.at(fd)->getNickname() + " INVITE " + guestname + " :" + channel_name);
-    	Channel channel_new(channel_name, &getClient(guestname));
-    	_channel.insert(std::make_pair(channel_name, channel_new));
-    	servSend(_srv_sock, getClient(guestname).getFd(), RPL_JOIN(guestname, channel_name));
-	}
-	servSend(_srv_sock, fd, RPL_INVITING(_client.find(fd)->second->getNickname(), guestname, channel_name));
+    	servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
 }
