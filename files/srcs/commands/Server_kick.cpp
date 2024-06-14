@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_kick.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:02:42 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/06 11:02:44 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/14 16:11:17 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ void Server::kick(int fd, std::string const &msg)
 		reason.erase(0, 1);
 	if (reason.empty())
 		reason = "No reason given";
-	
+
 	if (_channel.count(channel_name) != 0)
 	{
 		Channel &channel = _channel.at(channel_name);
 		Client *client = _client.at(fd);
-		if (channel.getAdmins().find(nickname) == channel.getAdmins().end())
+		if (channel.isAdmin(_client.at(fd)) == 0)
 			servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(client->getNickname(), channel_name));
 		else if (channel.getMembers().find(nickname) == channel.getMembers().end())
 			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(client->getNickname(), channel_name));
@@ -51,7 +51,7 @@ void Server::kick(int fd, std::string const &msg)
 			channel.broadcast(client->getNickname(), RPL_KICK(channel_name, nickname, reason));
 			channel.removeMember(nickname);
 			channel.removeAdmin(nickname);
-	
+
 			if (channel.getMembers().empty() && channel.getAdmins().empty())
 				_channel.erase(channel_name);
 		}

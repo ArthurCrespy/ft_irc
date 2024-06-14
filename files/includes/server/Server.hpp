@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/13 11:31:15 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/14 14:25:44 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ class Server
 		void		msgPrv(int fd, std::string const &name, std::string const &msg);
 		void		msgChannel(int fd, std::string &channel_name, std::string const &msg);
 		void		nick(int fd, std::string const &msg);
+		void		part(int fd, std::string const &msg);
 		void		topic(int fd, std::string const &msg);
 		void		user(int fd, std::string const &msg);
 };
