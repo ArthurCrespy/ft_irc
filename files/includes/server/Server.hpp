@@ -23,7 +23,6 @@ class Server
 		std::string	_srv_password;
 
 		t_poll		_poll;
-		t_user		_user;
 		t_client	_client;
 		t_channel	_channel;
 		t_signal	_signal;
@@ -59,20 +58,23 @@ class Server
 		std::string	getPassword(void) const;
 		Channel		&getChannel(std::string const &name);
 
-		void		msgSend(int fd, std::string const &msg);
-		void		msgPrv(int fd, std::string const &name, std::string const &msg);
-		void		msgChannel(int fd, std::string &channel, std::string const &msg);
+		bool		isClient(std::string const &name);
+		Client		&getClient(std::string const &name);
+
+		void		logBot(int fd, std::string const &msg);
+		void		invite(int fd, std::string const &msg);
 		void		join(int fd, std::string const &msg);
-		void		nick(int fd, std::string const &msg);
-		void		user(int fd, std::string const &msg);
 		void		kick(int fd, std::string const &msg);
-		void		topic(int fd, std::string const &msg);
 		void		mode(int fd, std::string const &msg);
 		void		modeMulti(int fd, std::istringstream &iss, Channel &channel, std::string &modes);
 		void		modeK(int fd, std::istringstream &iss, Channel &channel, char action);
 		void		modeO(int fd, std::istringstream &iss, Channel &channel, char action);
-		void		invite(int fd, std::string const &msg);
-		void		logBot(int fd, std::string const &msg);
+		void		msgSend(int fd, std::string const &msg);
+		void		msgPrv(int fd, std::string const &name, std::string const &msg);
+		void		msgChannel(int fd, std::string &channel_name, std::string const &msg);
+		void		nick(int fd, std::string const &msg);
+		void		topic(int fd, std::string const &msg);
+		void		user(int fd, std::string const &msg);
 };
 
 #endif

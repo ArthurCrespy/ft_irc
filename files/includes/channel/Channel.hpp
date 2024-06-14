@@ -18,18 +18,18 @@ class Client;
 class Channel
 {
 	private:
-		std::string			_channel_name;
-		std::string			_channel_topic;
-		bool				_channel_topic_set;
-		bool				_channel_topic_restrict;
-		std::string			_channel_password;
-		bool				_channel_password_restrict;
-		int					_channel_limit;
-		bool				_channel_invite_only;
+		std::string	_channel_name;
+		std::string	_channel_topic;
+		bool		_channel_topic_set;
+		bool		_channel_topic_restrict;
+		std::string	_channel_password;
+		bool		_channel_password_restrict;
+		int			_channel_limit;
+		bool		_channel_invite_only;
 
-		t_mode				_channel_modes;
-		t_members			_channel_members;
-		t_members			_channel_admins;
+		t_mode		_channel_modes;
+		t_members	_channel_members;
+		t_members	_channel_admins;
 
 	public:
 		Channel(void);
@@ -39,13 +39,13 @@ class Channel
 
 		Channel &operator=(Channel const &rhs);
 
-		void setTopic(std::string const &topic);
-		void setTopicSet(bool set);
-		void setTopicRestriction(bool restrict);
-		void setPassword(std::string const &password);
-		void setPasswordRestriction(bool restrict);
-		void setLimit(int limit);
-		void setInviteOnly(bool io);
+		void		setTopic(std::string const &topic);
+		void		setTopicSet(bool set);
+		void		setTopicRestriction(bool restrict);
+		void		setPassword(std::string const &password);
+		void		setPasswordRestriction(bool restrict);
+		void		setLimit(int limit);
+		void		setInviteOnly(bool io);
 
 		std::string	getMode(void) const;
 		bool		hasMode(char mode) const;
@@ -57,22 +57,22 @@ class Channel
 		bool		getPasswordRestriction(void) const;
 		int			getLimit(void) const;
 		bool		getInviteOnly(void) const;
-//		int			getMembersNb(void) const;
 
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;
 
-		void addMember(Client *member);
-		void removeMember(Client *member);
-		void removeMember(std::string const &member);
+		bool		isMember(Client *member);
+		void		addMember(Client *member);
+		void		removeMember(Client *member);
+		void		removeMember(std::string const &member);
 
-		bool isAdmin(Client *member);
-		void addAdmin(Client *op);
-		void removeAdmin(Client *op);
-		void removeAdmin(std::string const &op);
+		bool		isAdmin(Client *member);
+		void		addAdmin(Client *op);
+		void		removeAdmin(Client *op);
+		void		removeAdmin(std::string const &op);
 
-		void broadcast(std::string const &name, std::string const &msg);
-		void chaSend(std::string const &name_src, int fd_dest, std::string const &msg);
+		void		broadcast(std::string const &name, std::string const &msg);
+		void		chaSend(std::string const &name_src, int fd_dest, std::string const &msg);
 };
 
 #endif

@@ -145,7 +145,6 @@ void Server::servConnect(void)
 	std::string client_name = cli_name_in;
 
 	_poll.push_back(cli_poll_in);
-	_user.insert(std::make_pair(client_name, *client));
 	_client.insert(std::make_pair(cli_fd, client));
 
 	ft_print("Connection opened: " + (std::string)cli_name_in, LOG);
