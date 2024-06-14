@@ -6,7 +6,7 @@
 #    By: abinet <abinet@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/15 14:54:39 by acrespy           #+#    #+#              #
-#    Updated: 2024/06/03 19:54:54 by abinet           ###   ########.fr        #
+#    Updated: 2024/06/14 14:26:22 by abinet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS		:= \
 				srcs/commands/Server_kick.cpp \
 				srcs/commands/Server_mode.cpp \
 				srcs/commands/Server_msg.cpp \
+				srcs/commands/Server_part.cpp \
 				srcs/commands/Server_nick.cpp \
 				srcs/commands/Server_topic.cpp \
 				srcs/commands/Server_user.cpp \

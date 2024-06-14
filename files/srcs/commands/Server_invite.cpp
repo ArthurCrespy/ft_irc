@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 11:29:47 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/13 17:46:29 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/14 16:12:27 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void Server::invite(int fd, std::string const &msg)
 	if (!isClient(guestname))
 		servSend(_srv_sock, fd, ERR_NOSUCHNICK(_client.at(fd)->getNickname(), msg));
 	else if (_channel.count(channel_name) != 0)
-	{ 
+	{
 		Channel &channel = _channel.at(channel_name);
 		if (channel.getInviteOnly())
 		{

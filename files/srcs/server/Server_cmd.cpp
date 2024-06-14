@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/13 11:29:03 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/14 14:47:43 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void Server::servCommand(int fd, std::string const &msg)
 			topic(fd, remaining);
 		else if (command == "INVITE" || command == "/invite")
 			invite(fd, remaining);
+		else if (command == "PART" || command == "/part")
+			part(fd, remaining);
 		else
 			servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command));
 	}
