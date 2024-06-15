@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/15 11:31:54 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/15 12:56:52 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void Server::join(int fd, std::string const &msg)
 
 		if (channel.getMembers().count(client->getNickname()) != 0)
 			return (servSend(_srv_sock, fd, ERR_USERONCHANNEL(client->getNickname(), channel_name)));
-		if (channel.hasMode('l') && (int)channel.getMembers().size() >= channel.getLimit())
+		if (channel.getLimit() > 0 && (int)channel.getMembers().size() >= channel.getLimit())
 			return (servSend(_srv_sock, fd, ERR_CHANNELISFULL(client->getNickname(), channel_name)));
 		if (channel.getInviteOnly() && !channel.isInvited(client))
 				return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(client->getNickname(), channel_name)));

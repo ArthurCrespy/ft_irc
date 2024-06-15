@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:36:45 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/15 10:03:37 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/15 13:00:15 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void Server::modeMulti(int fd, std::istringstream &iss, Channel &channel, std::s
 			modeK(fd, iss, channel, action);
 		else if (mode == 'o')
 			modeO(fd, iss, channel, action);
+		else if (mode == 'l')
+			modeL(fd, iss, channel, action);
 		else
 			servSend(_srv_sock, fd, ERR_UNKNOWNMODE(client->getNickname(), std::string(1, mode)));
 	}
@@ -106,3 +108,20 @@ void Server::modeO(int fd, std::istringstream &iss, Channel &channel, char actio
 		servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "o"));
 	}
 }
+
+void Server::modeL(int fd, std::istringstream &iss, Channel &channel, char action)
+{
+	int param;
+
+	if (!(iss >> param))
+	{
+		if (action == '-')
+			channel.setLimit(-1);
+		else
+			return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), "MODE")));
+	}
+	if (action == '+')
+		channel.setLimit(param);
+	servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "l"));
+}
+

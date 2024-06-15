@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:28:57 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/14 14:25:44 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/15 12:18:26 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ class Server
 		void		modeMulti(int fd, std::istringstream &iss, Channel &channel, std::string &modes);
 		void		modeK(int fd, std::istringstream &iss, Channel &channel, char action);
 		void		modeO(int fd, std::istringstream &iss, Channel &channel, char action);
+		void		modeL(int fd, std::istringstream &iss, Channel &channel, char action);
 		void		msgSend(int fd, std::string const &msg);
 		void		msgPrv(int fd, std::string const &name, std::string const &msg);
 		void		msgChannel(int fd, std::string &channel_name, std::string const &msg);
