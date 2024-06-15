@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_topic.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 14:53:00 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/06 14:53:00 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/15 11:59:28 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void Server::topic(int fd, std::string const &msg)
 	iss >> channel_name;
 	std::getline(iss, topic);
 
-	nickname = _client.find(fd)->second->getNickname();
+	Client *client = _client.at(fd);
+	nickname = client->getNickname();
 	if (channel_name[0] == '#' || channel_name[0] == '&')
 		channel_name.erase(0, 1);
 	if (channel_name.empty())
@@ -39,7 +40,7 @@ void Server::topic(int fd, std::string const &msg)
 	if (_channel.count(channel_name) != 0)
 	{
 		Channel &channel = _channel.at(channel_name);
-		if (channel.isMember(_client.find(fd)->second))
+		if (channel.isMember(client))
 		{
 			if (topic.empty())
 			{
@@ -50,7 +51,7 @@ void Server::topic(int fd, std::string const &msg)
 			}
 			else
 			{
-				if (channel.hasMode('t') && !channel.isAdmin(_client.find(fd)->second))
+				if (channel.getTopicRestriction() && !channel.isAdmin(client))
 					servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(nickname, channel_name));
 				else
 				{

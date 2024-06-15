@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:02:42 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/14 16:11:17 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/15 11:32:36 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,5 +57,5 @@ void Server::kick(int fd, std::string const &msg)
 		}
 	}
 	else
-		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
+		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(client->getNickname(), channel_name));
 }

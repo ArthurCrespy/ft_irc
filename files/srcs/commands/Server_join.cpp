@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/13 16:54:12 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/15 11:31:54 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,21 @@ void Server::join(int fd, std::string const &msg)
 
 		if (channel.getMembers().count(client->getNickname()) != 0)
 			return (servSend(_srv_sock, fd, ERR_USERONCHANNEL(client->getNickname(), channel_name)));
-
 		if (channel.hasMode('l') && (int)channel.getMembers().size() >= channel.getLimit())
 			return (servSend(_srv_sock, fd, ERR_CHANNELISFULL(client->getNickname(), channel_name)));
 		if (channel.getInviteOnly() && !channel.isInvited(client))
 				return (servSend(_srv_sock, fd, ERR_INVITEONLYCHAN(client->getNickname(), channel_name)));
-
 		if (channel.isInvited(client))
 			channel.removeInvite(client);
+
 		channel.addMember(client);
-		servSend(fd, fd, RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
+		servSend(fd, fd, RPL_JOIN(client->getNickname(), channel_name));
 		channel.broadcast(client->getNickname(), RPL_JOIN(client->getNickname(), channel_name));
 	}
 	else
 	{
-		Channel channel_new(channel_name, _client.at(fd));
+		Channel channel_new(channel_name, client);
 		_channel.insert(std::make_pair(channel_name, channel_new));
-		servSend(fd, fd, RPL_JOIN(_client.at(fd)->getNickname(), channel_name));
+		servSend(fd, fd, RPL_JOIN(client->getNickname(), channel_name));
 	}
 }
