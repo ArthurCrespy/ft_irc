@@ -127,13 +127,8 @@ void Server::servConnect(void)
 	cli_poll_in.revents = 0;
 
 	cli_fd = accept(_srv_sock, (struct sockaddr *) &cli_adrr_in, &cli_adrr_len);
-	if (cli_fd == -1)
-	{
-		if (errno == EWOULDBLOCK)
-			return ;
-		else
+	if (cli_fd == -1 && errno != EWOULDBLOCK)
 			throw std::runtime_error("Syscall accept() Failed in servConnect: " + (std::string)std::strerror(errno));
-	}
 	cli_poll_in.fd = cli_fd;
 
 	cli_name_len = getnameinfo((struct sockaddr *) &cli_adrr_in, sizeof(cli_adrr_in), cli_name_in, NI_MAXHOST, NULL, 0, NI_NUMERICSERV);
@@ -166,7 +161,7 @@ void Server::servReceive(int fd)
 	while (1)
 	{
 		bytes = recv(fd, buffer, sizeof(buffer), 0);
-		if (bytes == -1)
+		if (bytes == -1 && errno != EWOULDBLOCK)
 			throw std::runtime_error("Syscall recv() Failed in servReceive: " + std::string(std::strerror(errno)));
 		if (bytes == 0)
 		{
