@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:02:42 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/17 13:09:42 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 14:37:29 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ void Server::kick(int fd, std::string const &msg)
 		Channel &channel = _channel.at(channel_name);
 		if (!channel.isAdmin(client))
 			servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(client->getNickname(), channel_name));
-		else if (channel.getMembers().find(nickname) == channel.getMembers().end())
-			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(client->getNickname(), channel_name));
+		else if (channel.getMembers().count(nickname) == 0)
+			servSend(_srv_sock, fd, ERR_USERNOTINCHANNEL(nickname, channel_name));
 		else
 		{
 			servSend(fd, fd, RPL_KICK(channel_name, nickname, reason));

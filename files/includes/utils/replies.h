@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/14 18:04:52 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 14:41:47 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define ERR_UNKNOWNCOMMAND(nickname, command)					"421 " + nickname + " " + command +		" :Unknown command"
 # define ERR_NONICKNAMEGIVEN(nickname)							"431 " + nickname +						" :No nickname given"
 # define ERR_NICKNAMEINUSE(nickname, nc)						"433 " + nickname + " " + nc +			" :Nickname is already in use"
+# define ERR_USERNOTINCHANNEL(nickname, channel)				"441 " + nickname + " #" + channel +	" :They aren't on that channel"
 # define ERR_NOTONCHANNEL(nickname, channel)					"442 " + nickname + " #" + channel +	" :You're not on that channel"
 # define ERR_USERONCHANNEL(nickname, channel) 					"443 " + nickname + " #" + channel +	" :is already on channel"
 # define ERR_NOLOGIN(nickname)									"444 " + nickname +						" :User not logged in"
