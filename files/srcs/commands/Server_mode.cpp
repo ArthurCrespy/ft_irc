@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 14:36:45 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/15 13:00:15 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 15:53:37 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,8 @@ void Server::modeO(int fd, std::istringstream &iss, Channel &channel, char actio
 			channel.removeAdmin(&client);
 		servSend(_srv_sock, fd, RPL_CHANNELMODEIS(_client.at(fd)->getNickname(), channel.getName(), action + "o"));
 	}
+	else
+		servSend(_srv_sock, fd, ERR_USERNOTINCHANNEL(_client.at(fd)->getNickname(), channel.getName()));
 }
 
 void Server::modeL(int fd, std::istringstream &iss, Channel &channel, char action)

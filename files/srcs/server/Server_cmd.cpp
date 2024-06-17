@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/17 12:07:08 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 15:36:52 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void Server::servCommand(int fd, std::string const &msg)
 {
 	t_cmd commands = ft_splitter(msg);
+	Client *client = _client.at(fd);
 
 	for (it_cmd it = commands.begin(); it != commands.end(); ++it)
 	{
@@ -30,9 +31,9 @@ void Server::servCommand(int fd, std::string const &msg)
 			remaining.erase(0, 1);
 
 		if ((remaining.empty() || remaining == "\r\n"))
-			servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command));
+			servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(client->getNickname(), command));
 		else if (command == "PING" || command == "/ping")
-			servSend(_srv_sock, fd, RPL_PONG(_client.at(fd)->getNickname()));
+			servSend(_srv_sock, fd, RPL_PONG(client->getNickname()));
 		else if (command == "PASS" || command == "/pass")
 			pass(fd, remaining);
 		else if ((command == "NICK" || command == "/nick"))
@@ -41,8 +42,8 @@ void Server::servCommand(int fd, std::string const &msg)
 			user(fd, remaining);
 		else if ((command == "PRIVMSG" || command == "/msg") && remaining.find("logbot") == 0)
 			logBot(fd, remaining);
-		else if (!_client.at(fd)->getLogged())
-			servSend(_srv_sock, fd, ERR_NOLOGIN(_client.at(fd)->getHostname()));
+		else if (!client->getLogged())
+			servSend(_srv_sock, fd, ERR_NOLOGIN(client->getHostname()));
 		else if (command == "PRIVMSG" || command == "/msg")
 			msgSend(fd, remaining);
 		else if (command == "JOIN" || command == "/join")
@@ -58,6 +59,6 @@ void Server::servCommand(int fd, std::string const &msg)
 		else if (command == "PART" || command == "/part")
 			part(fd, remaining);
 		else
-			servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(_client.at(fd)->getNickname(), command));
+			servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(client->getNickname(), command));
 	}
 }
