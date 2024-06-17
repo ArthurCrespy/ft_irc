@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:02:42 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/15 11:32:36 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 13:09:42 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void Server::kick(int fd, std::string const &msg)
 			channel.removeMember(nickname);
 			channel.removeAdmin(nickname);
 
-			if (channel.getMembers().empty() && channel.getAdmins().empty())
+			if (channel.getMembers().empty())
 				_channel.erase(channel_name);
 		}
 	}

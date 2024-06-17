@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/09 12:52:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/15 12:56:52 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 14:10:12 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void Server::join(int fd, std::string const &msg)
 		return (servSend(_srv_sock, fd, ERR_BADCHANMASK(channel_name)));
 	else
 		channel_name.erase(0, 1);
+	if (channel_name.size() == 0 || channel_name.size() > 200 || channel_name.find(',') != std::string::npos || channel_name.find("^G") != std::string::npos)
+		return (servSend(_srv_sock, fd, ERR_BADCHANMASK(channel_name)));
 
 	if (_channel.count(channel_name) != 0)
 	{

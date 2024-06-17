@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_part.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 14:24:57 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/17 12:03:47 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/17 14:14:08 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,16 @@ void Server::part(int fd, std::string const &msg)
 			if (channel.isMember(client))
 			{
 				channel.broadcast(client->getNickname(), RPL_PART(client->getNickname(), channel_name));
+				servSend(fd, fd, RPL_PART(client->getNickname(), channel_name));
 				channel.removeMember(client);
+				channel.removeAdmin(client);
+				if (channel.getMembers().empty())
+					_channel.erase(channel_name);
 			}
-			if (_channel.at(channel_name).isAdmin(_client.at(fd)))
-				_channel.at(channel_name).removeAdmin(_client.at(fd));
 			else
-				servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), channel_name));
+				servSend(_srv_sock, fd, ERR_NOTONCHANNEL(client->getNickname(), channel_name));
 		}
 		else
-			servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.at(fd)->getNickname(), channel_name));
+			servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(client->getNickname(), channel_name));
 	}
 }
