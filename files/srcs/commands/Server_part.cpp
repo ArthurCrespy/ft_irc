@@ -28,8 +28,8 @@ void Server::part(int fd, std::string const &msg)
 			Channel &channel = _channel.at(channel_name);
 			if (channel.isMember(client))
 			{
-				channel.broadcast(client->getNickname(), RPL_PART(client->getNickname(), channel_name));
-				servSend(fd, fd, RPL_PART(client->getNickname(), channel_name));
+				channel.broadcast(client->getNickname(), RPL_PART(channel_name));
+				servSend(fd, fd, RPL_PART(channel_name));
 				channel.removeMember(client);
 				channel.removeAdmin(client);
 				if (channel.getMembers().empty())

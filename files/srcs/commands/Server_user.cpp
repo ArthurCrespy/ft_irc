@@ -30,9 +30,9 @@ void Server::user(int fd, std::string const &msg)
 		realname.erase(0, 1);
 	if (username.empty() || realname.empty())
 		servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(nickname, "USER"));
-	if (client->getLogged())
+	else if (client->getLogged())
 		servSend(_srv_sock, fd, ERR_ALREADYREGISTERED(nickname));
-	if (!client->getNick())
+	else if (!client->getNick())
 		servSend(_srv_sock, fd, ERR_NOTREGISTERED(client->getHostname()));
 	else
 	{

@@ -52,7 +52,7 @@
 # define RPL_KICK(channel, target, reason)						"KICK #" + channel + " " + target + " :" + reason
 # define RPL_JOIN(nickname, channel)							"JOIN #" + channel
 # define RPL_NICK(nickname, nc)									"NICK " + nickname + " :" + nc
-# define RPL_PART(nickname, channel)							"PART #" + channel + " " + nickname
+# define RPL_PART(channel)										"PART #" + channel
 
 /* LogBot Replies */
 # define RPL_LBRGST(command)									"Cannot do " + command + "! Not authenticated...\nUse LOGBOT, our bot! /msg LOGBOT <password> <nickname> <username> <realname>"
