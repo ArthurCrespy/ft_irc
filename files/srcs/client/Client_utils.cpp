@@ -22,15 +22,24 @@ void	Client::setPort(int port)
 	this->_cli_port = port;
 }
 
-void	Client::setIdentification(bool id)
+void	Client::setPassword(bool pwd)
 {
-	this ->_cli_identified = id;
+	this ->_cli_p = pwd;
 }
-void	Client::setRegistration(bool reg)
+void	Client::setNick(bool nick)
 {
-	this ->_cli_registered = reg;
+	this ->_cli_n = nick;
 }
 
+void	Client::setUser(bool user)
+{
+	this ->_cli_u = user;
+}
+
+void	Client::setLogged(bool logged)
+{
+	this ->_cli_l = logged;
+}
 void	Client::setNickname(std::string const &nickname)
 {
 	this->_cli_nickname = nickname;
@@ -61,14 +70,24 @@ int	Client::getPort(void) const
 	return (this->_cli_port);
 }
 
-bool Client::getIdentification() const
+bool	Client::getPassword() const
 {
-	return (this->_cli_identified);
+	return (this->_cli_p);
 }
 
-bool Client::getRegistration() const
+bool	Client::getNick() const
 {
-	return (this->_cli_registered);
+	return (this->_cli_n);
+}
+
+bool	Client::getUser() const
+{
+	return (this->_cli_u);
+}
+
+bool	Client::getLogged() const
+{
+	return (this->_cli_l);
 }
 
 std::string	Client::getNickname(void) const

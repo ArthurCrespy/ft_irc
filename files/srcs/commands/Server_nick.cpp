@@ -27,10 +27,10 @@ void Server::nick(int fd, std::string const &msg)
 		return ;
 	else if (isClient(nickname) || nickname == "logbot" || nickname == "localhost")
 		servSend(_srv_sock, fd, ERR_NICKNAMEINUSE(nickname, nickname));
-	else if (!client->getRegistration())
+	else if (!client->getNick())
 	{
 		client->setNickname(nickname);
-		client->setIdentification(true);
+		client->setNick(true);
 	}
 	else
 	{

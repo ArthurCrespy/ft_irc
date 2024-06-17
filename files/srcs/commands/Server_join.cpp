@@ -38,7 +38,7 @@ void Server::join(int fd, std::string const &msg)
 			std::string mdp;
 			iss >> mdp;
 			if (mdp.empty() || channel.getPassword() != mdp)
-				return (servSend(_srv_sock, fd, ERR_PASSWDMISMATCH(client->getNickname())));
+				return (servSend(_srv_sock, fd, ERR_BADCHANNELKEY(client->getNickname(), channel_name)));
 		}
 
 		if (channel.getMembers().count(client->getNickname()) != 0)

@@ -36,17 +36,17 @@ void Server::logBot(int fd, std::string const &msg)
 	if (command != "logbot")
 		return (servSend(_srv_sock, fd, ERR_UNKNOWNCOMMAND(result, command)));
 
-	if (client->getRegistration())
+	if (client->getLogged())
 		return (servSend(-1, fd, ERR_ALREADYREGISTERED(result)));
 
 	if (password[0] == ':')
 		password.erase(0, 1);
 
-	if (client->getIdentification() && (!password.empty() && nickname.empty() && username.empty() && realname.empty()))
+	if (client->getUser() && (!password.empty() && nickname.empty() && username.empty() && realname.empty()))
 	{
 		if (password == _srv_password)
 		{
-			client->setRegistration(true);
+			client->setLogged(true);
 			servSend(_srv_sock, fd, RPL_LBLOGGED(client->getNickname()));
 		}
 		else
@@ -63,10 +63,11 @@ void Server::logBot(int fd, std::string const &msg)
 			client->setNickname(nickname);
 			client->setUsername(username);
 			client->setRealname(realname);
-			client->setIdentification(true);
-			client->setRegistration(true);
+			client->setNick(true);
+			client->setUser(true);
+			client->setLogged(true);
 			servSend(_srv_sock, fd, RPL_LBLOGGED(nickname));
-			servSend(_srv_sock, fd, RPL_LBWELCOME(nickname, username, client->getHostname()));
+			servSend(_srv_sock, fd, RPL_WELCOME(nickname, username, client->getHostname()));
 		}
 	}
 	else

@@ -12,24 +12,9 @@
 
 #include "../../includes/ft_irc.h"
 
-std::vector<std::string> splitter(std::string const &str)
-{
-	std::string line;
-	std::istringstream iss(str);
-	std::vector<std::string> result;
-
-		while (std::getline(iss, line))
-		{
-			if (!line.empty() && line[line.size() - 1] == '\r')
-				line.erase(line.size() - 1);
-			result.push_back(line);
-		}
-		return (result);
-}
-
 void Server::servCommand(int fd, std::string const &msg)
 {
-	t_cmd commands = splitter(msg);
+	t_cmd commands = ft_splitter(msg);
 
 	for (it_cmd it = commands.begin(); it != commands.end(); ++it)
 	{
@@ -48,13 +33,15 @@ void Server::servCommand(int fd, std::string const &msg)
 			servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command));
 		else if (command == "PING" || command == "/ping")
 			servSend(_srv_sock, fd, RPL_PONG(_client.at(fd)->getNickname()));
+		else if (command == "PASS" || command == "/pass")
+			pass(fd, remaining);
 		else if ((command == "NICK" || command == "/nick"))
 			nick(fd, remaining);
 		else if ((command == "USER" || command == "/user"))
 			user(fd, remaining);
 		else if ((command == "PRIVMSG" || command == "/msg") && remaining.find("logbot") == 0)
 			logBot(fd, remaining);
-		else if (!_client.at(fd)->getRegistration())
+		else if (!_client.at(fd)->getLogged())
 			servSend(_srv_sock, fd, ERR_NOLOGIN(_client.at(fd)->getHostname()));
 		else if (command == "PRIVMSG" || command == "/msg")
 			msgSend(fd, remaining);

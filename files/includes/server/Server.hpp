@@ -75,6 +75,7 @@ class Server
 		void		msgChannel(int fd, std::string &channel_name, std::string const &msg);
 		void		nick(int fd, std::string const &msg);
 		void		part(int fd, std::string const &msg);
+		void		pass(int fd, std::string const &msg);
 		void		topic(int fd, std::string const &msg);
 		void		user(int fd, std::string const &msg);
 };
