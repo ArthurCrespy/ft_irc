@@ -157,9 +157,9 @@ void Server::servReceive(int fd)
 	char		buffer[1024];
 	std::string	msg;
 
-	memset(buffer, 0, 1024);
 	while (1)
 	{
+		memset(buffer, 0, 1024);
 		bytes = recv(fd, buffer, sizeof(buffer), 0);
 		if (bytes == -1 && errno != EWOULDBLOCK)
 			throw std::runtime_error("Syscall recv() Failed in servReceive: " + std::string(std::strerror(errno)));
@@ -169,9 +169,8 @@ void Server::servReceive(int fd)
 			return ;
 		}
 		msg.append(buffer, bytes);
-		if (msg.find("\r\n") != std::string::npos || msg.find('\n') != std::string::npos) // only \n for netcat ???
+		if (msg.find("\r\n") != std::string::npos || msg.find('\n') != std::string::npos)
 			break ;
-		memset(buffer, 0, sizeof(buffer));
 	}
 	servCommand(fd, msg);
 }
