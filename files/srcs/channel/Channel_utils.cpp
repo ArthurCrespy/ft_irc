@@ -6,7 +6,7 @@
 /*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/12 15:55:28 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:32:59 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,9 @@ bool Channel::isAdmin(Client *member)
 
 void Channel::addAdmin(Client *op)
 {
-	_channel_admins.insert(std::make_pair(op->getNickname(), op));
+	it_members it_members = _channel_members.find(op->getNickname());
+	if (it_members != _channel_members.end())
+		_channel_admins.insert(std::make_pair(op->getNickname(), op));
 }
 
 void Channel::removeAdmin(Client *op)
