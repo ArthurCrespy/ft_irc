@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 19:54:01 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/14 14:47:43 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 12:07:08 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void Server::servCommand(int fd, std::string const &msg)
 
 		if ((remaining.empty() || remaining == "\r\n"))
 			servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.at(fd)->getNickname(), command));
-		if (command == "PING" || command == "/ping")
+		else if (command == "PING" || command == "/ping")
 			servSend(_srv_sock, fd, RPL_PONG(_client.at(fd)->getNickname()));
 		else if ((command == "NICK" || command == "/nick"))
 			nick(fd, remaining);
