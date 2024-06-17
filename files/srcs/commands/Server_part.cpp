@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server_part.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/14 14:24:57 by abinet            #+#    #+#             */
-/*   Updated: 2024/06/14 19:04:40 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 12:03:47 by jdegluai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void Server::part(int fd, std::string const &msg)
 				channel.broadcast(client->getNickname(), RPL_PART(client->getNickname(), channel_name));
 				channel.removeMember(client);
 			}
+			if (_channel.at(channel_name).isAdmin(_client.at(fd)))
+				_channel.at(channel_name).removeAdmin(_client.at(fd));
 			else
 				servSend(_srv_sock, fd, ERR_NOTONCHANNEL(_client.at(fd)->getNickname(), channel_name));
 		}
