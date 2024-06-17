@@ -33,7 +33,10 @@ void Server::part(int fd, std::string const &msg)
 				channel.removeMember(client);
 				channel.removeAdmin(client);
 				if (channel.getMembers().empty())
+				{
 					_channel.erase(channel_name);
+					ft_print("Channel deleted: " + channel_name, LOG);
+				}
 			}
 			else
 				servSend(_srv_sock, fd, ERR_NOTONCHANNEL(client->getNickname(), channel_name));
