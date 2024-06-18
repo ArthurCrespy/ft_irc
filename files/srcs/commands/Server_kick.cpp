@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:02:42 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/14 16:11:17 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 13:09:42 by acrespy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void Server::kick(int fd, std::string const &msg)
 	std::string nickname;
 	std::string channel_name;
 	std::istringstream iss(msg);
+	Client *client = _client.at(fd);
 
 	iss >> channel_name >> nickname;
 	std::getline(iss, reason);
@@ -31,7 +32,7 @@ void Server::kick(int fd, std::string const &msg)
 	if (channel_name[0] == '#' || channel_name[0] == '&')
 		channel_name.erase(0, 1);
 	if (channel_name.empty() || nickname.empty())
-		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(_client.find(fd)->second->getNickname(), "KICK")));
+		return (servSend(_srv_sock, fd, ERR_NEEDMOREPARAMS(client->getNickname(), "KICK")));
 	while (reason[0] == ' ' || reason[0] == ':')
 		reason.erase(0, 1);
 	if (reason.empty())
@@ -40,11 +41,10 @@ void Server::kick(int fd, std::string const &msg)
 	if (_channel.count(channel_name) != 0)
 	{
 		Channel &channel = _channel.at(channel_name);
-		Client *client = _client.at(fd);
 		if (!channel.isAdmin(client))
 			servSend(_srv_sock, fd, ERR_CHANOPRIVSNEEDED(client->getNickname(), channel_name));
-		else if (channel.getMembers().find(nickname) == channel.getMembers().end())
-			servSend(_srv_sock, fd, ERR_NOTONCHANNEL(client->getNickname(), channel_name));
+		else if (channel.getMembers().count(nickname) == 0)
+			servSend(_srv_sock, fd, ERR_USERNOTINCHANNEL(nickname, channel_name));
 		else
 		{
 			servSend(fd, fd, RPL_KICK(channel_name, nickname, reason));
@@ -52,10 +52,13 @@ void Server::kick(int fd, std::string const &msg)
 			channel.removeMember(nickname);
 			channel.removeAdmin(nickname);
 
-			if (channel.getMembers().empty() && channel.getAdmins().empty())
+			if (channel.getMembers().empty())
+			{
 				_channel.erase(channel_name);
+				ft_print("Channel deleted: " + channel_name, LOG);
+			}
 		}
 	}
 	else
-		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(_client.find(fd)->second->getNickname(), channel_name));
+		servSend(_srv_sock, fd, ERR_NOSUCHCHANNEL(client->getNickname(), channel_name));
 }

@@ -6,7 +6,7 @@
 /*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:43:41 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/13 17:18:20 by abinet           ###   ########.fr       */
+/*   Updated: 2024/06/17 14:41:47 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define REPLIES_H
 
 /* 001-099 | Client-Server Exchange */
-# define RPL_WELCOME(nickname)									"001 " + nickname +						" :Welcome to the 42IRC network"
+# define RPL_WELCOME(nickname, username, hostname)				"001 " + nickname +						" :Welcome to the 42IRC network " + nickname + "!" + username + "@" + hostname
 # define RPL_YOURHOST(nickname)									"002 " + nickname +						" :Your host is 42IRC, running version 1.0"
 
 /* 200-399 | Command Replies */
@@ -23,14 +23,10 @@
 # define RPL_NOTOPIC(nickname, channel)							"331 " + nickname + " #" + channel +	" :No topic is set"
 # define RPL_TOPIC(nickname, channel, topic)					"332 " + nickname + " #" + channel +	" :" + topic
 # define RPL_INVITING(nickname, channel, target)				"341 " + nickname + " #" + channel +	" " + target
-# define RPL_NAMREPLY(nickname, channel, users)					"353 " + nickname + " = #" + channel +	" :" + users
-# define RPL_ENDOFNAMES(nickname, channel)						"366 " + nickname + " #" + channel +	" :End of /NAMES list."
 
 /* 400-599 | Error Replies */
 # define ERR_NOSUCHNICK(nickname, nc)							"401 " + nickname + " " + nc +			" :No such nick/channel"
 # define ERR_NOSUCHCHANNEL(nickname, channel)					"403 " + nickname + " #" + channel +	" :No such channel"
-# define ERR_CANNOTSENDTOCHAN(nickname, channel)				"404 " + nickname + " #" + channel +	" :Cannot send to channel"
-# define ERR_TOOMANYCHANNELS(nickname, channel)					"405 " + nickname + " #" + channel +	" :You have joined too many channels"
 # define ERR_NOTEXTTOSEND(nickname)								"412 " + nickname +						" :No text to send"
 # define ERR_UNKNOWNCOMMAND(nickname, command)					"421 " + nickname + " " + command +		" :Unknown command"
 # define ERR_NONICKNAMEGIVEN(nickname)							"431 " + nickname +						" :No nickname given"
@@ -41,7 +37,7 @@
 # define ERR_NOLOGIN(nickname)									"444 " + nickname +						" :User not logged in"
 # define ERR_NOTREGISTERED(nickname)							"451 " + nickname +						" :You have not registered"
 # define ERR_NEEDMOREPARAMS(nickname, command)					"461 " + nickname + " " + command +		" :Not enough parameters"
-# define ERR_ALREADYREGISTERED(nickname)						"462 " + nickname +						" :You may not register"
+# define ERR_ALREADYREGISTERED(nickname)						"462 " + nickname +						" :You may not reregister"
 # define ERR_PASSWDMISMATCH(nickname)							"464 " + nickname +						" :Password incorrect"
 # define ERR_CHANNELISFULL(nickname, channel)					"471 " + nickname + " #" + channel +	" :Cannot join channel (+l)"
 # define ERR_UNKNOWNMODE(nickname, mode)						"472 " + nickname + " " + mode +		" :is unknown mode char to me"
@@ -56,11 +52,11 @@
 # define RPL_KICK(channel, target, reason)						"KICK #" + channel + " " + target + " :" + reason
 # define RPL_JOIN(nickname, channel)							"JOIN #" + channel
 # define RPL_NICK(nickname, nc)									"NICK " + nickname + " :" + nc
+# define RPL_PART(channel)										"PART #" + channel
 
 /* LogBot Replies */
 # define RPL_LBRGST(command)									"Cannot do " + command + "! Not authenticated...\nUse LOGBOT, our bot! /msg LOGBOT <password> <nickname> <username> <realname>"
 # define RPL_LBLOGGED(nickname)									"Hey " + nickname + " ! You are now logged"
-# define RPL_LBWELCOME(nickname, username, hostname)			"001 " + nickname +	" :Welcome to the 42IRC network " + nickname + "!" + username + "@" + hostname
 
 /* PING/PONG Replies */
 # define RPL_PING(nickname)										"PING " + nickname

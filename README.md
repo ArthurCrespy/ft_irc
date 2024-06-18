@@ -15,11 +15,11 @@ with each other.
 It’s always a good thing to know.</a></h4>
 
 <p align="center">
-    <a href="https://github.com/ArthurCrespy/ft_irc/search?l=c"> <img alt="Language: C++" src="https://img.shields.io/badge/language-C++-orange"></a>
+    <a href="https://github.com/ArthurCrespy/ft_irc/search?l=cpp"> <img alt="Language: C++" src="https://img.shields.io/badge/language-C++-rose"></a>
     <a href="https://github.com/ArthurCrespy/ft_irc"> <img alt="Lines of code" src="https://img.shields.io/tokei/lines/github/ArthurCrespy/minishell"></a>
     <a href="https://github.com/ArthurCrespy/ft_irc/commits"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/ArthurCrespy/minishell?color=yellow"></a>
     <a href="https://github.com/ArthurCrespy/ft_irc/watchers"> <img alt="GitHub watchers" src="https://img.shields.io/github/watchers/ArthurCrespy/minishell?color=ff69b4"></a>
-    <a href="https://projects.intra.42.fr/42cursus-ft_irc/acrespy"> <img alt="Result: NA/100" src="https://img.shields.io/badge/result-NA/100-brightgreen"></a>
+    <a href="https://projects.intra.42.fr/42cursus-ft_irc/acrespy"> <img alt="Result: 100/100" src="https://img.shields.io/badge/result-100/100-brightgreen"></a>
 </p>
 
 <p align="center">
@@ -57,7 +57,7 @@ $ ./ircserv <port> <password>
 42 Students can use the following command to test the project with `irssi` installed in the `sgoinfre`:
 
 ```bash
-rm -rf $HOME/sgoinfre/.brew && git clone --depth=1 https://github.com/Homebrew/brew $HOME/sgoinfre/.brew && echo 'export PATH=$HOME/sgoinfre/.brew/bin:$PATH' >> $HOME/.zshrc && source $HOME/.zshrc && brew update
+rm -rf $HOME/sgoinfre/.brew && git clone --depth=1 https://github.com/Homebrew/brew $HOME/sgoinfre/.brew && echo 'export PATH=$HOME/sgoinfre/.brew/bin:$PATH' >> $HOME/.zshrc && source $HOME/.zshrc && brew update && irssi
 ```
 
 ## Description
@@ -74,6 +74,7 @@ C++ project of Core05. Last group project before ft_transcendence.
 
 - [minitalk](https://github.com/ArthurCrespy/minitalk) - The purpose of this project is to code a small data exchange program using UNIX signals.
 - [minishell](https://github.com/ArthurCrespy/minishell) - This project is about creating a simple shell.
+
 ## License
 
 For now, all rights are reserved.
@@ -82,6 +83,7 @@ For now, all rights are reserved.
 <p align="center">
     <a href="https://github.com/ArthurCrespy"> <img alt="Made by ArthurCrespy" src="https://img.shields.io/badge/made%20by-ArthurCrespy-blue"></a>
     <a href="https://github.com/arm-and-b"> <img alt="Made by armandb" src="https://img.shields.io/badge/made%20by-armandb-blue"></a>
+    <a href="https://github.com/juliendeg"> <img alt="Made by juliendeg" src="https://img.shields.io/badge/made%20by-juliendeg-blue"></a>
     <a href="https://42.fr"><img alt="42 Website" src="https://img.shields.io/badge/website-42.fr-blue"></a>
     <br>
     Github <a href="https://github.com/ArthurCrespy" target="_blank">@Thur'</a> |

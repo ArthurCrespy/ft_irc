@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/11 15:06:07 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/18 10:30:47 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ class Channel
 		void		setLimit(int limit);
 		void		setInviteOnly(bool io);
 
-		std::string	getMode(void) const;
-		bool		hasMode(char mode) const;
 		std::string	getName(void) const;
 		std::string	getTopic(void) const;
 		bool		getTopicSet(void) const;

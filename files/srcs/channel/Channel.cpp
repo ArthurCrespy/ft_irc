@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/12 13:39:21 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/18 10:28:04 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@ Channel::Channel(void)
 {
 	_channel_name = "";
 	setTopic("");
-	setTopicRestriction(false);
-	//setPasswordRestriction(false);
-	setPassword("");
+	setTopicRestriction(true);
+	setPasswordRestriction(false);
 	setLimit(-1);
 	setInviteOnly(false);
 	ft_print("Channel created: " + _channel_name, LOG);
@@ -27,9 +26,8 @@ Channel::Channel(void)
 Channel::Channel(std::string const &name, Client *op) : _channel_name(name)
 {
 	setTopic("");
-	setTopicRestriction(false);
-	//setPasswordRestriction(false);
-	setPassword("");
+	setTopicRestriction(true);
+	setPasswordRestriction(false);
 	setLimit(-1);
 	setInviteOnly(false);
 

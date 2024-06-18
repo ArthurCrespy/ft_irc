@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Server_nick.c                                      :+:      :+:    :+:   */
+/*   Server_nick.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acrespy <acrespy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/13 16:06:03 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/13 16:06:03 by acrespy          ###   ########.fr       */
+/*   Updated: 2024/06/15 11:20:50 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ void Server::nick(int fd, std::string const &msg)
 	if (nickname[0] == ':')
 		nickname.erase(0, 1);
 	if (nickname.empty())
-		servSend(_srv_sock, fd, ERR_NONICKNAMEGIVEN(_client.at(fd)->getNickname()));
+		servSend(_srv_sock, fd, ERR_NONICKNAMEGIVEN(client->getNickname()));
 	if (nickname == client->getNickname())
 		return ;
 	else if (isClient(nickname) || nickname == "logbot" || nickname == "localhost")
 		servSend(_srv_sock, fd, ERR_NICKNAMEINUSE(nickname, nickname));
-	else if (!client->getRegistration())
+	else if (!client->getNick())
 	{
 		client->setNickname(nickname);
-		client->setIdentification(true);
+		client->setNick(true);
 	}
 	else
 	{

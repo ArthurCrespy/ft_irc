@@ -24,6 +24,7 @@ SRCS		:= \
 				srcs/commands/Server_mode.cpp \
 				srcs/commands/Server_msg.cpp \
 				srcs/commands/Server_part.cpp \
+				srcs/commands/Server_pass.cpp \
 				srcs/commands/Server_nick.cpp \
 				srcs/commands/Server_topic.cpp \
 				srcs/commands/Server_user.cpp \
@@ -38,6 +39,7 @@ SRCS		:= \
 				srcs/utils/ft_convert.cpp \
 				srcs/utils/ft_print.cpp \
 				srcs/utils/ft_signal.cpp \
+				srcs/utils/ft_splitter.cpp \
 				srcs/utils/ft_strlen.cpp \
 				srcs/main.cpp
 

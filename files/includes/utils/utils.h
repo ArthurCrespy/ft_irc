@@ -22,6 +22,8 @@ void		ft_print(std::string const &str,std::string const &level);
 
 void		ft_servSHandler(int sig, t_siginfo *siginfo, void *content);
 
+t_cmd		ft_splitter(std::string const &str);
+
 size_t		ft_strlen(std::string const &str);
 
 #endif
