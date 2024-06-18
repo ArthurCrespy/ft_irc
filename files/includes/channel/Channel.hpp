@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/11 15:06:07 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/18 10:30:47 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ class Channel
 		bool		getPasswordRestriction(void) const;
 		int			getLimit(void) const;
 		bool		getInviteOnly(void) const;
-
-		bool		hasMode(char mode) const;
 
 		t_members	getMembers(void) const;
 		t_members	getAdmins(void) const;

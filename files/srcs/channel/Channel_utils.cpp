@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Channel_utils.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdegluai <jdegluai@student.42.fr>          +#+  +:+       +#+        */
+/*   By: abinet <abinet@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 09:46:27 by acrespy           #+#    #+#             */
-/*   Updated: 2024/06/17 15:32:59 by jdegluai         ###   ########.fr       */
+/*   Updated: 2024/06/18 10:33:54 by abinet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/ft_irc.h"
-
-// Une de ces versions (a voir)
-
-// bool	Channel::isInChannel(Client *user, int fd)
-// {
-// 	if (std::find(user.begin(), this->user.end(), user) != this->_users.end())
-// 		return (true);
-// 	return (false);
-// }
-
-// bool Server::isInChannel(Client* client, std::string const &channelName)
-// {
-//     Channel* channel = findchannelname(channelName);
-//     if (channel) {
-//         return channel->isMember(client);
-//     }
-//     return false;
-// }
 
 void Channel::setTopic(std::string const &topic)
 {
@@ -57,20 +39,12 @@ void Channel::setTopicRestriction(bool restrict)
 void Channel::setPassword(std::string const &password)
 {
 	if (password.empty())
-	{
-		// _channel_password = "";
 		_channel_password_restrict = false;
-	}
 	else
 	{
 		_channel_password = password;
 		_channel_password_restrict = true;
 	}
-}
-
-bool Channel::hasMode(char mode) const
-{
-	return (std::find(this->_channel_modes.begin(), this->_channel_modes.end(), mode) != this->_channel_modes.end());
 }
 
 void Channel::setPasswordRestriction(bool restrict)
@@ -140,12 +114,12 @@ t_members Channel::getAdmins(void) const
 
 bool Channel::isInvited(Client *member)
 {
-    for (it_members it = _channel_invite.begin(); it != _channel_invite.end(); ++it)
+	for (it_members it = _channel_invite.begin(); it != _channel_invite.end(); ++it)
 	{
-        if (it->second == member)
-            return (true);
-    }
-    return (false);
+		if (it->second == member)
+			return (true);
+	}
+	return (false);
 }
 
 void Channel::addInvite(Client *member)
